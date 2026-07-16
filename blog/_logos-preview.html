@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideias de logo — Do Neto Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --secondary: #3B82F6;
+    --accent: #F59E0B;
+    --gray-200: #E5E7EB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #F9FAFB; color: var(--primary);
+    padding: 48px 24px 80px; line-height: 1.6;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+  .sub { color: var(--gray-500); margin: 8px 0 40px; }
+
+  .opcao { margin-bottom: 44px; }
+  .opcao-titulo {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px;
+  }
+  .opcao-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    background: var(--primary); color: var(--accent);
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .opcao-titulo h2 { font-size: 19px; font-weight: 700; }
+  .opcao-desc { color: var(--gray-700); font-size: 14.5px; margin-bottom: 14px; max-width: 640px; }
+
+  /* header fake escuro, igual ao do blog */
+  .header-mock {
+    background: rgba(11,18,32,.97); border: 1px solid #1E293B;
+    border-radius: 12px; padding: 0 22px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-mock {
+    display: flex; gap: 22px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: #94A3B8;
+  }
+  .nav-mock span::before { content: './'; color: #475569; }
+
+  .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 18px; letter-spacing: -.02em; color: #E2E8F0; text-decoration: none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  @keyframes piscar { 50% { opacity: 0; } }
+  .cursor {
+    display: inline-block; width: 8px; height: 15px;
+    background: var(--accent); vertical-align: -2px; margin-left: 2px;
+    animation: piscar 1.1s steps(1) infinite;
+  }
+
+  /* ===== 1: <neto/> ===== */
+  .l1 .marca { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; }
+  .l1 .ponta { color: #475569; }
+  .l1 .nome { color: #fff; }
+  .l1 .barra { color: var(--accent); }
+
+  /* ===== 2: neto.dev ===== */
+  .l2 .marca { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; color: #fff; }
+  .l2 .ext { color: var(--accent); }
+  .l2 .sufixo { font-weight: 400; font-size: 13px; color: #64748B; margin-left: 8px; }
+
+  /* ===== 3: {n} ===== */
+  .l3 .caixa {
+    width: 38px; height: 38px; border-radius: 9px;
+    background: #1E293B; border: 1px solid #334155;
+    display: grid; place-items: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 17px;
+  }
+  .l3 .chave { color: var(--accent); }
+  .l3 .ene { color: #fff; }
+
+  /* ===== 4: ~/neto ===== */
+  .l4 .marca { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; }
+  .l4 .til { color: var(--secondary); }
+  .l4 .nome { color: #fff; }
+
+  /* ===== 5: neto() => dev ===== */
+  .l5 .marca { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 17px; }
+  .l5 .nome { color: #fff; }
+  .l5 .par { color: var(--secondary); }
+  .l5 .seta { color: var(--accent); }
+  .l5 .dev { color: #94A3B8; font-weight: 400; }
+
+  /* ===== 6: [ n_ ] ===== */
+  .l6 .caixa {
+    background: #1E293B; border: 1px solid #334155; border-radius: 8px;
+    padding: 5px 10px; font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 15px; color: #fff;
+  }
+
+  /* ===== 8: barra de LED ciano ===== */
+  .l8 .marca {
+    display: inline-flex; flex-direction: column; gap: 5px;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px;
+    color: #fff; line-height: 1;
+  }
+  .l8 .ext { color: #4AC9E8; font-weight: 400; }
+  .led-bar {
+    position: relative; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(74,201,232,.15), #7DE3F7 12%, #7DE3F7 88%, rgba(74,201,232,.15));
+    box-shadow:
+      0 0 6px rgba(74,201,232,.9),
+      0 0 14px rgba(74,201,232,.55),
+      0 10px 22px rgba(74,201,232,.35);
+  }
+  .led-bar::after {
+    content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 16px;
+    background: linear-gradient(180deg, rgba(74,201,232,.35), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+  @keyframes ligar {
+    0% { opacity: 0; box-shadow: none; }
+    12% { opacity: .4; }
+    16% { opacity: .15; }
+    22% { opacity: 1; }
+    100% { opacity: 1; }
+  }
+  .led-liga { animation: ligar 1.6s ease-out 1 both; }
+  @keyframes respirar {
+    0%, 100% { filter: brightness(.92); }
+    50% { filter: brightness(1.15); }
+  }
+  .led-respira { animation: respirar 3.2s ease-in-out infinite; }
+  .l8 .so-barra { width: 34px; align-self: center; }
+
+  /* ===== 7: lâmpada LED ciano ===== */
+  .lamp { flex-shrink: 0; }
+  .lamp-glow { filter: drop-shadow(0 0 5px rgba(34,211,238,.75)); }
+  @keyframes acender {
+    0%, 100% { filter: drop-shadow(0 0 3px rgba(34,211,238,.4)); opacity: .85; }
+    50% { filter: drop-shadow(0 0 8px rgba(34,211,238,.95)); opacity: 1; }
+  }
+  .lamp-pulso { animation: acender 2.6s ease-in-out infinite; }
+  .l7 .nome { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; color: #fff; }
+  .l7 .ext { color: #22D3EE; }
+  .l7 .caixa {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: #1E293B; border: 1px solid #334155;
+    display: grid; place-items: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ideias de logo — Do Neto Dev</h1>
+  <p class="sub">Seis conceitos que amarram o "Neto" ao código, todos em HTML/CSS puro (é só copiar pro header). Cada um está dentro do header escuro real do blog. Me diz o número do que curtiu — ou peça variações.</p>
+
+  <!-- 1 -->
+  <div class="opcao l1">
+    <div class="opcao-titulo"><span class="opcao-num">opção 1</span><h2>&lt;neto/&gt; — seu nome como tag</h2></div>
+    <p class="opcao-desc">O nome vira uma tag HTML auto-fechada: você é o elemento da página. Simples, legível de longe, e a barra laranja dá o toque da paleta. Meu favorito: é a evolução natural do <code>&lt;/&gt;</code> atual, só que agora é SEU.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="marca"><span class="ponta">&lt;</span><span class="nome">neto</span><span class="barra">/</span><span class="ponta">&gt;</span></span> Blog Do Neto Dev</a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="opcao l2">
+    <div class="opcao-titulo"><span class="opcao-num">opção 2</span><h2>neto.dev — o nome como domínio</h2></div>
+    <p class="opcao-desc">Minimalista total: o nome com a extensão .dev em laranja, como se fosse o domínio do site. Sem símbolo nenhum — a tipografia mono É o logo. Fica ótimo em favicon e redes sociais.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="marca">neto<span class="ext">.dev</span></span><span class="sufixo">// blog</span></a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="opcao l3">
+    <div class="opcao-titulo"><span class="opcao-num">opção 3</span><h2>{n} — monograma entre chaves</h2></div>
+    <p class="opcao-desc">A inicial do Neto dentro de chaves de código, num quadradinho — monograma clássico com DNA de dev. É o mais "logomarca" dos seis: funciona sozinho como ícone de app, favicon e avatar.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="caixa"><span><span class="chave">{</span><span class="ene">n</span><span class="chave">}</span></span></span> Blog Do Neto Dev</a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="opcao l4">
+    <div class="opcao-titulo"><span class="opcao-num">opção 4</span><h2>~/neto — a home do terminal</h2></div>
+    <p class="opcao-desc">No terminal, <code>~/</code> é a SUA casa. "~/neto" = a casa do Neto — casa perfeitamente com o hero de terminal e o cursor piscando reforça o tema vivo. Sutil e cheio de significado pra quem é dev.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="marca"><span class="til">~/</span><span class="nome">neto</span></span><span class="cursor"></span></a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="opcao l5">
+    <div class="opcao-titulo"><span class="opcao-num">opção 5</span><h2>neto() => dev — o nome como função</h2></div>
+    <p class="opcao-desc">Seu nome é uma função que retorna dev: conta a história da carreira em um lambda. O mais "programador raiz" dos seis — quem é da área sorri na hora que lê.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="marca"><span class="nome">neto</span><span class="par">()</span> <span class="seta">=&gt;</span> <span class="dev">dev</span></span></a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="opcao l6">
+    <div class="opcao-titulo"><span class="opcao-num">opção 6</span><h2>[ n_ ] — o prompt do Neto</h2></div>
+    <p class="opcao-desc">A evolução direta do logo atual: em vez do genérico <code>&lt;/&gt;_</code>, a caixinha guarda o "n" com o cursor piscando — o prompt esperando o próximo comando do Neto. Muda pouco, personaliza muito.</p>
+    <div class="header-mock">
+      <a class="logo"><span class="caixa">n<span class="cursor"></span></span> Blog Do Neto Dev</a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="opcao l7">
+    <div class="opcao-titulo"><span class="opcao-num">opção 7</span><h2>💡 Lâmpada LED ciano + neto</h2></div>
+    <p class="opcao-desc">A lâmpada fina de LED em ciano ao lado do nome — a ideia acesa do Neto. SVG leve, desenho fino de traço só (estilo LED mesmo, não bulbo antigo), com o filamento em cruz de LED. Três jeitos de usar:</p>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>7a — lâmpada + neto, com brilho fixo:</strong></p>
+    <div class="header-mock" style="margin-bottom:18px;">
+      <a class="logo">
+        <svg class="lamp lamp-glow" viewBox="0 0 24 44" width="19" height="35" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 C6.8 2 4.5 6.8 4.5 11.5 c0 5.2 2.8 7.6 4.3 11.3 L9 27 h6 l.2 -4.2 c1.5 -3.7 4.3 -6.1 4.3 -11.3 C19.5 6.8 17.2 2 12 2 Z"/>
+          <path d="M9.2 13.5 h5.6 M12 13.5 V 22" stroke-width="1.7"/>
+          <path d="M9.3 31 h5.4 M9.3 34.8 h5.4 M10.6 38.5 h2.8" stroke="#67E8F9" stroke-width="1.8"/>
+        </svg>
+        <span class="nome">neto</span> Blog Do Neto Dev
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>7b — lâmpada pulsando devagar + neto.dev</strong> (o LED "respirando" — sutil, chama o olho sem irritar):</p>
+    <div class="header-mock" style="margin-bottom:18px;">
+      <a class="logo">
+        <svg class="lamp lamp-pulso" viewBox="0 0 24 44" width="19" height="35" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 C6.8 2 4.5 6.8 4.5 11.5 c0 5.2 2.8 7.6 4.3 11.3 L9 27 h6 l.2 -4.2 c1.5 -3.7 4.3 -6.1 4.3 -11.3 C19.5 6.8 17.2 2 12 2 Z"/>
+          <path d="M9.2 13.5 h5.6 M12 13.5 V 22" stroke-width="1.7"/>
+          <path d="M9.3 31 h5.4 M9.3 34.8 h5.4 M10.6 38.5 h2.8" stroke="#67E8F9" stroke-width="1.8"/>
+        </svg>
+        <span class="nome">neto<span class="ext">.dev</span></span>
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>7c — lâmpada na caixinha</strong> (mantém o formato do logo atual, vira ícone/favicon fácil):</p>
+    <div class="header-mock">
+      <a class="logo">
+        <span class="caixa">
+          <svg class="lamp lamp-glow" viewBox="0 0 24 44" width="15" height="27" fill="none" stroke="#22D3EE" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2 C6.8 2 4.5 6.8 4.5 11.5 c0 5.2 2.8 7.6 4.3 11.3 L9 27 h6 l.2 -4.2 c1.5 -3.7 4.3 -6.1 4.3 -11.3 C19.5 6.8 17.2 2 12 2 Z"/>
+            <path d="M9.2 13.5 h5.6 M12 13.5 V 22" stroke-width="1.9"/>
+            <path d="M9.3 31 h5.4 M9.3 34.8 h5.4 M10.6 38.5 h2.8" stroke="#67E8F9" stroke-width="2"/>
+          </svg>
+        </span>
+        Blog Do Neto Dev
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="opcao l8">
+    <div class="opcao-titulo"><span class="opcao-num">opção 8</span><h2>▬ Barra de LED ciano — a luz embaixo do nome</h2></div>
+    <p class="opcao-desc">A régua de LED da sua referência: uma barra fina ciano com o brilho vazando pra baixo, servindo de sublinhado de luz pro nome. É a que mais conversa com o header escuro — parece uma luminária de verdade instalada na página.</p>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>8a — neto com sublinhado de LED</strong> (brilho fixo):</p>
+    <div class="header-mock" style="margin-bottom:18px;">
+      <a class="logo">
+        <span class="marca">neto<span class="led-bar"></span></span>
+        <span style="font-weight:800; margin-left: 4px;">Blog Do Neto Dev</span>
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>8b — neto.dev com a barra "acendendo"</strong> (liga com um flicker de LED real ao carregar a página, depois fica respirando devagar):</p>
+    <div class="header-mock" style="margin-bottom:18px;">
+      <a class="logo">
+        <span class="marca">neto<span class="ext">.dev</span><span class="led-bar led-liga led-respira"></span></span>
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+
+    <p class="opcao-desc" style="margin-bottom:8px;"><strong>8c — a barra como ícone</strong> (mini barra de LED no lugar do símbolo, nome normal ao lado):</p>
+    <div class="header-mock">
+      <a class="logo">
+        <span class="marca so-barra"><span class="led-bar led-respira" style="width:34px;"></span></span>
+        <span style="font-weight:800;">Blog Do Neto Dev</span>
+      </a>
+      <div class="nav-mock"><span>home</span><span>posts</span><span>trilha</span><span>sobre</span></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

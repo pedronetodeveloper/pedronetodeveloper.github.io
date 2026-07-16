@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundação em Python: o essencial pra sair automatizando — Blog Do Neto Dev</title>
+<meta name="description" content="Variáveis, loops, funções, coleções e try/except explicados de forma direta — sem framework, e cada conceito fechando com uma automação de verdade.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --secondary: #3B82F6;
+    --accent: #F59E0B;
+    --bg: #FFFFFF;
+    --bg-soft: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --success: #10B981;
+    --danger: #EF4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--primary);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 16.5px;
+  }
+  a { text-decoration: none; color: inherit; }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Header ===== */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 800; font-size: 18px; letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-mark {
+    background: var(--primary); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .logo-mark span { color: var(--accent); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a { font-size: 15px; font-weight: 500; color: var(--gray-700); transition: color .15s; }
+  nav ul a:hover, nav ul a.active { color: var(--secondary); }
+  .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+  /* ===== Artigo ===== */
+  .post-hero { padding: 56px 0 8px; }
+  .badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; font-weight: 500; letter-spacing: .04em;
+    padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+    background: #DBEAFE; color: #1D4ED8;
+  }
+  .serie-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--gray-500); margin-left: 10px;
+  }
+  .post-hero h1 {
+    margin-top: 16px;
+    font-size: clamp(30px, 5vw, 42px); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.15;
+  }
+  .post-meta {
+    margin-top: 16px; font-size: 14.5px; color: var(--gray-500);
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  article { padding: 32px 0 48px; }
+  article h2 {
+    font-size: 25px; font-weight: 700; letter-spacing: -.02em;
+    margin: 44px 0 14px; line-height: 1.3;
+  }
+  article h3 { font-size: 19px; font-weight: 700; margin: 30px 0 10px; }
+  article p { margin-bottom: 16px; color: var(--gray-700); }
+  article p strong { color: var(--primary); }
+  article ul, article ol { margin: 0 0 16px 24px; color: var(--gray-700); }
+  article li { margin-bottom: 8px; }
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: .88em;
+    background: var(--gray-100); padding: 2px 6px; border-radius: 5px;
+    color: var(--primary);
+  }
+  pre {
+    background: var(--primary); color: #E2E8F0;
+    border-radius: 12px; padding: 20px 22px; overflow-x: auto;
+    margin: 18px 0 24px; font-size: 14px; line-height: 1.65;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--gray-500); margin-bottom: -12px; margin-top: 18px;
+  }
+  .frase-chave {
+    border-left: 4px solid var(--secondary);
+    background: #EFF6FF; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+    font-weight: 600; color: var(--primary);
+  }
+  .callout-erro {
+    border-left: 4px solid var(--danger);
+    background: #FEF2F2; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .callout-erro strong { color: var(--danger); }
+  .callout-dica {
+    border-left: 4px solid var(--success);
+    background: #ECFDF5; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .quando-usar {
+    border-left: 4px solid var(--accent);
+    background: #FFFBEB; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 28px;
+  }
+  .quando-usar strong { color: #92400E; }
+  .na-pratica {
+    border: 1px solid #BFDBFE; background: #EFF6FF;
+    border-radius: 12px; padding: 4px 20px 6px; margin: 20px 0 28px;
+  }
+  .na-pratica .rotulo {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--secondary); font-weight: 500; margin: 14px 0 2px;
+  }
+  .na-pratica p { margin-bottom: 10px; font-size: 15px; }
+  .historia {
+    background: var(--bg-soft); border: 1px solid var(--gray-200);
+    border-radius: 18px; padding: 28px 30px; margin: 40px 0 8px;
+  }
+  .historia .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+  .historia h2 { margin-top: 8px; margin-bottom: 12px; }
+  .historia p { margin-bottom: 12px; }
+  .historia p:last-child { margin-bottom: 0; }
+
+  .proximo-post {
+    background: var(--primary); color: #fff; border-radius: 18px;
+    padding: 36px; margin: 48px 0 24px;
+  }
+  .proximo-post .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+  .proximo-post h3 { font-size: 22px; margin: 8px 0 10px; color: #fff; }
+  .proximo-post p { color: #94A3B8; margin-bottom: 18px; }
+  .btn {
+    display: inline-block; padding: 12px 24px; border-radius: 10px;
+    font-weight: 600; font-size: 15px; transition: transform .15s;
+    background: var(--secondary); color: #fff;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .voltar { display: inline-block; margin-top: 8px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+  .voltar:hover { text-decoration: underline; }
+
+  /* ===== Footer ===== */
+  footer { border-top: 1px solid var(--gray-200); background: var(--bg-soft); padding: 36px 0; margin-top: 40px; }
+  .footer-inner {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-inner p { font-size: 14px; color: var(--gray-500); }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-links a { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+  .footer-links a:hover { color: var(--secondary); }
+
+  @media (max-width: 760px) {
+    nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0;
+      background: #fff; flex-direction: column; gap: 0; border-bottom: 1px solid var(--gray-200); }
+    nav ul.open { display: flex; }
+    nav ul li { border-top: 1px solid var(--gray-100); }
+    nav ul a { display: block; padding: 14px 24px; }
+    .menu-btn { display: block; }
+    .post-hero { padding: 36px 0 4px; }
+    pre { padding: 16px; font-size: 13px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+<style id="tema-terminal">
+  /* canvas escuro: overscroll (elástico) no topo/fim mostra escuro, não branco */
+  html { background: #0B1220; }
+
+  /* ===== Tema terminal: header ===== */
+  header { background: rgba(11,18,32,.97) !important; border-bottom: 1px solid #1E293B !important; }
+  header .logo { color: #E2E8F0; }
+  header .logo-mark { background: #1E293B; }
+  header nav ul a {
+    font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  header nav ul a::before { content: './'; color: #475569; }
+  header nav ul a:hover, header nav ul a.active { color: var(--accent) !important; }
+  header .menu-btn { color: #E2E8F0 !important; }
+  @media (max-width: 760px) {
+    header nav ul { background: #0B1220 !important; border-bottom: 1px solid #1E293B !important; }
+    header nav ul li { border-top: 1px solid #1E293B !important; }
+  }
+
+  /* ===== Tema terminal: footer ===== */
+  footer { background: #0B1220 !important; border-top: 1px solid #1E293B !important; }
+  footer .footer-inner p {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 12.5px !important;
+    color: #64748B !important;
+  }
+  footer .footer-inner p::before { content: '$ echo '; color: var(--accent); }
+  footer .footer-links a {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 13px !important;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  footer .footer-links a::before { content: '↗ '; color: #475569; }
+  footer .footer-links a:hover { color: var(--accent) !important; }
+  /* logo: barra de LED sobre o neto */
+  .logo-neto {
+    display: inline-flex; flex-direction: column; gap: 6px;
+    font-weight: 800; font-size: 17px; letter-spacing: -.02em;
+    color: #E2E8F0; line-height: 1; padding-top: 3px;
+  }
+  .logo-neto .led-bar {
+    position: relative; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(74,201,232,.15), #7DE3F7 12%, #7DE3F7 88%, rgba(74,201,232,.15));
+    box-shadow:
+      0 0 6px rgba(74,201,232,.9),
+      0 0 14px rgba(74,201,232,.55),
+      0 10px 22px rgba(74,201,232,.35);
+  }
+  .logo-neto .led-bar::after {
+    content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 14px;
+    background: linear-gradient(180deg, rgba(74,201,232,.35), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+</style>
+<style id="tema-terminal-corpo">
+  /* ===== Tema terminal: corpo ===== */
+  /* blocos de código = janelas de terminal */
+  article pre, .posts pre {
+    position: relative; border: 1px solid #1E293B;
+    padding-top: 46px !important;
+  }
+  article pre::before, .posts pre::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 30px;
+    background: #1E293B;
+  }
+  article pre::after, .posts pre::after {
+    content: ''; position: absolute; top: 9px; left: 16px;
+    width: 11px; height: 11px; border-radius: 50%; background: #FF5F57;
+    box-shadow: 19px 0 0 #FEBC2E, 38px 0 0 #28C840;
+  }
+  .code-label {
+    color: #92400E !important;
+  }
+  .code-label::before { content: '» '; color: var(--accent); }
+
+
+  /* frase-chave com prompt de output */
+  .frase-chave::before { content: '> '; color: var(--secondary); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+  /* separadores entre assuntos */
+  article h2:not(:first-child) {
+    border-top: 1px dashed var(--gray-200);
+    padding-top: 36px; margin-top: 48px;
+  }
+  .historia h2, .veredito h2, .proximo-post h2 {
+    border-top: none !important; padding-top: 0 !important; margin-top: 8px !important;
+  }
+  body.modo-corrido .cap + .cap {
+    border-top: 1px dashed var(--gray-200);
+    margin-top: 44px; padding-top: 8px;
+  }
+
+  /* seleção de texto invertida */
+  ::selection { background: #0F172A; color: #F59E0B; }
+
+  /* scrollbar escura */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg-soft); }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+<style id="hero-terminal">
+  /* ===== Hero do post: janela de terminal clara + fita LED ===== */
+  .post-hero { padding: 0 0 8px !important; }
+  .post-hero .led-wrap { animation: led-flicker 1.15s ease-out both; }
+  @keyframes led-flicker {
+    0% { opacity: 0; } 8% { opacity: .7; } 13% { opacity: .15; }
+    19% { opacity: .9; } 24% { opacity: .35; } 32%, 100% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .post-hero .led-wrap { animation: none; } }
+  .post-hero .led-luminaria {
+    position: relative; height: 4px; width: 100%;
+    background: linear-gradient(90deg, rgba(74,201,232,.08), #5BC9E8 8%, #8FE2F6 50%, #5BC9E8 92%, rgba(74,201,232,.08));
+    box-shadow:
+      0 0 8px rgba(74,201,232,.8),
+      0 0 22px rgba(74,201,232,.45),
+      0 12px 34px rgba(74,201,232,.28);
+  }
+  .post-hero .led-luminaria::after {
+    content: ''; position: absolute; top: 4px; left: 0; right: 0; height: 220px;
+    background: radial-gradient(60% 100% at 50% 0%,
+      rgba(74,201,232,.16), rgba(74,201,232,.06) 45%, transparent 78%);
+    pointer-events: none;
+  }
+  .post-hero .container { padding-top: 44px; }
+  .term-post {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
+    box-shadow: 0 14px 44px rgba(15,23,42,.08);
+    overflow: hidden; position: relative; z-index: 1;
+  }
+  .term-post .term-bar2 {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 16px; background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .term-post .dot2 { width: 11px; height: 11px; border-radius: 50%; }
+  .d1x { background: #FF5F57; } .d2x { background: #FEBC2E; } .d3x { background: #28C840; }
+  .term-post .term-title2 {
+    margin-left: 8px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--gray-500);
+  }
+  .term-post-body { padding: 30px 30px 28px; }
+  .term-post-body h1 { margin-top: 12px !important; }
+  @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="../index.html" class="logo">
+      <span class="logo-neto"><span class="led-bar"></span>Blog Do Neto Dev</span>
+    </a>
+    <nav>
+      <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+      <ul id="menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#posts" class="active">Posts</a></li>
+        <li><a href="../index.html#trilha">Trilha</a></li>
+        <li><a href="../sobre.html">Sobre</a></li>
+        <li><a href="../index.html#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="post-hero">
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
+  <div class="container">
+    <div class="term-post">
+      <div class="term-bar2">
+        <span class="dot2 d1x"></span><span class="dot2 d2x"></span><span class="dot2 d3x"></span>
+        <span class="term-title2">pedro@donetodev: ~/posts/03-fundacao-python.md</span>
+      </div>
+      <div class="term-post-body">
+    <span class="badge">Python</span><span class="serie-num">03 / fundação</span>
+    <h1>Fundação em Python: o essencial pra sair automatizando</h1>
+    <div class="post-meta">
+      <span>Pedro Neto</span> • <span>15 jul 2026</span> • <span>14 min de leitura</span>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="container">
+
+    <h2>Por que Python?</h2>
+    <p>Python foi a primeira linguagem que usei profissionalmente — e é a que eu recomendo pra qualquer pessoa começando na TI. O motivo é simples: <strong>a distância entre "aprendi o conceito" e "resolvi um problema real" é a menor que existe</strong>. Não precisa de framework, não precisa de setup complicado. Um arquivo <code>.py</code> e você já está automatizando coisa do seu dia.</p>
+    <p>Por isso este post é diferente dos tutoriais de sempre: <strong>sem framework, só Python puro</strong> — e no fim de cada seção, em vez de exemplo de banco de dados, uma automação de verdade usando o que você acabou de aprender. Todo código daqui foi testado: copia e roda.</p>
+
+    <h2>🧱 Variáveis e tipos: simples do jeito certo</h2>
+    <div class="frase-chave">Em Python, variável não tem tipo declarado — o valor é que tem tipo. Você escreve menos, mas precisa saber o que está guardando.</div>
+<pre><code>nome = "Pedro"        # str
+idade = 25            # int
+altura = 1.75         # float
+ativo = True          # bool (com T maiúsculo!)
+
+# f-string: o jeito moderno de montar texto
+mensagem = f"{nome} tem {idade} anos"
+
+TAXA = 0.05           # convenção: MAIÚSCULO = "não mexa"</code></pre>
+    <ul>
+      <li><strong>Sem <code>int x</code>, sem <code>final</code></strong> — o Python descobre o tipo pelo valor. Vindo do Java, a sensação é de estar esquecendo algo. Não está.</li>
+      <li><strong>f-string sempre</strong> — <code>f"texto {variavel}"</code> resolve 99% da formatação. Concatenar com <code>+</code> é coisa do passado.</li>
+      <li><strong>Constante é convenção</strong> — nome em maiúsculo avisa "não reatribua". O Python não impede, o combinado protege.</li>
+    </ul>
+    <div class="na-pratica">
+      <span class="rotulo">🤖 na prática — automação com isso aqui</span>
+      <p>Só com variável e f-string você já monta a mensagem de log de um backup:</p>
+<pre><code>from datetime import date
+
+projeto = "blog-do-neto"
+hoje = date.today()
+print(f"[backup] {projeto} salvo em {hoje:%d/%m/%Y}")
+# [backup] blog-do-neto salvo em 15/07/2026</code></pre>
+    </div>
+
+    <h2>🔀 Condições e loops: o fluxo do script</h2>
+    <div class="frase-chave">if decide, for percorre, while repete até a condição virar. E em Python, a indentação É o bloco — não é estética, é sintaxe.</div>
+<pre><code>nota = 85
+if nota &gt;= 90:
+    conceito = "A"
+elif nota &gt;= 70:
+    conceito = "B"
+else:
+    conceito = "C"
+
+# for com range: quando você sabe quantas vezes
+for i in range(3):
+    print(f"tentativa {i + 1}")
+
+# for direto na coleção (o mais comum em Python)
+techs = ["Java", "Python", "AWS"]
+for i, tech in enumerate(techs, start=1):
+    print(i, tech)
+
+# while: repete enquanto a condição vale
+saldo = 27
+while saldo &gt; 0:
+    saldo -= 10</code></pre>
+    <div class="callout-erro">
+      <strong>O erro que pega TODO iniciante:</strong> indentação errada. Um espaço fora do lugar e o código muda de significado ou lança <code>IndentationError</code>. Configura seu editor pra 4 espaços e nunca mais pensa nisso.
+    </div>
+    <div class="na-pratica">
+      <span class="rotulo">🤖 na prática — automação com isso aqui</span>
+      <p>Um for + if e você tem um fiscal de arquivos gigantes na sua pasta:</p>
+<pre><code>from pathlib import Path
+
+for arquivo in Path("downloads").iterdir():
+    tamanho_mb = arquivo.stat().st_size / 1_000_000
+    if tamanho_mb &gt; 100:
+        print(f"⚠️ {arquivo.name} está com {tamanho_mb:.0f} MB")</code></pre>
+    </div>
+
+    <h2>🧰 Funções: o bloco que você reusa</h2>
+    <div class="frase-chave">Função é como você para de copiar e colar código. Se você escreveu a mesma lógica duas vezes, era pra ser uma função.</div>
+<pre><code>def calcular_desconto(preco, percentual=10):
+    return preco * (1 - percentual / 100)
+
+calcular_desconto(200)                       # 180.0 — usa o padrão
+calcular_desconto(200, 25)                   # 150.0
+calcular_desconto(preco=200, percentual=5)   # 190.0 — nomeado, mais legível</code></pre>
+    <ul>
+      <li><strong>Parâmetro com padrão</strong> (<code>percentual=10</code>) — quem chama só informa o que foge do comum.</li>
+      <li><strong>Argumento nomeado</strong> — em chamada com vários parâmetros, nomear deixa o código autoexplicativo.</li>
+      <li><strong>Função pequena com nome claro</strong> vale mais que comentário. <code>calcular_desconto</code> dispensa explicação.</li>
+    </ul>
+    <div class="na-pratica">
+      <span class="rotulo">🤖 na prática — automação com isso aqui</span>
+      <p>Uma função que decide o destino de cada arquivo — guarda ela, vamos usar na automação final:</p>
+<pre><code>def destino_por_extensao(arquivo):
+    pastas = {".pdf": "documentos", ".png": "imagens", ".zip": "compactados"}
+    return pastas.get(arquivo.suffix, "outros")   # sem match? vai pra "outros"</code></pre>
+    </div>
+
+    <h2>📚 Coleções: list, dict e set</h2>
+    <div class="frase-chave">list guarda em ordem, dict busca por chave, set garante que não repete. É o mesmo raciocínio do List/Map/Set do Java — com muito menos cerimônia.</div>
+<pre><code>techs = ["Java", "Python", "AWS", "Python"]   # list: ordem, aceita repetição
+unicas = set(techs)                            # set: {"Java", "Python", "AWS"}
+
+horas = {"Java": 120, "Python": 80}            # dict: chave -> valor
+horas["AWS"] = 40                              # adiciona na hora, sem drama
+
+# list comprehension: transformar coleção em UMA linha
+maiusculas = [t.upper() for t in techs if t != "AWS"]
+# ['JAVA', 'PYTHON', 'PYTHON']</code></pre>
+    <div class="callout-dica">
+      <strong>List comprehension é o "stream" do Python:</strong> filtra e transforma numa linha só, sem <code>map().filter().collect()</code>. Mas a regra é a mesma do Java: se ficou difícil de ler, volta pro for normal.
+    </div>
+    <div class="na-pratica">
+      <span class="rotulo">🤖 na prática — automação com isso aqui</span>
+      <p>Um dict e você tem um relatório do que está entulhando sua pasta:</p>
+<pre><code>from pathlib import Path
+
+contagem = {}
+for arquivo in Path("downloads").iterdir():
+    ext = arquivo.suffix or "sem extensão"
+    contagem[ext] = contagem.get(ext, 0) + 1
+
+print(contagem)   # {'.pdf': 12, '.png': 34, '.zip': 5, ...}</code></pre>
+    </div>
+
+    <h2>🧯 Erros: try/except sem drama</h2>
+    <div class="frase-chave">try/except é o try/catch do Python. A regra continua a mesma: capture só o que você tem como tratar — e nunca em silêncio.</div>
+<pre><code># erro esperado: entrada do usuário
+entrada = "abc"
+try:
+    quantidade = int(entrada)
+except ValueError:
+    print("Digite um número válido")
+
+# erro esperado: arquivo que pode não existir
+from pathlib import Path
+try:
+    config = Path("config.txt").read_text()
+except FileNotFoundError:
+    config = "config padrão"   # plano B claro e documentado</code></pre>
+    <div class="callout-erro">
+      <strong>O primo python do catch vazio:</strong> <code>except:</code> pelado (ou <code>except Exception: pass</code>). Engole TODO erro — até o Ctrl+C que você aperta desesperado. Sempre nomeie a exceção que espera: <code>except ValueError:</code>, <code>except FileNotFoundError:</code>.
+    </div>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> try/except pra situações que você <em>espera</em> que possam falhar — entrada do usuário, arquivo ausente, rede. Erro de lógica do SEU código não se esconde com except: se deixa estourar, se lê o traceback e se conserta.
+    </div>
+
+    <h2>📂 Arquivos e a automação final</h2>
+    <div class="frase-chave">pathlib é o jeito moderno de mexer com arquivos: caminho vira objeto, e ler/escrever vira uma linha.</div>
+<pre><code>from pathlib import Path
+
+arquivo = Path("notas.txt")
+arquivo.write_text("aprender python\n")       # escreve
+conteudo = arquivo.read_text()                # lê
+existe = arquivo.exists()                     # confere
+for item in Path("downloads").iterdir():      # percorre pasta
+    print(item.name, item.suffix)</code></pre>
+    <p>E agora, o gran finale: <strong>juntando TUDO que você viu</strong> — variáveis, for, if, função, dict, pathlib — no script que eu mais uso na vida real. Ele organiza sua pasta de downloads em subpastas por tipo de arquivo:</p>
+    <p class="code-label">organizar_downloads.py — testado: rodou, organizou</p>
+<pre><code>from pathlib import Path
+import shutil
+
+PASTAS = {
+    ".pdf": "documentos",
+    ".png": "imagens",
+    ".jpg": "imagens",
+    ".zip": "compactados",
+}
+
+def organizar(pasta="downloads"):
+    origem = Path(pasta)
+    movidos = 0
+    for arquivo in list(origem.iterdir()):
+        if arquivo.is_file():
+            destino = origem / PASTAS.get(arquivo.suffix.lower(), "outros")
+            destino.mkdir(exist_ok=True)
+            shutil.move(str(arquivo), str(destino / arquivo.name))
+            movidos += 1
+    print(f"✅ {movidos} arquivos organizados")
+
+organizar()</code></pre>
+    <p>Vinte e poucas linhas, zero dependência externa, e um problema real resolvido. <strong>Isso é o espírito do Python</strong>: o caminho mais curto entre você e o problema resolvido.</p>
+    <div class="quando-usar">
+      <strong>Quando usar Python puro (sem framework):</strong> automações de arquivos e pastas, scripts de rotina, processamento de texto e dados pequenos, ferramentas de linha de comando pro seu time. Quando virar API pra outras pessoas consumirem — aí sim entra framework, e é exatamente o assunto do próximo post.
+    </div>
+
+    <div class="historia">
+      <span class="rotulo">~/background $</span>
+      <h2>A história por trás desse post</h2>
+      <p>Python foi minha porta de entrada profissional: a primeira aplicação que fiz no estágio era Python puro — sem framework, porque a gente nem sabia que existia. E olhando pra trás, foi uma sorte: <strong>aprender a base sem atalho me deu fundamento que uso até hoje</strong>.</p>
+      <p>No próximo post dessa jornada, esse fundamento vira aplicação de verdade: o projeto do meu estágio reconstruído com FastAPI e servindo nas nuvens.</p>
+    </div>
+
+    <div class="proximo-post">
+      <span class="rotulo">04 / automação — próximo post</span>
+      <h3>🐍 Python &amp; IaC: a dupla que faz o simples funcionar</h3>
+      <p>Agora que você domina a base, bora colocar ela pra trabalhar: uma API com FastAPI subindo na Azure e na AWS, com infra escrita em código — e a história do meu primeiro projeto no estágio.</p>
+      <a href="04-python-iac.html" class="btn">Ler o post 04 →</a>
+    </div>
+
+    <h2>Conclusão</h2>
+    <p>Se você sair daqui com uma ideia, que seja essa: <strong>Python puro já resolve problema de verdade</strong>. Variável, loop, função, dict e pathlib — com esses cinco você automatiza metade das chatices do seu dia. Framework é a extensão; a base é isso aqui.</p>
+    <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
+
+  </div>
+</article>
+
+<footer id="contato">
+  <div class="footer-inner">
+    <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/pedro-neto-07415b21b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<style id="acc-css">
+  /* ===== Accordions: mentalidade, erros e dicas ===== */
+  details.mentalidade, details.callout-erro, details.callout-dica { padding: 0 !important; }
+  details.mentalidade summary, details.callout-erro summary, details.callout-dica summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px;
+  }
+  details.mentalidade summary { padding: 16px 26px; }
+  details.mentalidade summary::-webkit-details-marker,
+  details.callout-erro summary::-webkit-details-marker,
+  details.callout-dica summary::-webkit-details-marker { display: none; }
+  details.mentalidade summary .acc-label { display: inline !important; margin: 0 !important; }
+  details.callout-erro summary .acc-label { font-weight: 700; color: var(--danger); font-size: 15.5px; }
+  details.callout-dica summary .acc-label { font-weight: 700; color: #065F46; font-size: 15.5px; }
+  details.mentalidade .seta-acc, details.callout-erro .seta-acc, details.callout-dica .seta-acc {
+    font-size: 12px; flex-shrink: 0; transition: transform .2s ease;
+    display: inline !important; margin: 0 !important; color: var(--gray-500);
+  }
+  details[open] > summary .seta-acc { transform: rotate(180deg); }
+  details.mentalidade .acc-conteudo { padding: 0 26px 18px; }
+  details.callout-erro .acc-conteudo, details.callout-dica .acc-conteudo { padding: 2px 20px 14px; font-weight: 400; }
+</style>
+<script id="acc-js">
+(function () {
+  // mentalidade: o rótulo vira o cabeçalho, a frase fica dentro
+  document.querySelectorAll('div.mentalidade').forEach(div => {
+    const label = div.querySelector('span');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = label ? label.textContent : 'a mentalidade';
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (label) label.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+
+  // callouts de erro e dica: o <strong> inicial vira o cabeçalho
+  document.querySelectorAll('div.callout-erro, div.callout-dica').forEach(div => {
+    const ehErro = div.classList.contains('callout-erro');
+    const strong = div.querySelector('strong');
+    const titulo = strong ? strong.textContent.replace(/:\s*$/, '') : (ehErro ? 'Atenção' : 'Dica');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = (ehErro ? '⚠️ ' : '💡 ') + titulo;
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (strong) strong.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    if (cont.firstChild && cont.firstChild.nodeType === 3) {
+      cont.firstChild.textContent = cont.firstChild.textContent.replace(/^\s+/, '');
+    }
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+})();
+</script>
+<style id="cap-css">
+  /* ===== Modo capítulos ===== */
+  #cap-progresso {
+    position: fixed; top: 64px; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    z-index: 60; transition: width .3s ease;
+  }
+  #cap-nav {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 60;
+    background: rgba(15,23,42,.96); color: #E2E8F0;
+    border-radius: 999px; padding: 10px 12px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.35);
+    font-size: 15px; max-width: calc(100vw - 24px);
+    backdrop-filter: blur(6px);
+  }
+  #cap-nav button {
+    border: none; cursor: pointer; border-radius: 999px;
+    background: #1E293B; color: #E2E8F0; font-family: inherit;
+    font-size: 16px; font-weight: 600; padding: 10px 18px;
+    transition: background .15s; white-space: nowrap;
+  }
+  #cap-nav button:hover:not(:disabled) { background: var(--secondary); }
+  #cap-nav button:disabled { opacity: .3; cursor: default; }
+  #cap-modo { font-size: 13px !important; font-weight: 500 !important; color: #94A3B8 !important; }
+  #cap-info {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 6px 10px; border-radius: 999px; min-width: 0;
+  }
+  #cap-info:hover { background: #1E293B; }
+  #cap-contador { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); white-space: nowrap; }
+  #cap-titulo-atual { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; font-weight: 500; }
+  #cap-menu {
+    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.45); padding: 8px;
+    display: none; z-index: 61; max-height: 55vh; overflow-y: auto;
+    min-width: 300px; max-width: calc(100vw - 24px);
+  }
+  #cap-menu.aberto { display: block; }
+  #cap-menu button {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    color: #CBD5E1; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 14px;
+  }
+  #cap-menu button:hover { background: #1E293B; }
+  #cap-menu button.atual { color: var(--accent); font-weight: 600; }
+  #cap-menu .grupo-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: #64748B; padding: 10px 12px 2px;
+  }
+  @keyframes capFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  body.modo-capitulos article { padding-bottom: 120px; }
+  body.modo-capitulos .cap { display: none; }
+  body.modo-capitulos .cap.ativa { display: block; animation: capFade .28s ease; }
+  body.modo-corrido article { padding-bottom: 100px; }
+  body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
+  body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
+  @media (max-width: 760px) {
+    #cap-nav { bottom: 12px; padding: 8px 10px; font-size: 14px; }
+    #cap-nav button { font-size: 14px; padding: 8px 14px; }
+    #cap-titulo-atual { max-width: 100px; font-size: 13.5px; }
+    #cap-menu { bottom: 72px; }
+  }
+</style>
+<script id="cap-js">
+(function () {
+  const artigo = document.querySelector('article .container');
+  if (!artigo) return;
+  const capitulos = [];
+
+  function tituloDe(el) {
+    if (!el || el.nodeType !== 1) return null;
+    if (el.tagName === 'H2') return el.textContent.trim();
+    const c = el.classList;
+    if (c.contains('mentalidade')) return '💭 A mentalidade';
+    if (c.contains('historia')) return '📖 A história por trás';
+    if (c.contains('proximo-post')) return '⏭️ Próximo post';
+    if (c.contains('veredito')) return '🏁 Veredito';
+    return null;
+  }
+
+  // Agrupamento: só títulos que casam com um prefixo abaixo iniciam capítulo novo.
+  // O resto (h2 sem prefixo listado, próximo-post, conclusão) continua no capítulo atual.
+  const CAPITULOS = [
+    ['Por que', '🧱 Por que Python? + variáveis e tipos'],
+    ['🔀', '🔀 Condições e loops'],
+    ['🧰', '🧰 Funções'],
+    ['📚', '📚 Coleções: list, dict e set'],
+    ['🧯', '🧯 Erros com try/except'],
+    ['📂', '📂 Arquivos e a automação final']
+  ];
+
+  function inicioDe(raw) {
+    if (!raw) return null;
+    for (const par of CAPITULOS) {
+      if (raw.startsWith(par[0])) return par[1];
+    }
+    return null;
+  }
+
+  function dividir(container, grupo) {
+    let atual = null;
+    for (const n of Array.from(container.childNodes)) {
+      if (n.nodeType === 8) continue;
+      if (n.nodeType === 3 && !n.textContent.trim()) continue;
+      const el = n.nodeType === 1 ? n : null;
+      if (el && (el.classList.contains('tabs-wrap') || el.classList.contains('tab-panel') || el.tagName === 'SCRIPT')) {
+        atual = null; continue;
+      }
+      const novo = inicioDe(tituloDe(el));
+      if (novo || !atual) {
+        atual = document.createElement('section');
+        atual.className = 'cap';
+        atual.dataset.titulo = novo || 'Introdução';
+        atual.dataset.grupo = grupo;
+        container.insertBefore(atual, n);
+        capitulos.push(atual);
+      }
+      atual.appendChild(n);
+    }
+  }
+
+  const paineis = Array.from(artigo.querySelectorAll('.tab-panel'));
+  paineis.forEach(p => dividir(p, p.id));
+  dividir(artigo, '');
+  if (!capitulos.length) return;
+
+  function rotuloGrupo(idPainel) {
+    const btn = document.getElementById(idPainel.replace('panel-', 'btn-'));
+    return btn ? btn.childNodes[0].textContent.trim() : idPainel;
+  }
+
+  // ===== UI =====
+  const barra = document.createElement('div'); barra.id = 'cap-progresso';
+  const nav = document.createElement('div'); nav.id = 'cap-nav';
+  nav.innerHTML = '<button id="cap-prev" aria-label="Capítulo anterior">←</button>' +
+    '<div id="cap-info" title="Ver capítulos"><span id="cap-contador"></span><span id="cap-titulo-atual"></span></div>' +
+    '<button id="cap-prox" aria-label="Próximo capítulo">→</button>' +
+    '<button id="cap-modo"></button>';
+  const menu = document.createElement('div'); menu.id = 'cap-menu';
+  document.body.append(barra, nav, menu);
+
+  let ultimoGrupo = null;
+  capitulos.forEach((cap, i) => {
+    if (cap.dataset.grupo && cap.dataset.grupo !== ultimoGrupo) {
+      const lbl = document.createElement('div');
+      lbl.className = 'grupo-label';
+      lbl.textContent = rotuloGrupo(cap.dataset.grupo);
+      menu.appendChild(lbl);
+      ultimoGrupo = cap.dataset.grupo;
+    }
+    const b = document.createElement('button');
+    b.textContent = (i + 1) + '. ' + cap.dataset.titulo;
+    b.onclick = () => { ir(i); fecharMenu(); };
+    menu.appendChild(b);
+  });
+
+  const prev = document.getElementById('cap-prev');
+  const prox = document.getElementById('cap-prox');
+  const contador = document.getElementById('cap-contador');
+  const tituloAtual = document.getElementById('cap-titulo-atual');
+  const btnModo = document.getElementById('cap-modo');
+  const info = document.getElementById('cap-info');
+
+  let idx = 0;
+  function ir(i, rolar = true) {
+    idx = Math.max(0, Math.min(capitulos.length - 1, i));
+    const cap = capitulos[idx];
+    capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    if (cap.dataset.grupo && typeof trocarAba === 'function') {
+      trocarAba(cap.dataset.grupo.replace('panel-', ''));
+      capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    }
+    barra.style.width = ((idx + 1) / capitulos.length * 100) + '%';
+    contador.textContent = (idx + 1) + ' / ' + capitulos.length;
+    tituloAtual.textContent = cap.dataset.titulo;
+    info.title = cap.dataset.titulo + ' — clique para ver os capítulos';
+    prev.disabled = idx === 0;
+    prox.disabled = idx === capitulos.length - 1;
+    menu.querySelectorAll('button').forEach(b => b.classList.remove('atual'));
+    const botoes = Array.from(menu.querySelectorAll('button'));
+    if (botoes[idx]) botoes[idx].classList.add('atual');
+    if (rolar) window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function fecharMenu() { menu.classList.remove('aberto'); }
+  info.onclick = (e) => { e.stopPropagation(); menu.classList.toggle('aberto'); };
+  document.addEventListener('click', (e) => { if (!menu.contains(e.target)) fecharMenu(); });
+  prev.onclick = () => ir(idx - 1);
+  prox.onclick = () => ir(idx + 1);
+
+  // tab buttons pulam pro primeiro capítulo do grupo
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!document.body.classList.contains('modo-capitulos')) return;
+      const painel = btn.id.replace('btn-', 'panel-');
+      const alvo = capitulos.findIndex(c => c.dataset.grupo === painel);
+      if (alvo >= 0) ir(alvo);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('modo-capitulos')) return;
+    if (e.key === 'ArrowRight') ir(idx + 1);
+    if (e.key === 'ArrowLeft') ir(idx - 1);
+    if (e.key === 'Escape') fecharMenu();
+  });
+
+  // ===== modo de leitura =====
+  function aplicarModo(modo) {
+    document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
+    document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
+    btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
+    btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
+    try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {}
+    if (modo === 'capitulos') ir(idx, false);
+  }
+  btnModo.onclick = () => {
+    aplicarModo(document.body.classList.contains('modo-capitulos') ? 'corrido' : 'capitulos');
+  };
+
+  let salvo = 'capitulos';
+  try { salvo = localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) {}
+  aplicarModo(salvo);
+})();
+</script>
+</body>
+</html>
