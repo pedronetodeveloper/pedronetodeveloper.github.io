@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundação em Java: o essencial pra se virar no backend — Blog Do Neto Dev</title>
+<meta name="description" content="Entidades, DTOs, records, casts, Collections e Streams explicados de forma direta. O alicerce que todo dev jr de backend precisa dominar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --secondary: #3B82F6;
+    --accent: #F59E0B;
+    --bg: #FFFFFF;
+    --bg-soft: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --success: #10B981;
+    --danger: #EF4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--primary);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 16.5px;
+  }
+  a { text-decoration: none; color: inherit; }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Header ===== */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 800; font-size: 18px; letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-mark {
+    background: var(--primary); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .logo-mark span { color: var(--accent); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a {
+    font-size: 15px; font-weight: 500; color: var(--gray-700);
+    transition: color .15s;
+  }
+  nav ul a:hover, nav ul a.active { color: var(--secondary); }
+  .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+  /* ===== Artigo ===== */
+  .post-hero { padding: 56px 0 8px; }
+  .badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; font-weight: 500; letter-spacing: .04em;
+    padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+    background: #FEF3C7; color: #92400E;
+  }
+  .serie-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--gray-500); margin-left: 10px;
+  }
+  .post-hero h1 {
+    margin-top: 16px;
+    font-size: clamp(30px, 5vw, 42px); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.15;
+  }
+  .post-meta {
+    margin-top: 16px; font-size: 14.5px; color: var(--gray-500);
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  article { padding: 32px 0 48px; }
+  article h2 {
+    font-size: 25px; font-weight: 700; letter-spacing: -.02em;
+    margin: 44px 0 14px; line-height: 1.3;
+  }
+  article h3 { font-size: 19px; font-weight: 700; margin: 30px 0 10px; }
+  article p { margin-bottom: 16px; color: var(--gray-700); }
+  article p strong { color: var(--primary); }
+  article ul, article ol { margin: 0 0 16px 24px; color: var(--gray-700); }
+  article li { margin-bottom: 8px; }
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: .88em;
+    background: var(--gray-100); padding: 2px 6px; border-radius: 5px;
+    color: var(--primary);
+  }
+  pre {
+    background: var(--primary); color: #E2E8F0;
+    border-radius: 12px; padding: 20px 22px; overflow-x: auto;
+    margin: 18px 0 24px; font-size: 14px; line-height: 1.65;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--gray-500); margin-bottom: -12px; margin-top: 18px;
+  }
+  .frase-chave {
+    border-left: 4px solid var(--secondary);
+    background: #EFF6FF; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+    font-weight: 600; color: var(--primary);
+  }
+  .callout-erro {
+    border-left: 4px solid var(--danger);
+    background: #FEF2F2; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .callout-erro strong { color: var(--danger); }
+  .callout-dica {
+    border-left: 4px solid var(--success);
+    background: #ECFDF5; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .quando-usar {
+    border-left: 4px solid var(--accent);
+    background: #FFFBEB; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 28px;
+  }
+  .quando-usar strong { color: #92400E; }
+  .historia {
+    background: var(--bg-soft); border: 1px solid var(--gray-200);
+    border-radius: 18px; padding: 28px 30px; margin: 40px 0 8px;
+  }
+  .historia .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+  .historia h2 { margin-top: 8px; margin-bottom: 12px; }
+  .historia p { margin-bottom: 12px; }
+  .historia p:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0 24px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--gray-200); }
+  th { background: var(--bg-soft); font-weight: 600; font-size: 13.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--gray-700); }
+  td code { white-space: nowrap; }
+
+  .proximo-post {
+    background: var(--primary); color: #fff; border-radius: 18px;
+    padding: 36px; margin: 48px 0 24px;
+  }
+  .proximo-post .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+  .proximo-post h3 { font-size: 22px; margin: 8px 0 10px; color: #fff; }
+  .proximo-post p { color: #94A3B8; margin-bottom: 18px; }
+  .btn {
+    display: inline-block; padding: 12px 24px; border-radius: 10px;
+    font-weight: 600; font-size: 15px; transition: transform .15s;
+    background: var(--secondary); color: #fff;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .voltar { display: inline-block; margin-top: 8px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+  .voltar:hover { text-decoration: underline; }
+
+  /* ===== Footer ===== */
+  footer { border-top: 1px solid var(--gray-200); background: var(--bg-soft); padding: 36px 0; margin-top: 40px; }
+  .footer-inner {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-inner p { font-size: 14px; color: var(--gray-500); }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-links a { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+  .footer-links a:hover { color: var(--secondary); }
+
+  @media (max-width: 760px) {
+    nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0;
+      background: #fff; flex-direction: column; gap: 0; border-bottom: 1px solid var(--gray-200); }
+    nav ul.open { display: flex; }
+    nav ul li { border-top: 1px solid var(--gray-100); }
+    nav ul a { display: block; padding: 14px 24px; }
+    .menu-btn { display: block; }
+    .post-hero { padding: 36px 0 4px; }
+    pre { padding: 16px; font-size: 13px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+<style id="tema-terminal">
+  /* canvas escuro: overscroll (elástico) no topo/fim mostra escuro, não branco */
+  html { background: #0B1220; }
+
+  /* ===== Tema terminal: header ===== */
+  header { background: rgba(11,18,32,.97) !important; border-bottom: 1px solid #1E293B !important; }
+  header .logo { color: #E2E8F0; }
+  header .logo-mark { background: #1E293B; }
+  header nav ul a {
+    font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  header nav ul a::before { content: './'; color: #475569; }
+  header nav ul a:hover, header nav ul a.active { color: var(--accent) !important; }
+  header .menu-btn { color: #E2E8F0 !important; }
+  @media (max-width: 760px) {
+    header nav ul { background: #0B1220 !important; border-bottom: 1px solid #1E293B !important; }
+    header nav ul li { border-top: 1px solid #1E293B !important; }
+  }
+
+  /* ===== Tema terminal: footer ===== */
+  footer { background: #0B1220 !important; border-top: 1px solid #1E293B !important; }
+  footer .footer-inner p {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 12.5px !important;
+    color: #64748B !important;
+  }
+  footer .footer-inner p::before { content: '$ echo '; color: var(--accent); }
+  footer .footer-links a {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 13px !important;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  footer .footer-links a::before { content: '↗ '; color: #475569; }
+  footer .footer-links a:hover { color: var(--accent) !important; }
+  /* logo: barra de LED sobre o neto */
+  .logo-neto {
+    display: inline-flex; flex-direction: column; gap: 6px;
+    font-weight: 800; font-size: 17px; letter-spacing: -.02em;
+    color: #E2E8F0; line-height: 1; padding-top: 3px;
+  }
+  .logo-neto .led-bar {
+    position: relative; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(74,201,232,.15), #7DE3F7 12%, #7DE3F7 88%, rgba(74,201,232,.15));
+    box-shadow:
+      0 0 6px rgba(74,201,232,.9),
+      0 0 14px rgba(74,201,232,.55),
+      0 10px 22px rgba(74,201,232,.35);
+  }
+  .logo-neto .led-bar::after {
+    content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 14px;
+    background: linear-gradient(180deg, rgba(74,201,232,.35), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+</style>
+<style id="tema-terminal-corpo">
+  /* ===== Tema terminal: corpo ===== */
+  /* blocos de código = janelas de terminal */
+  article pre, .posts pre {
+    position: relative; border: 1px solid #1E293B;
+    padding-top: 46px !important;
+  }
+  article pre::before, .posts pre::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 30px;
+    background: #1E293B;
+  }
+  article pre::after, .posts pre::after {
+    content: ''; position: absolute; top: 9px; left: 16px;
+    width: 11px; height: 11px; border-radius: 50%; background: #FF5F57;
+    box-shadow: 19px 0 0 #FEBC2E, 38px 0 0 #28C840;
+  }
+  .code-label {
+    color: #92400E !important;
+  }
+  .code-label::before { content: '» '; color: var(--accent); }
+
+
+  /* frase-chave com prompt de output */
+  .frase-chave::before { content: '> '; color: var(--secondary); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+  /* separadores entre assuntos */
+  article h2:not(:first-child) {
+    border-top: 1px dashed var(--gray-200);
+    padding-top: 36px; margin-top: 48px;
+  }
+  .historia h2, .veredito h2, .proximo-post h2 {
+    border-top: none !important; padding-top: 0 !important; margin-top: 8px !important;
+  }
+  body.modo-corrido .cap + .cap {
+    border-top: 1px dashed var(--gray-200);
+    margin-top: 44px; padding-top: 8px;
+  }
+
+  /* seleção de texto invertida */
+  ::selection { background: #0F172A; color: #F59E0B; }
+
+  /* scrollbar escura */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg-soft); }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+<style id="hero-terminal">
+  /* ===== Hero do post: janela de terminal clara + fita LED ===== */
+  .post-hero { padding: 0 0 8px !important; }
+  .post-hero .led-wrap { animation: led-flicker 1.15s ease-out both; }
+  @keyframes led-flicker {
+    0% { opacity: 0; } 8% { opacity: .7; } 13% { opacity: .15; }
+    19% { opacity: .9; } 24% { opacity: .35; } 32%, 100% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .post-hero .led-wrap { animation: none; } }
+  .post-hero .led-luminaria {
+    position: relative; height: 4px; width: 100%;
+    background: linear-gradient(90deg, rgba(74,201,232,.08), #5BC9E8 8%, #8FE2F6 50%, #5BC9E8 92%, rgba(74,201,232,.08));
+    box-shadow:
+      0 0 8px rgba(74,201,232,.8),
+      0 0 22px rgba(74,201,232,.45),
+      0 12px 34px rgba(74,201,232,.28);
+  }
+  .post-hero .led-luminaria::after {
+    content: ''; position: absolute; top: 4px; left: 0; right: 0; height: 220px;
+    background: radial-gradient(60% 100% at 50% 0%,
+      rgba(74,201,232,.16), rgba(74,201,232,.06) 45%, transparent 78%);
+    pointer-events: none;
+  }
+  .post-hero .container { padding-top: 44px; }
+  .term-post {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
+    box-shadow: 0 14px 44px rgba(15,23,42,.08);
+    overflow: hidden; position: relative; z-index: 1;
+  }
+  .term-post .term-bar2 {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 16px; background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .term-post .dot2 { width: 11px; height: 11px; border-radius: 50%; }
+  .d1x { background: #FF5F57; } .d2x { background: #FEBC2E; } .d3x { background: #28C840; }
+  .term-post .term-title2 {
+    margin-left: 8px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--gray-500);
+  }
+  .term-post-body { padding: 30px 30px 28px; }
+  .term-post-body h1 { margin-top: 12px !important; }
+  @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="../index.html" class="logo">
+      <span class="logo-neto"><span class="led-bar"></span>Blog Do Neto Dev</span>
+    </a>
+    <nav>
+      <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+      <ul id="menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#posts" class="active">Posts</a></li>
+        <li><a href="../index.html#trilha">Trilha</a></li>
+        <li><a href="../sobre.html">Sobre</a></li>
+        <li><a href="../index.html#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="post-hero">
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
+  <div class="container">
+    <div class="term-post">
+      <div class="term-bar2">
+        <span class="dot2 d1x"></span><span class="dot2 d2x"></span><span class="dot2 d3x"></span>
+        <span class="term-title2">pedro@donetodev: ~/posts/01-fundacao-java.md</span>
+      </div>
+      <div class="term-post-body">
+    <span class="badge">Java</span><span class="serie-num">01 / fundação</span>
+    <h1>Fundação em Java: o essencial pra se virar no backend</h1>
+    <div class="post-meta">
+      <span>Pedro Neto</span> • <span>14 jul 2026</span> • <span>15 min de leitura</span>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="container">
+
+    <h2>Por que você deveria entender isso?</h2>
+    <p>Quando entrei no backend, abri meu primeiro projeto Spring e me deparei com um monte de palavras que só tinha visto na faculdade, porém não tinha profundidade de entendimento ainda: entidade, DTO, record, stream.</p>
+    <p> Mas no final a real é: <strong>qualquer codebase Java de backend que você abrir vai ter esses conceitos em todo lugar</strong>. Não dá pra fugir e você precisa saber my friend.</p>
+    <p>Levei mais tempo do que gostaria de admitir pra conectar esses pontos. Espero que este post encurte esse caminho pra você.</p>
+
+    <h2>🧱 O básico que a gente esquece (e não devia)</h2>
+    <div class="frase-chave">Variável guarda valor, loop repete trabalho, try/catch trata o que pode dar errado. Parece óbvio — até o code review mostrar que não é.</div>
+    <p>Antes de entidade e stream, um passeio rápido pelo alicerce do alicerce. Se você domina isso, pula pra próxima seção sem culpa.</p>
+
+    <h3>Variáveis: primitivos e referências</h3>
+<pre><code>int idade = 25;              // primitivo: guarda o VALOR direto
+double altura = 1.75;
+boolean ativo = true;
+
+String nome = "Pedro";       // referência: aponta pra um OBJETO
+Integer pontos = null;       // objeto pode ser null; primitivo nunca
+
+var cidade = "Recife";       // o compilador infere o tipo (Java 10+)
+final double TAXA = 0.05;    // final = não muda nunca mais</code></pre>
+    <ul>
+      <li><strong>Primitivo</strong> (<code>int</code>, <code>double</code>, <code>boolean</code>) guarda o valor e nunca é null. <strong>Referência</strong> (<code>String</code>, <code>Integer</code>, seus objetos) aponta pro objeto — e pode ser null, então trate.</li>
+      <li><strong><code>var</code></strong> só funciona em variável local e não muda o tipo depois — é inferência, não mágica.</li>
+      <li><strong><code>final</code></strong> em constantes e no que não deve ser reatribuído. Quanto mais <code>final</code>, menos surpresa.</li>
+    </ul>
+
+    <h3>for, while e for-each: qual repete o quê</h3>
+<pre><code>// for clássico: você SABE quantas vezes vai rodar
+for (int i = 0; i &lt; 3; i++) {
+    System.out.println("tentativa " + i);
+}
+
+// for-each: percorrer coleção (seu caso em 90% do tempo)
+for (String tech : List.of("Java", "Spring", "AWS")) {
+    System.out.println(tech);
+}
+
+// while: repete ENQUANTO a condição vale (não sabe quantas vezes)
+while (fila.temPendencia()) {
+    fila.processarProxima();
+}
+
+// do-while: igual ao while, mas roda PELO MENOS uma vez
+do {
+    resposta = perguntarAoUsuario();
+} while (!resposta.valida());</code></pre>
+    <p>Regra de bolso: <strong>quantidade conhecida → for; coleção → for-each; condição → while; "executa e depois verifica" → do-while</strong>. E guarda essa: mais pra frente, o for-each em coleção vai virar stream.</p>
+
+    <h3>try/catch: quando usar (e quando não)</h3>
+<pre><code>// BOM: erro esperado, e você TEM o que fazer com ele
+try {
+    int quantidade = Integer.parseInt(entradaDoUsuario);
+} catch (NumberFormatException e) {
+    System.out.println("Digite um número válido");
+}
+
+// MELHOR AINDA: try-with-resources fecha o recurso sozinho
+try (var leitor = Files.newBufferedReader(caminho)) {
+    return leitor.readLine();
+}</code></pre>
+    <ul>
+      <li><strong>Capture só o que você consegue tratar.</strong> Não tem o que fazer com o erro ali? Deixa ele subir pra quem tem (no Spring, um handler global resolve).</li>
+      <li><strong>Try-with-resources sempre</strong> que abrir arquivo, conexão ou stream — fecha sozinho até quando dá erro.</li>
+      <li><strong>Exceção não é fluxo de controle.</strong> Validar com if é de graça; lançar exceção é caro e esconde a intenção.</li>
+    </ul>
+    <div class="callout-erro">
+      <strong>O clássico que assombra:</strong> <code>catch (Exception e) { }</code> — o catch vazio, engolidor de erro. A aplicação quebra em silêncio e você caça o bug por horas onde ele não está. Se capturou, faça algo: logue, avise, relance. Silêncio nunca.
+    </div>
+
+    <h2>🪞 Entidade: o espelho do banco de dados</h2>
+    <div class="frase-chave">Entidade é a classe que representa uma tabela do banco dentro do seu código.</div>
+    <p>Cada linha da tabela vira um objeto. Cada coluna vira um atributo. No mundo Spring, você marca isso com anotações do JPA:</p>
+    <p class="code-label">Produto.java</p>
+<pre><code>import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "produtos")
+public class Produto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nome;
+    private BigDecimal preco;
+    private boolean ativo;
+
+    // JPA exige um construtor vazio
+    public Produto() {}
+
+    public Produto(String nome, BigDecimal preco, boolean ativo) {
+        this.nome = nome;
+        this.preco = preco;
+        this.ativo = ativo;
+    }
+
+    // getters e setters...
+    public Long getId() { return id; }
+    public String getNome() { return nome; }
+    public BigDecimal getPreco() { return preco; }
+    public boolean isAtivo() { return ativo; }
+}</code></pre>
+    <p>Repare em dois detalhes que confundem todo jr:</p>
+    <ul>
+      <li><code>@GeneratedValue</code> — o banco gera o ID pra você. Você nunca seta o ID na mão.</li>
+      <li><strong>Preço é <code>BigDecimal</code>, não <code>double</code></strong> — <code>double</code> tem erro de arredondamento e dinheiro não perdoa. Isso já derrubou boleto em produção por aí.</li>
+    </ul>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> pra representar as tabelas do banco dentro da aplicação — e só. Entidade não sai pelo controller nem vira contrato de API: ela fica no domínio, quem viaja é o DTO. Se a entidade está aparecendo no JSON da resposta, algo furou.
+    </div>
+
+    <h2>📦 DTO: o que entra e sai da sua API</h2>
+    <div class="frase-chave">DTO (Data Transfer Object) é a classe que carrega dados entre a sua API e o mundo externo — sem expor a entidade.</div>
+    <p>"Mas por que não devolver a entidade direto no controller?" Eu fiz essa pergunta. E fiz o erro também. Três motivos pra não fazer:</p>
+    <ol>
+      <li><strong>Segurança</strong>: a entidade pode ter campos que não devem vazar (senha, custo interno, flags de negócio).</li>
+      <li><strong>Acoplamento</strong>: se o front depende do formato da entidade, qualquer mudança no banco quebra o contrato da API.</li>
+      <li><strong>Lazy loading</strong>: entidade com relacionamento preguiçoso serializando fora da transação = <code>LazyInitializationException</code> na sua cara.</li>
+    </ol>
+    <p>Um DTO clássico é simples assim:</p>
+    <p class="code-label">ProdutoDTO.java</p>
+<pre><code>public class ProdutoDTO {
+
+    private final String nome;
+    private final BigDecimal preco;
+
+    public ProdutoDTO(String nome, BigDecimal preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public String getNome() { return nome; }
+    public BigDecimal getPreco() { return preco; }
+
+    // Converte entidade -> DTO num lugar só
+    public static ProdutoDTO from(Produto p) {
+        return new ProdutoDTO(p.getNome(), p.getPreco());
+    }
+}</code></pre>
+    <p>Muito boilerplate pra pouca coisa, né? Concordo. É exatamente por isso que existem records.</p>
+
+    <h2>✨ Records: o DTO que o Java escreve pra você</h2>
+    <div class="frase-chave">Record é uma classe imutável onde o Java gera construtor, getters, equals, hashCode e toString automaticamente.</div>
+    <p>Aquele DTO inteiro de cima vira <strong>uma linha</strong> (Java 16+):</p>
+    <p class="code-label">ProdutoResponse.java</p>
+<pre><code>public record ProdutoResponse(String nome, BigDecimal preco) {
+
+    public static ProdutoResponse from(Produto p) {
+        return new ProdutoResponse(p.getNome(), p.getPreco());
+    }
+}</code></pre>
+    <p>O acesso muda de <code>getNome()</code> pra <code>nome()</code>, e pronto. E dá pra validar na entrada com o construtor compacto:</p>
+    <p class="code-label">CriarProdutoRequest.java</p>
+<pre><code>public record CriarProdutoRequest(String nome, BigDecimal preco) {
+
+    public CriarProdutoRequest {
+        if (preco == null || preco.signum() &lt; 0) {
+            throw new IllegalArgumentException("Preço não pode ser negativo");
+        }
+    }
+}</code></pre>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> record pra DTO, request, response e retorno de query — tudo que carrega dado pra fora. NÃO use pra entidade JPA (ela precisa de construtor vazio e de mudar de estado, e record é imutável) nem pra objeto que muda ao longo da vida. Regra prática: request e response? Record. Entidade? Classe normal.
+    </div>
+
+    <h2>🔄 Cast: do simples ao sofisticado</h2>
+    <div class="frase-chave">Cast é dizer pro compilador: "confia, esse valor é desse tipo aqui".</div>
+
+    <h3>O simples: tipos primitivos</h3>
+    <p>Quando não perde informação, o Java converte sozinho (widening). Quando pode perder, ele te obriga a assumir o risco (narrowing):</p>
+<pre><code>int inteiro = 42;
+long largo = inteiro;      // implícito: int cabe em long
+double preciso = inteiro;  // implícito: int cabe em double
+
+double pi = 3.99;
+int truncado = (int) pi;   // explícito: vira 3 (trunca, NÃO arredonda!)
+
+Integer caixa = 42;        // autoboxing: int -> Integer
+int semCaixa = caixa;      // unboxing: Integer -> int</code></pre>
+    <div class="callout-erro">
+      <strong>Pegadinha do unboxing:</strong> se <code>caixa</code> for <code>null</code>, o unboxing lança <code>NullPointerException</code>. Campo <code>Integer</code> vindo do banco pode ser null — cuidado ao jogar direto num <code>int</code>.
+    </div>
+
+    <h3>O sofisticado: cast de objetos</h3>
+    <p>Downcast (de tipo genérico pra tipo específico) só funciona se o objeto realmente for daquele tipo. Por isso sempre vem com <code>instanceof</code>:</p>
+<pre><code>Object obj = buscarQualquerCoisa();
+
+// Jeito clássico (qualquer versão do Java)
+if (obj instanceof String) {
+    String s = (String) obj;
+    System.out.println(s.toUpperCase());
+}
+
+// Pattern matching (Java 16+): testa E declara numa tacada só
+if (obj instanceof String s) {
+    System.out.println(s.toUpperCase());
+}</code></pre>
+    <p>E no Java 21 dá pra ir além com <code>switch</code> por tipo:</p>
+<pre><code>String descricao = switch (obj) {
+    case String s     -> "Texto: " + s;
+    case Integer i    -> "Número: " + i;
+    case Produto p    -> "Produto: " + p.getNome();
+    default           -> "Não sei o que é isso";
+};</code></pre>
+    <div class="callout-erro">
+      <strong>Erro comum:</strong> cast sem verificar o tipo. <code>(String) num</code> onde <code>num</code> é um <code>Integer</code> compila normal e explode em runtime com <code>ClassCastException</code>. O compilador confiou em você — não decepcione ele.
+    </div>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> cast explícito só quando não tem jeito — API antiga, <code>Object</code> genérico, integração legada. Se você está fazendo cast toda hora no seu próprio código, o recado é outro: provavelmente falta um generic ou um polimorfismo no design.
+    </div>
+
+    <h2>🗂️ Collections: List, Set e Map</h2>
+    <div class="frase-chave">Collections são as estruturas que guardam vários objetos. A escolha certa depende de uma pergunta: como você vai buscar o dado depois?</div>
+    <table>
+      <thead>
+        <tr><th>Interface</th><th>Serve para</th><th>Implementação padrão</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>List</code></td><td>Ordem importa, duplicata pode. É a lista "normal".</td><td><code>ArrayList</code></td></tr>
+        <tr><td><code>Set</code></td><td>Sem duplicata. Verificar "já existe?" é instantâneo.</td><td><code>HashSet</code></td></tr>
+        <tr><td><code>Map</code></td><td>Buscar valor por chave (tipo um dicionário).</td><td><code>HashMap</code></td></tr>
+      </tbody>
+    </table>
+<pre><code>List&lt;String&gt; techs = new ArrayList&lt;&gt;(List.of("Java", "Spring", "AWS", "Java"));
+System.out.println(techs.size());        // 4 — List aceita duplicata
+
+Set&lt;String&gt; unicas = new HashSet&lt;&gt;(techs);
+System.out.println(unicas.size());       // 3 — Set removeu o "Java" repetido
+
+Map&lt;String, Integer&gt; horasEstudo = new HashMap&lt;&gt;();
+horasEstudo.put("Java", 120);
+horasEstudo.put("Spring", 80);
+System.out.println(horasEstudo.get("Java")); // 120 — busca direta pela chave</code></pre>
+    <div class="callout-dica">
+      <strong>Se você está com pressa:</strong> 90% do tempo é <code>ArrayList</code>, <code>HashSet</code> e <code>HashMap</code>. Declare sempre pelo tipo da interface (<code>List</code>, <code>Set</code>, <code>Map</code>) — trocar a implementação depois fica indolor.
+    </div>
+    <p>Detalhe que me pegou: <code>List.of(...)</code> cria lista <strong>imutável</strong>. Se tentar dar <code>add()</code> nela, toma <code>UnsupportedOperationException</code>. Quer mexer depois? Embrulha num <code>new ArrayList&lt;&gt;(...)</code> como no exemplo.</p>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> ordem e duplicata? <code>List</code>. Garantir que não repete? <code>Set</code>. Buscar por chave? <code>Map</code>. E o teste definitivo: se você se pegou escrevendo <code>if (!lista.contains(x))</code> antes de adicionar, você queria um <code>Set</code> desde o começo.
+    </div>
+
+    <h2>🌊 Streams: transformar dados sem for</h2>
+    <div class="frase-chave">Stream é uma esteira de transformação: os dados entram de um lado, passam por filtros e transformações, e saem prontos do outro.</div>
+    <p>O trio que resolve quase tudo: <code>filter</code> (peneira), <code>map</code> (transforma), <code>collect</code> (junta o resultado). Olha um caso real de backend — pegar produtos ativos e converter pra DTO:</p>
+<pre><code>List&lt;Produto&gt; produtos = produtoRepository.findAll();
+
+// Sem stream: umas 6 linhas de for + if + add
+// Com stream:
+List&lt;ProdutoResponse&gt; ativos = produtos.stream()
+    .filter(Produto::isAtivo)            // peneira: só os ativos
+    .map(ProdutoResponse::from)          // transforma: entidade -> DTO
+    .toList();                           // junta numa List (Java 16+)</code></pre>
+    <p>Somar valores? <code>reduce</code>:</p>
+<pre><code>BigDecimal total = produtos.stream()
+    .filter(Produto::isAtivo)
+    .map(Produto::getPreco)
+    .reduce(BigDecimal.ZERO, BigDecimal::add);</code></pre>
+    <p>Agrupar? <code>Collectors</code>:</p>
+<pre><code>import java.util.stream.Collectors;
+
+// Separa em dois grupos: ativos (true) e inativos (false)
+Map&lt;Boolean, List&lt;Produto&gt;&gt; porStatus = produtos.stream()
+    .collect(Collectors.partitioningBy(Produto::isAtivo));</code></pre>
+    <div class="callout-erro">
+      <strong>Erro que EU cometi:</strong> reusar um stream. Stream é descartável — depois de uma operação final (<code>collect</code>, <code>count</code>, <code>forEach</code>), ele morre. Usar de novo lança <code>IllegalStateException: stream has already been operated upon or closed</code>. Precisa de novo? Chama <code>.stream()</code> de novo na collection.
+    </div>
+    <div class="quando-usar">
+      <strong>Quando usar:</strong> stream pra transformar, filtrar e agregar coleções. NÃO force stream onde um <code>for</code> simples é mais legível — uma linha gigante com 8 operações encadeadas é pior que um loop claro. Legibilidade ganha do estilo.
+    </div>
+
+    <h2>⚠️ O erro comum que junta tudo</h2>
+    <p>O clássico dos clássicos: <strong>devolver a entidade direto no controller</strong>. Funciona no teste local, passa no code review desatento, e aí um dia alguém adiciona um relacionamento na entidade e sua API começa a vazar dado ou estourar <code>LazyInitializationException</code>.</p>
+    <p>O fluxo saudável, juntando tudo que vimos:</p>
+<pre><code>@GetMapping("/produtos")
+public List&lt;ProdutoResponse&gt; listarAtivos() {
+    return produtoRepository.findAll().stream()  // entidades do banco
+        .filter(Produto::isAtivo)                // stream: peneira
+        .map(ProdutoResponse::from)              // record: converte
+        .toList();                               // collection: entrega
+}</code></pre>
+    <p>Entidade fica no domínio, record sai pela API, stream faz a ponte. É esse padrão que você vai ver (e escrever) todo santo dia.</p>
+
+    <div class="historia">
+      <span class="rotulo">~/background $</span>
+      <h2>A história por trás desse post</h2>
+      <p>Tudo que você leu aqui foi o que me carregou na prática. Comecei como estagiário na <strong>TIVIT</strong>, uma consultoria onde fazia projetos pra clientes e internos — e em pouco mais de 2 anos saí de estagiário pra <strong>fullstack pleno</strong>.</p>
+      <p>Nessa trajetória, <strong>o que separou minha evolução de estagiário a jr foi o básico bem dominado.</strong> Variável, loop, exceção, entidade, record, stream — é isso que aparece em TODO code review, em TODA sprint, em qualquer stack. Domina o alicerce que o resto vem.</p>
+    </div>
+
+    <h2>Conclusão</h2>
+    <p>Se você sair daqui com uma frase, que seja essa: <strong>entidade espelha o banco, record carrega os dados pra fora, e stream faz a transformação no meio</strong>. Dominou esse fluxo, você se vira em qualquer backend Java.</p>
+    
+    <div class="proximo-post">
+      <span class="rotulo">02 / arquitetura — próximo post</span>
+      <h3>🏛️ Spring MVC vs Hexagonal: a evolução de um dev backend</h3>
+      <p>Agora que você domina o alicerce — entidades, records e streams — o próximo passo é entender ONDE cada peça mora. Do CRUD acoplado ao Spring até o hexagonal pregado nos bancos, navegando pelas abas como se fosse pela carreira.</p>
+      <a href="02-mvc-vs-hexagonal.html" class="btn">Ler o post 02 →</a>
+    </div>
+
+    <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
+
+  </div>
+</article>
+
+<footer id="contato">
+  <div class="footer-inner">
+    <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/pedro-neto-07415b21b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<style id="acc-css">
+  /* ===== Accordions: mentalidade, erros e dicas ===== */
+  details.mentalidade, details.callout-erro, details.callout-dica { padding: 0 !important; }
+  details.mentalidade summary, details.callout-erro summary, details.callout-dica summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px;
+  }
+  details.mentalidade summary { padding: 16px 26px; }
+  details.mentalidade summary::-webkit-details-marker,
+  details.callout-erro summary::-webkit-details-marker,
+  details.callout-dica summary::-webkit-details-marker { display: none; }
+  details.mentalidade summary .acc-label { display: inline !important; margin: 0 !important; }
+  details.callout-erro summary .acc-label { font-weight: 700; color: var(--danger); font-size: 15.5px; }
+  details.callout-dica summary .acc-label { font-weight: 700; color: #065F46; font-size: 15.5px; }
+  details.mentalidade .seta-acc, details.callout-erro .seta-acc, details.callout-dica .seta-acc {
+    font-size: 12px; flex-shrink: 0; transition: transform .2s ease;
+    display: inline !important; margin: 0 !important; color: var(--gray-500);
+  }
+  details[open] > summary .seta-acc { transform: rotate(180deg); }
+  details.mentalidade .acc-conteudo { padding: 0 26px 18px; }
+  details.callout-erro .acc-conteudo, details.callout-dica .acc-conteudo { padding: 2px 20px 14px; font-weight: 400; }
+</style>
+<script id="acc-js">
+(function () {
+  // mentalidade: o rótulo vira o cabeçalho, a frase fica dentro
+  document.querySelectorAll('div.mentalidade').forEach(div => {
+    const label = div.querySelector('span');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = label ? label.textContent : 'a mentalidade';
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (label) label.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+
+  // callouts de erro e dica: o <strong> inicial vira o cabeçalho
+  document.querySelectorAll('div.callout-erro, div.callout-dica').forEach(div => {
+    const ehErro = div.classList.contains('callout-erro');
+    const strong = div.querySelector('strong');
+    const titulo = strong ? strong.textContent.replace(/:\s*$/, '') : (ehErro ? 'Atenção' : 'Dica');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = (ehErro ? '⚠️ ' : '💡 ') + titulo;
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (strong) strong.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    if (cont.firstChild && cont.firstChild.nodeType === 3) {
+      cont.firstChild.textContent = cont.firstChild.textContent.replace(/^\s+/, '');
+    }
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+})();
+</script>
+<style id="cap-css">
+  /* ===== Modo capítulos ===== */
+  #cap-progresso {
+    position: fixed; top: 64px; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    z-index: 60; transition: width .3s ease;
+  }
+  #cap-nav {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 60;
+    background: rgba(15,23,42,.96); color: #E2E8F0;
+    border-radius: 999px; padding: 10px 12px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.35);
+    font-size: 15px; max-width: calc(100vw - 24px);
+    backdrop-filter: blur(6px);
+  }
+  #cap-nav button {
+    border: none; cursor: pointer; border-radius: 999px;
+    background: #1E293B; color: #E2E8F0; font-family: inherit;
+    font-size: 16px; font-weight: 600; padding: 10px 18px;
+    transition: background .15s; white-space: nowrap;
+  }
+  #cap-nav button:hover:not(:disabled) { background: var(--secondary); }
+  #cap-nav button:disabled { opacity: .3; cursor: default; }
+  #cap-modo { font-size: 13px !important; font-weight: 500 !important; color: #94A3B8 !important; }
+  #cap-info {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 6px 10px; border-radius: 999px; min-width: 0;
+  }
+  #cap-info:hover { background: #1E293B; }
+  #cap-contador { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); white-space: nowrap; }
+  #cap-titulo-atual { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; font-weight: 500; }
+  #cap-menu {
+    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.45); padding: 8px;
+    display: none; z-index: 61; max-height: 55vh; overflow-y: auto;
+    min-width: 300px; max-width: calc(100vw - 24px);
+  }
+  #cap-menu.aberto { display: block; }
+  #cap-menu button {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    color: #CBD5E1; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 14px;
+  }
+  #cap-menu button:hover { background: #1E293B; }
+  #cap-menu button.atual { color: var(--accent); font-weight: 600; }
+  #cap-menu .grupo-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: #64748B; padding: 10px 12px 2px;
+  }
+  @keyframes capFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  body.modo-capitulos article { padding-bottom: 120px; }
+  body.modo-capitulos .cap { display: none; }
+  body.modo-capitulos .cap.ativa { display: block; animation: capFade .28s ease; }
+  body.modo-corrido article { padding-bottom: 100px; }
+  body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
+  body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
+  @media (max-width: 760px) {
+    #cap-nav { bottom: 12px; padding: 8px 10px; font-size: 14px; }
+    #cap-nav button { font-size: 14px; padding: 8px 14px; }
+    #cap-titulo-atual { max-width: 100px; font-size: 13.5px; }
+    #cap-menu { bottom: 72px; }
+  }
+</style>
+<script id="cap-js">
+(function () {
+  const artigo = document.querySelector('article .container');
+  if (!artigo) return;
+  const capitulos = [];
+
+  function tituloDe(el) {
+    if (!el || el.nodeType !== 1) return null;
+    if (el.tagName === 'H2') return el.textContent.trim();
+    const c = el.classList;
+    if (c.contains('mentalidade')) return '💭 A mentalidade';
+    if (c.contains('historia')) return '📖 A história por trás';
+    if (c.contains('proximo-post')) return '⏭️ Próximo post';
+    if (c.contains('veredito')) return '🏁 Veredito';
+    return null;
+  }
+
+  // Agrupamento: só títulos que casam com um prefixo abaixo iniciam capítulo novo.
+  // O resto (h2 sem prefixo listado, próximo-post, conclusão) continua no capítulo atual.
+  const CAPITULOS = [
+    ['Por que', 'Por que entender isso?'],
+    ['🧱', '🧱 O básico que a gente esquece'],
+    ['🪞', '🪞 Entidade, DTO e Records'],
+    ['🔄', '🔄 Cast: do simples ao sofisticado'],
+    ['🗂️', '🗂️ Collections e Streams'],
+    ['⚠️', 'Conclusão da história']
+  ];
+
+  function inicioDe(raw) {
+    if (!raw) return null;
+    for (const par of CAPITULOS) {
+      if (raw.startsWith(par[0])) return par[1];
+    }
+    return null;
+  }
+
+  function dividir(container, grupo) {
+    let atual = null;
+    for (const n of Array.from(container.childNodes)) {
+      if (n.nodeType === 8) continue;
+      if (n.nodeType === 3 && !n.textContent.trim()) continue;
+      const el = n.nodeType === 1 ? n : null;
+      if (el && (el.classList.contains('tabs-wrap') || el.classList.contains('tab-panel') || el.tagName === 'SCRIPT')) {
+        atual = null; continue;
+      }
+      const novo = inicioDe(tituloDe(el));
+      if (novo || !atual) {
+        atual = document.createElement('section');
+        atual.className = 'cap';
+        atual.dataset.titulo = novo || 'Introdução';
+        atual.dataset.grupo = grupo;
+        container.insertBefore(atual, n);
+        capitulos.push(atual);
+      }
+      atual.appendChild(n);
+    }
+  }
+
+  const paineis = Array.from(artigo.querySelectorAll('.tab-panel'));
+  paineis.forEach(p => dividir(p, p.id));
+  dividir(artigo, '');
+  if (!capitulos.length) return;
+
+  function rotuloGrupo(idPainel) {
+    const btn = document.getElementById(idPainel.replace('panel-', 'btn-'));
+    return btn ? btn.childNodes[0].textContent.trim() : idPainel;
+  }
+
+  // ===== UI =====
+  const barra = document.createElement('div'); barra.id = 'cap-progresso';
+  const nav = document.createElement('div'); nav.id = 'cap-nav';
+  nav.innerHTML = '<button id="cap-prev" aria-label="Capítulo anterior">←</button>' +
+    '<div id="cap-info" title="Ver capítulos"><span id="cap-contador"></span><span id="cap-titulo-atual"></span></div>' +
+    '<button id="cap-prox" aria-label="Próximo capítulo">→</button>' +
+    '<button id="cap-modo"></button>';
+  const menu = document.createElement('div'); menu.id = 'cap-menu';
+  document.body.append(barra, nav, menu);
+
+  let ultimoGrupo = null;
+  capitulos.forEach((cap, i) => {
+    if (cap.dataset.grupo && cap.dataset.grupo !== ultimoGrupo) {
+      const lbl = document.createElement('div');
+      lbl.className = 'grupo-label';
+      lbl.textContent = rotuloGrupo(cap.dataset.grupo);
+      menu.appendChild(lbl);
+      ultimoGrupo = cap.dataset.grupo;
+    }
+    const b = document.createElement('button');
+    b.textContent = (i + 1) + '. ' + cap.dataset.titulo;
+    b.onclick = () => { ir(i); fecharMenu(); };
+    menu.appendChild(b);
+  });
+
+  const prev = document.getElementById('cap-prev');
+  const prox = document.getElementById('cap-prox');
+  const contador = document.getElementById('cap-contador');
+  const tituloAtual = document.getElementById('cap-titulo-atual');
+  const btnModo = document.getElementById('cap-modo');
+  const info = document.getElementById('cap-info');
+
+  let idx = 0;
+  function ir(i, rolar = true) {
+    idx = Math.max(0, Math.min(capitulos.length - 1, i));
+    const cap = capitulos[idx];
+    capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    if (cap.dataset.grupo && typeof trocarAba === 'function') {
+      trocarAba(cap.dataset.grupo.replace('panel-', ''));
+      capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    }
+    barra.style.width = ((idx + 1) / capitulos.length * 100) + '%';
+    contador.textContent = (idx + 1) + ' / ' + capitulos.length;
+    tituloAtual.textContent = cap.dataset.titulo;
+    info.title = cap.dataset.titulo + ' — clique para ver os capítulos';
+    prev.disabled = idx === 0;
+    prox.disabled = idx === capitulos.length - 1;
+    menu.querySelectorAll('button').forEach(b => b.classList.remove('atual'));
+    const botoes = Array.from(menu.querySelectorAll('button'));
+    if (botoes[idx]) botoes[idx].classList.add('atual');
+    if (rolar) window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function fecharMenu() { menu.classList.remove('aberto'); }
+  info.onclick = (e) => { e.stopPropagation(); menu.classList.toggle('aberto'); };
+  document.addEventListener('click', (e) => { if (!menu.contains(e.target)) fecharMenu(); });
+  prev.onclick = () => ir(idx - 1);
+  prox.onclick = () => ir(idx + 1);
+
+  // tab buttons pulam pro primeiro capítulo do grupo
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!document.body.classList.contains('modo-capitulos')) return;
+      const painel = btn.id.replace('btn-', 'panel-');
+      const alvo = capitulos.findIndex(c => c.dataset.grupo === painel);
+      if (alvo >= 0) ir(alvo);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('modo-capitulos')) return;
+    if (e.key === 'ArrowRight') ir(idx + 1);
+    if (e.key === 'ArrowLeft') ir(idx - 1);
+    if (e.key === 'Escape') fecharMenu();
+  });
+
+  // ===== modo de leitura =====
+  function aplicarModo(modo) {
+    document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
+    document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
+    btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
+    btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
+    try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {}
+    if (modo === 'capitulos') ir(idx, false);
+  }
+  btnModo.onclick = () => {
+    aplicarModo(document.body.classList.contains('modo-capitulos') ? 'corrido' : 'capitulos');
+  };
+
+  let salvo = 'capitulos';
+  try { salvo = localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) {}
+  aplicarModo(salvo);
+})();
+</script>
+
+</body>
+</html>
