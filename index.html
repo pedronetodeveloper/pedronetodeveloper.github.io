@@ -63,15 +63,19 @@
   .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--primary); }
 
   /* ===== Hero (terminal + luminária) ===== */
+:root { --luz: 1; }
   .hero {
-    --luz: 1;
     padding: 0 0 64px; text-align: center;
     background: #0B1220;
   }
-  .hero .container { margin-top: 56px; }
+  .hero .container { padding-top: 56px; }
 
-  /* luminária de LED full-width */
-  .led-wrap { animation: led-flicker 1.15s ease-out both; }
+  /* luminária de LED full-width, fixa na base do header sticky */
+  .led-wrap {
+    position: absolute; left: 0; right: 0; bottom: -3px;
+    z-index: 51; pointer-events: none;
+    animation: led-flicker 1.15s ease-out both;
+  }
   @keyframes led-flicker {
     0% { opacity: 0; }
     8% { opacity: .7; }
@@ -90,13 +94,13 @@
       0 0 8px rgba(74,201,232,.95),
       0 0 24px rgba(74,201,232,.6),
       0 14px 42px rgba(74,201,232,.32);
-    opacity: var(--luz);
   }
   .led-luminaria::after {
     content: ''; position: absolute; top: 4px; left: 0; right: 0; height: 360px;
     background: radial-gradient(60% 100% at 50% 0%,
       rgba(74,201,232,.26), rgba(74,201,232,.09) 45%, transparent 78%);
     pointer-events: none;
+    opacity: var(--luz, 1);
   }
   .term {
     max-width: 760px; margin: 0 auto; text-align: left;
@@ -436,10 +440,10 @@
       </ul>
     </nav>
   </div>
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
 <section class="hero">
-  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
   <div class="container">
     <div class="term" aria-label="Terminal de apresentação do blog">
       <div class="term-bar">
@@ -762,7 +766,7 @@
     agendado = false;
     const alcance = Math.max(1, hero.offsetHeight * 0.9);
     const progresso = Math.min(1, Math.max(0, window.scrollY / alcance));
-    hero.style.setProperty('--luz', String(1 - progresso));
+    document.documentElement.style.setProperty('--luz', String(1 - progresso));
     if (term && window.scrollY < hero.offsetHeight) {
       term.style.transform = 'translateY(' + (window.scrollY * 0.16).toFixed(1) + 'px)';
     }

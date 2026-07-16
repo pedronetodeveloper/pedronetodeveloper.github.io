@@ -286,29 +286,32 @@
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
 <style id="hero-terminal">
-  /* ===== Hero do post: janela de terminal clara + fita LED ===== */
+  /* ===== Hero do post: janela de terminal clara + fita LED âmbar fixa no header ===== */
   .post-hero { padding: 0 0 8px !important; }
-  .post-hero .led-wrap { animation: led-flicker 1.15s ease-out both; }
+  header .led-wrap {
+    position: absolute; left: 0; right: 0; bottom: -3px;
+    z-index: 51; pointer-events: none;
+    animation: led-flicker 1.15s ease-out both;
+  }
   @keyframes led-flicker {
     0% { opacity: 0; } 8% { opacity: .7; } 13% { opacity: .15; }
     19% { opacity: .9; } 24% { opacity: .35; } 32%, 100% { opacity: 1; }
   }
-  @media (prefers-reduced-motion: reduce) { .post-hero .led-wrap { animation: none; } }
-  .post-hero .led-luminaria {
+  @media (prefers-reduced-motion: reduce) { header .led-wrap { animation: none; } }
+  .led-luminaria {
     position: relative; height: 4px; width: 100%;
-    background: linear-gradient(90deg, rgba(74,201,232,.08), #5BC9E8 8%, #8FE2F6 50%, #5BC9E8 92%, rgba(74,201,232,.08));
+    background: linear-gradient(90deg, rgba(245,158,11,.08), #FBBF24 8%, #FDE68A 50%, #FBBF24 92%, rgba(245,158,11,.08));
     box-shadow:
-      0 0 8px rgba(74,201,232,.8),
-      0 0 22px rgba(74,201,232,.45),
-      0 12px 34px rgba(74,201,232,.28);
+      0 0 8px rgba(251,191,36,.8),
+      0 0 20px rgba(251,191,36,.45),
+      0 8px 24px rgba(251,191,36,.25);
   }
-  .post-hero .led-luminaria::after {
-    content: ''; position: absolute; top: 4px; left: 0; right: 0; height: 220px;
-    background: radial-gradient(60% 100% at 50% 0%,
-      rgba(74,201,232,.16), rgba(74,201,232,.06) 45%, transparent 78%);
-    pointer-events: none;
+  .led-luminaria::after {
+    content: ''; position: absolute; left: 4%; right: 4%; top: 4px; height: 22px;
+    background: linear-gradient(180deg, rgba(251,191,36,.28), transparent);
+    filter: blur(3px); pointer-events: none;
   }
-  .post-hero .container { padding-top: 44px; }
+  .post-hero .container { padding-top: 48px; }
   .term-post {
     background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
     box-shadow: 0 14px 44px rgba(15,23,42,.08);
@@ -327,6 +330,8 @@
   }
   .term-post-body { padding: 30px 30px 28px; }
   .term-post-body h1 { margin-top: 12px !important; }
+  .term-post-body h2 { font-size: 20px; font-weight: 700; margin: 24px 0 8px; }
+  .term-post-body p { color: var(--gray-700); margin-bottom: 12px; }
   @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
 </style>
 </head>
@@ -348,10 +353,10 @@
       </ul>
     </nav>
   </div>
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
 <div class="post-hero">
-  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
   <div class="container">
     <div class="term-post">
       <div class="term-bar2">
@@ -364,6 +369,11 @@
     <div class="post-meta">
       <span>Pedro Neto</span> • <span>14 jul 2026</span> • <span>15 min de leitura</span>
     </div>
+
+    <h2>Por que você deveria entender isso?</h2>
+    <p>Quando entrei no backend, abri meu primeiro projeto Spring e me deparei com um monte de palavras que só tinha visto na faculdade, porém não tinha profundidade de entendimento ainda: entidade, DTO, record, stream.</p>
+    <p> Mas no final a real é: <strong>qualquer codebase Java de backend que você abrir vai ter esses conceitos em todo lugar</strong>. Não dá pra fugir e você precisa saber my friend.</p>
+    <p>Levei mais tempo do que gostaria de admitir pra conectar esses pontos. Espero que este post encurte esse caminho pra você.</p>
       </div>
     </div>
   </div>
@@ -372,10 +382,6 @@
 <article>
   <div class="container">
 
-    <h2>Por que você deveria entender isso?</h2>
-    <p>Quando entrei no backend, abri meu primeiro projeto Spring e me deparei com um monte de palavras que só tinha visto na faculdade, porém não tinha profundidade de entendimento ainda: entidade, DTO, record, stream.</p>
-    <p> Mas no final a real é: <strong>qualquer codebase Java de backend que você abrir vai ter esses conceitos em todo lugar</strong>. Não dá pra fugir e você precisa saber my friend.</p>
-    <p>Levei mais tempo do que gostaria de admitir pra conectar esses pontos. Espero que este post encurte esse caminho pra você.</p>
 
     <h2>🧱 O básico que a gente esquece (e não devia)</h2>
     <div class="frase-chave">Variável guarda valor, loop repete trabalho, try/catch trata o que pode dar errado. Parece óbvio — até o code review mostrar que não é.</div>
@@ -765,7 +771,7 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
     z-index: 60; transition: width .3s ease;
   }
   #cap-nav {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 27px; left: 50%; transform: translateX(-50%);
     display: flex; align-items: center; gap: 10px; z-index: 60;
     background: rgba(15,23,42,.96); color: #E2E8F0;
     border-radius: 999px; padding: 10px 12px;
@@ -790,7 +796,7 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
   #cap-contador { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); white-space: nowrap; }
   #cap-titulo-atual { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; font-weight: 500; }
   #cap-menu {
-    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 91px; left: 50%; transform: translateX(-50%);
     background: #0F172A; color: #E2E8F0; border-radius: 14px;
     box-shadow: 0 8px 30px rgba(15,23,42,.45); padding: 8px;
     display: none; z-index: 61; max-height: 55vh; overflow-y: auto;
@@ -817,10 +823,10 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
   body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
   body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
   @media (max-width: 760px) {
-    #cap-nav { bottom: 12px; padding: 8px 10px; font-size: 14px; }
+    #cap-nav { bottom: 19px; padding: 8px 10px; font-size: 14px; }
     #cap-nav button { font-size: 14px; padding: 8px 14px; }
     #cap-titulo-atual { max-width: 100px; font-size: 13.5px; }
-    #cap-menu { bottom: 72px; }
+    #cap-menu { bottom: 79px; }
   }
 </style>
 <script id="cap-js">
@@ -843,7 +849,6 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
   // Agrupamento: só títulos que casam com um prefixo abaixo iniciam capítulo novo.
   // O resto (h2 sem prefixo listado, próximo-post, conclusão) continua no capítulo atual.
   const CAPITULOS = [
-    ['Por que', 'Por que entender isso?'],
     ['🧱', '🧱 O básico que a gente esquece'],
     ['🪞', '🪞 Entidade, DTO e Records'],
     ['🔄', '🔄 Cast: do simples ao sofisticado'],

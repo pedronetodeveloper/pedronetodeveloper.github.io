@@ -62,7 +62,12 @@
 
   /* ===== Hero ===== */
   .sobre-hero { padding: 0 0 56px; text-align: center; background: #0B1220; }
-  .led-wrap { animation: led-flicker 1.15s ease-out both; }
+:root { --luz: 1; }
+  .led-wrap {
+    position: absolute; left: 0; right: 0; bottom: -3px;
+    z-index: 51; pointer-events: none;
+    animation: led-flicker 1.15s ease-out both;
+  }
   @keyframes led-flicker {
     0% { opacity: 0; }
     8% { opacity: .7; }
@@ -87,6 +92,7 @@
     background: radial-gradient(60% 100% at 50% 0%,
       rgba(74,201,232,.26), rgba(74,201,232,.09) 45%, transparent 78%);
     pointer-events: none;
+    opacity: var(--luz, 1);
   }
   .sobre-hero .container { padding-top: 56px; }
   .term {
@@ -347,10 +353,10 @@
       </ul>
     </nav>
   </div>
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
 <div class="sobre-hero">
-  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
   <div class="container">
     <div class="term" aria-label="Terminal contando a história do blog">
       <div class="term-bar">
@@ -493,6 +499,26 @@
       }
     }, 42);
   }, 500);
+})();
+</script>
+
+<script id="sobre-luz-js">
+(function () {
+  const hero = document.querySelector('.sobre-hero');
+  if (!hero) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let agendado = false;
+  function atualizar() {
+    agendado = false;
+    const alcance = Math.max(1, hero.offsetHeight * 0.9);
+    const progresso = Math.min(1, Math.max(0, window.scrollY / alcance));
+    document.documentElement.style.setProperty('--luz', String(1 - progresso));
+  }
+  window.addEventListener('scroll', function () {
+    if (!agendado) { agendado = true; requestAnimationFrame(atualizar); }
+  }, { passive: true });
+  window.addEventListener('resize', atualizar);
+  atualizar();
 })();
 </script>
 </body>
