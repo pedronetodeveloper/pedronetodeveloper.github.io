@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPB6NBPG2C"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -252,20 +251,18 @@
 </style>
 <style id="tema-terminal-corpo">
   /* ===== Tema terminal: corpo ===== */
-  /* blocos de código = janelas de terminal */
-  article pre, .posts pre {
-    position: relative; border: 1px solid #1E293B;
-    padding-top: 46px !important;
+  /* blocos de código = janelas de terminal (barra fixa, código rola dentro) */
+  .pre-janela {
+    position: relative; border: 1px solid #1E293B; border-radius: 12px;
+    overflow: hidden; margin: 18px 0 24px; background: var(--primary);
   }
-  article pre::before, .posts pre::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 30px;
-    background: #1E293B;
-  }
-  article pre::after, .posts pre::after {
+  .pre-janela .pre-topo { height: 30px; background: #1E293B; position: relative; }
+  .pre-janela .pre-topo::before {
     content: ''; position: absolute; top: 9px; left: 16px;
     width: 11px; height: 11px; border-radius: 50%; background: #FF5F57;
     box-shadow: 19px 0 0 #FEBC2E, 38px 0 0 #28C840;
   }
+  .pre-janela pre { margin: 0 !important; border: none; border-radius: 0; }
   .code-label {
     color: #92400E !important;
   }
@@ -669,6 +666,20 @@ organizar()</code></pre>
   });
 })();
 </script>
+<script id="pre-js">
+(function () {
+  document.querySelectorAll('article pre').forEach(function (pre) {
+    if (pre.parentElement && pre.parentElement.classList.contains('pre-janela')) return;
+    var janela = document.createElement('div');
+    janela.className = 'pre-janela';
+    var topo = document.createElement('div');
+    topo.className = 'pre-topo';
+    pre.parentNode.insertBefore(janela, pre);
+    janela.appendChild(topo);
+    janela.appendChild(pre);
+  });
+})();
+</script>
 <style id="cap-css">
   /* ===== Modo capítulos ===== */
   #cap-progresso {
@@ -844,6 +855,8 @@ organizar()</code></pre>
       trocarAba(cap.dataset.grupo.replace('panel-', ''));
       capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
     }
+    const heroPost = document.querySelector('.post-hero');
+    if (heroPost) heroPost.style.display = (idx === 0) ? '' : 'none';
     barra.style.width = ((idx + 1) / capitulos.length * 100) + '%';
     contador.textContent = (idx + 1) + ' / ' + capitulos.length;
     tituloAtual.textContent = cap.dataset.titulo;
@@ -884,6 +897,8 @@ organizar()</code></pre>
     document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
     document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
     btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
+    const heroPost2 = document.querySelector('.post-hero');
+    if (heroPost2 && modo !== 'capitulos') heroPost2.style.display = '';
     btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
     try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {}
     if (modo === 'capitulos') ir(idx, false);
