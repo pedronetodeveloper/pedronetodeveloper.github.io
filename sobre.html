@@ -194,11 +194,16 @@
     text-transform: uppercase; letter-spacing: .04em; color: var(--secondary);
   }
 
-  /* ===== O que esperar ===== */
-  .esperar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+  /* ===== O que esperar (cards escuros, cor do terminal) — sempre 2 por linha ===== */
+  .esperar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 8px; }
   .esperar-card {
     border: 1px solid var(--gray-200); border-radius: 14px; padding: 20px 22px;
     background: #fff;
+    transition: transform .2s, border-color .2s, box-shadow .25s;
+  }
+  .esperar-card:hover {
+    transform: translateY(-3px); border-color: var(--secondary);
+    box-shadow: 0 12px 30px rgba(15,23,42,.1);
   }
   .esperar-card .icone { font-size: 22px; }
   .esperar-card h3 { font-size: 16px; font-weight: 700; margin: 8px 0 6px; }
@@ -238,7 +243,11 @@
     nav ul a { display: block; padding: 14px 24px; }
     .menu-btn { display: block; }
     .sobre-hero .container { padding-top: 36px; }
-    .esperar-grid { grid-template-columns: 1fr; }
+    /* mobile: mantém 2 cards por linha */
+    .esperar-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .esperar-card { padding: 14px 16px; }
+    .esperar-card h3 { font-size: 14px; }
+    .esperar-card p { font-size: 12.5px; }
     .footer-inner { flex-direction: column; text-align: center; }
   }
 </style>

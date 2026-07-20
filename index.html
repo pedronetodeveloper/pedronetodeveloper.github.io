@@ -211,9 +211,11 @@
   }
   .serie-card {
     background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
-    padding: 24px; position: relative; transition: transform .15s, box-shadow .15s;
+    padding: 24px; position: relative;
+    transition: transform .15s, box-shadow .25s, border-color .2s;
   }
-  .serie-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15,23,42,.08); }
+  .serie-card:hover { transform: translateY(-3px); border-color: var(--secondary); box-shadow: 0 12px 30px rgba(15,23,42,.1); }
+  .serie-card p { color: var(--gray-700); }
   .serie-num {
     font-family: 'JetBrains Mono', monospace; font-size: 12px;
     color: var(--gray-500); margin-bottom: 10px;
@@ -226,7 +228,9 @@
   .leva {
     background: #fff; border: 1px solid var(--gray-200); border-radius: 16px;
     padding: 24px 26px;
+    transition: border-color .2s, box-shadow .25s;
   }
+  .leva:hover { border-color: var(--secondary); box-shadow: 0 12px 30px rgba(15,23,42,.1); }
   .leva.futuro { border-style: dashed; background: var(--bg-soft); }
   .leva-tag {
     display: inline-block; font-family: 'JetBrains Mono', monospace;
@@ -250,34 +254,66 @@
   }
   .leva .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); }
 
-  /* ===== Posts ===== */
+  /* ===== Posts (cards brancos) — mobile first, 2 por linha ===== */
   .posts { padding: 64px 0; }
-  .posts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .posts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .post-card {
-    border: 1px solid var(--gray-200); border-radius: 14px; padding: 28px;
-    display: flex; flex-direction: column; gap: 12px;
-    transition: transform .15s, box-shadow .15s; background: #fff;
+    position: relative; display: flex; flex-direction: column;
+    padding: 16px; border-radius: 14px;
+    background: #fff; border: 1px solid var(--gray-200);
+    color: var(--primary); min-height: 200px;
+    transition: transform .2s, box-shadow .25s, border-color .2s;
   }
-  .post-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15,23,42,.08); }
+  .post-card:hover {
+    transform: translateY(-3px); border-color: var(--secondary);
+    box-shadow: 0 12px 30px rgba(15,23,42,.12);
+  }
+  .card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    border: 2px solid rgba(255,255,255,.85);
+    font-weight: 700; font-size: 11px; color: #fff; letter-spacing: .02em;
+  }
+  .autor { font-weight: 700; font-size: 13.5px; color: var(--primary); }
   .badge {
-    align-self: flex-start; font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px; font-weight: 500; letter-spacing: .04em;
-    padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+    margin-left: auto; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500; letter-spacing: .04em;
+    padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
   }
   .badge-java { background: #FEF3C7; color: #92400E; }
   .badge-python { background: #DBEAFE; color: #1D4ED8; }
   .badge-spring { background: #D1FAE5; color: #065F46; }
   .badge-aws { background: #EDE9FE; color: #5B21B6; }
-  .post-card h3 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; line-height: 1.3; }
-  .post-card h3 a:hover { color: var(--secondary); }
-  .post-card p { color: var(--gray-700); font-size: 15px; flex-grow: 1; }
+  .post-card h3 {
+    font-size: 15.5px; font-weight: 700; letter-spacing: -.01em; line-height: 1.35;
+    margin-top: 12px;
+  }
+  .post-card h3 a { color: var(--primary); transition: color .15s; }
+  .post-card:hover h3 a { color: var(--secondary); }
+  /* link esticado: o card inteiro é clicável */
+  .post-card h3 a::after { content: ''; position: absolute; inset: 0; }
+  /* descrição + meta: sempre visíveis */
+  .card-body { margin-top: auto; padding-top: 12px; }
+  .post-card p { color: var(--gray-700); font-size: 13px; }
   .post-meta {
     display: flex; align-items: center; justify-content: space-between;
-    font-size: 13.5px; color: var(--gray-500);
-    border-top: 1px solid var(--gray-100); padding-top: 14px;
+    font-size: 12px; color: var(--gray-500);
+    border-top: 1px solid var(--gray-100); padding-top: 10px; margin-top: 10px;
   }
-  .read-link { color: var(--secondary); font-weight: 600; font-size: 14px; }
-  .read-link:hover { text-decoration: underline; }
+  .read-link { color: var(--secondary); font-weight: 600; font-size: 13px; }
+  /* desktop: mesmos 2 por linha, com mais respiro */
+  @media (min-width: 761px) {
+    .posts-grid { gap: 24px; }
+    .post-card { padding: 24px; min-height: 230px; }
+    .avatar { width: 40px; height: 40px; font-size: 13px; }
+    .autor { font-size: 16px; }
+    .badge { font-size: 11px; padding: 4px 10px; }
+    .post-card h3 { font-size: 20px; margin-top: 14px; }
+    .post-card p { font-size: 14.5px; }
+    .post-meta { font-size: 13px; }
+  }
 
   /* ===== Categorias ===== */
   .categorias { text-align: center; padding: 0 0 64px; }
@@ -324,7 +360,12 @@
     nav ul a { display: block; padding: 14px 24px; }
     .menu-btn { display: block; }
     .hero { padding: 56px 0 48px; }
-    .serie-grid, .posts-grid, .levas { grid-template-columns: 1fr; }
+    /* mobile: sempre 2 cards por linha */
+    .serie-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .serie-card { padding: 16px; }
+    .serie-card h3 { font-size: 15px; }
+    .serie-card p { font-size: 13px; }
+    .levas { grid-template-columns: 1fr; }
     .newsletter { padding: 36px 24px; }
     .footer-inner { flex-direction: column; text-align: center; }
   }
@@ -506,40 +547,76 @@
     <p class="section-sub">Direto ao ponto, com erro comum incluso.</p>
     <div class="posts-grid">
       <article class="post-card">
-        <span class="badge badge-java">Java</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-java">Java</span>
+        </div>
         <h3><a href="posts/01-fundacao-java.html">Fundação em Java: o essencial pra se virar no backend</a></h3>
-        <p>De variáveis e loops até entidades, records, casts, Collections e Streams — o alicerce que todo jr de backend usa TODO dia, explicado sem enrolação.</p>
-        <div class="post-meta"><span>Pedro Neto • 15 min</span><a href="posts/01-fundacao-java.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>De variáveis e loops até entidades, records, casts, Collections e Streams — o alicerce que todo jr de backend usa TODO dia, explicado sem enrolação.</p>
+          <div class="post-meta"><span>Pedro Neto • 15 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
       <article class="post-card">
-        <span class="badge badge-java">Java</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-java">Java</span>
+        </div>
         <h3><a href="posts/02-mvc-vs-hexagonal.html">Spring MVC vs Hexagonal: a evolução de um dev backend</a></h3>
-        <p>Você deve saber isso desde o inicio de carreira e importante my friend !!! — navegue pelas abas como se fosse pela carreira.</p>
-        <div class="post-meta"><span>Pedro Neto • 15 min</span><a href="posts/02-mvc-vs-hexagonal.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>Você deve saber isso desde o inicio de carreira e importante my friend !!! — navegue pelas abas como se fosse pela carreira.</p>
+          <div class="post-meta"><span>Pedro Neto • 15 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
       <article class="post-card">
-        <span class="badge badge-python">Python</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-python">Python</span>
+        </div>
         <h3><a href="posts/03-fundacao-python.html">Fundação em Python: o essencial pra sair automatizando</a></h3>
-        <p>Variáveis, loops, funções, coleções e try/except — sem framework, e cada conceito fechando com uma automação de verdade que você usa hoje.</p>
-        <div class="post-meta"><span>Pedro Neto • 14 min</span><a href="posts/03-fundacao-python.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>Variáveis, loops, funções, coleções e try/except — sem framework, e cada conceito fechando com uma automação de verdade que você usa hoje.</p>
+          <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
       <article class="post-card">
-        <span class="badge badge-python">Python &amp; IaC</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-python">Python &amp; IaC</span>
+        </div>
         <h3><a href="posts/04-python-iac.html">Python &amp; IaC: a dupla que faz o simples funcionar</a></h3>
-        <p>Às vezes é um script de 20 linhas que salva o dia. Python com infra como código é o que destrava as tarefas do dia a dia — e te faz se sentir um dev mais rápido.</p>
-        <div class="post-meta"><span>Pedro Neto • 13 min</span><a href="posts/04-python-iac.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>Às vezes é um script de 20 linhas que salva o dia. Python com infra como código é o que destrava as tarefas do dia a dia — e te faz se sentir um dev mais rápido.</p>
+          <div class="post-meta"><span>Pedro Neto • 13 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
       <article class="post-card">
-        <span class="badge badge-aws">Cloud</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-aws">Cloud</span>
+        </div>
         <h3><a href="posts/05-fundacao-cloud.html">Fundação em Cloud: AWS e Azure pra quem está começando</a></h3>
-        <p>O que é nuvem e os serviços que todo jr deve conhecer — S3, EC2, Lambda, IAM e os equivalentes na Azure. Sem competição: aprendeu numa, sabe na outra.</p>
-        <div class="post-meta"><span>Pedro Neto • 16 min</span><a href="posts/05-fundacao-cloud.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>O que é nuvem e os serviços que todo jr deve conhecer — S3, EC2, Lambda, IAM e os equivalentes na Azure. Sem competição: aprendeu numa, sabe na outra.</p>
+          <div class="post-meta"><span>Pedro Neto • 16 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
       <article class="post-card">
-        <span class="badge badge-spring">Cloud &amp; IA</span>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-spring">Cloud &amp; IA</span>
+        </div>
         <h3><a href="posts/06-ia-na-nuvem.html">IA na nuvem: Bedrock, SageMaker e Lex — e os irmãos da Azure</a></h3>
-        <p>Os serviços de IA mais falados do momento, sem confusão: o que é e pra que usar cada um — e a régua pra saber qual abrir em qualquer provedor.</p>
-        <div class="post-meta"><span>Pedro Neto • 14 min</span><a href="posts/06-ia-na-nuvem.html" class="read-link">→ Leia</a></div>
+        <div class="card-body">
+          <p>Os serviços de IA mais falados do momento, sem confusão: o que é e pra que usar cada um — e a régua pra saber qual abrir em qualquer provedor.</p>
+          <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
+        </div>
       </article>
     </div>
   </div>

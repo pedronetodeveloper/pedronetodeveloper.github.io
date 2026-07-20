@@ -769,20 +769,314 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
   });
 })();
 </script>
+<style id="ide-components">
+  /* ===== Code Block IntelliJ ===== */
+  .intellij-codeblock {
+    display: flex; flex-direction: column;
+    border-radius: 16px; border: 1px solid #1E293B;
+    background: #0F172A; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 18px 0 24px;
+  }
+  .intellij-header {
+    display: flex; align-items: center;
+    padding: 12px 16px; background: #1E293B;
+    border-bottom: 1px solid #0F172A; gap: 12px;
+  }
+  .intellij-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 2px; border-radius: 4px; transition: all 150ms; }
+  .intellij-logo svg { width: 100%; height: 100%; }
+  .intellij-logo:hover { background: rgba(187,134,252,.15); box-shadow: 0 0 8px rgba(187,134,252,.3); }
+  .intellij-filename {
+    color: #E2E8F0; font-size: 13.5px; font-weight: 600;
+    font-family: 'Inter', sans-serif; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .3px;
+  }
+  .intellij-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .intellij-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border: none; background: transparent;
+    cursor: pointer; border-radius: 4px; transition: all 150ms;
+    opacity: .85; position: relative;
+  }
+  .intellij-btn:not(:disabled):hover { opacity: 1; background: rgba(255,255,255,.1); transform: translateY(-1px); }
+  .intellij-btn:not(:disabled):hover svg { filter: brightness(1.25); }
+  .intellij-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .intellij-btn svg { width: 17px; height: 17px; }
+  .intellij-btn::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; padding: 4px 8px; border-radius: 4px;
+    font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #1E293B;
+    font-family: 'Inter', sans-serif; font-weight: 500; z-index: 10;
+  }
+  .intellij-btn:hover::after { opacity: 1; }
+  .intellij-btn-debug.active { opacity: 1; background: rgba(89,168,105,.15); border-bottom: 2px solid #59A869; }
+  .intellij-btn-run.running { animation: intellij-pulse 2s infinite; }
+  @keyframes intellij-pulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+  .intellij-body { display: flex; overflow: hidden; background: #0F172A; }
+  .intellij-line-numbers {
+    display: flex; flex-direction: column;
+    padding: 20px 8px; color: #606366;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #1E293B; min-width: 46px;
+  }
+  .intellij-body pre {
+    flex: 1; margin: 0 !important; border-radius: 0 !important;
+    background: #0F172A !important; color: #A9B7C6 !important;
+  }
+  .intellij-status {
+    padding: 8px 16px; background: #1E293B; border-top: 1px solid #0F172A;
+    color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  }
+  .intellij-status-text { animation: intellij-blink 1s infinite; }
+  @keyframes intellij-blink { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+  /* Syntax highlighting — IntelliJ Darcula */
+  .intellij-codeblock .hl-com { color: #808080; font-style: italic; }
+  .intellij-codeblock .hl-str { color: #6A8759; }
+  .intellij-codeblock .hl-ann { color: #BBB529; }
+  .intellij-codeblock .hl-kw  { color: #CC7832; }
+  .intellij-codeblock .hl-num { color: #6897BB; }
+  .intellij-codeblock .hl-cls { color: #4EC9B0; }
+  .intellij-codeblock .hl-fn  { color: #FFC66D; }
+
+  /* ===== Code Block VSCode (Dracula) ===== */
+  .vscode-codeblock {
+    display: flex; flex-direction: column;
+    border-radius: 12px; border: 1px solid #44475A;
+    background: #282A36; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 18px 0 24px;
+  }
+  .vscode-header {
+    display: flex; align-items: center;
+    padding: 8px 12px; background: #21222C;
+    border-bottom: 1px solid #44475A; gap: 12px;
+  }
+  .vscode-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3px; border-radius: 3px; transition: all 150ms; }
+  .vscode-logo svg { width: 100%; height: 100%; }
+  .vscode-logo:hover { background: rgba(88,175,243,.2); box-shadow: 0 0 6px rgba(88,175,243,.3); }
+  .vscode-tabs { display: flex; flex-grow: 1; overflow-x: auto; }
+  .vscode-tab {
+    display: flex; align-items: center;
+    padding: 8px 16px; background: #21222C; color: #F8F8F2;
+    font-size: 12px; border-bottom: 2px solid #50FA7B; white-space: nowrap;
+  }
+  .vscode-tab-label { display: flex; align-items: center; gap: 6px; }
+  .vscode-tab-label::before { content: ''; width: 8px; height: 8px; background: #50FA7B; border-radius: 50%; }
+  .vscode-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .vscode-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 6px 12px; background: #50FA7B; color: #282A36;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    transition: all 150ms; position: relative;
+  }
+  .vscode-btn:hover:not(:disabled) { background: #44FF99; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(80,250,123,.2); }
+  .vscode-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .vscode-btn svg { width: 13px; height: 13px; }
+  .vscode-btn::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+    background: #44475A; color: #F8F8F2; padding: 4px 8px; border-radius: 4px;
+    font-size: 10px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #6272A4; z-index: 10;
+  }
+  .vscode-btn:hover::after { opacity: 1; }
+  .vscode-body { display: flex; overflow: hidden; background: #282A36; }
+  .vscode-line-numbers {
+    display: flex; flex-direction: column;
+    padding: 20px 8px; color: #6272A4;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #44475A; min-width: 42px;
+  }
+  .vscode-body pre {
+    flex: 1; margin: 0 !important; border-radius: 0 !important;
+    background: #282A36 !important; color: #F8F8F2 !important;
+  }
+  .vscode-statusbar {
+    padding: 6px 16px; background: #21222C; border-top: 1px solid #44475A;
+    color: #6272A4; font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  }
+  .vscode-status-text.running { color: #50FA7B; }
+
+  /* Syntax highlighting — Dracula */
+  .vscode-codeblock .hl-com { color: #6272A4; }
+  .vscode-codeblock .hl-str { color: #F1FA8C; }
+  .vscode-codeblock .hl-ann { color: #50FA7B; }
+  .vscode-codeblock .hl-kw  { color: #FF79C6; }
+  .vscode-codeblock .hl-num { color: #BD93F9; }
+  .vscode-codeblock .hl-cls { color: #8BE9FD; }
+  .vscode-codeblock .hl-fn  { color: #50FA7B; }
+
+  @media (max-width: 760px) {
+    .intellij-header { padding: 10px 12px; gap: 8px; }
+    .intellij-logo, .vscode-logo { width: 20px; height: 20px; }
+    .intellij-filename { font-size: 12px; }
+    .intellij-btn { width: 27px; height: 27px; }
+    .intellij-btn svg { width: 15px; height: 15px; }
+    .intellij-btn::after, .vscode-btn::after { display: none; }
+    .intellij-line-numbers, .vscode-line-numbers { padding: 16px 6px; font-size: 12px; min-width: 34px; }
+    .vscode-tab { padding: 6px 12px; font-size: 11px; }
+    .vscode-btn { padding: 4px 8px; font-size: 11px; }
+    .vscode-btn-text { display: none; }
+    .vscode-statusbar { padding: 4px 12px; font-size: 10px; }
+  }
+</style>
 <script id="pre-js">
 (function () {
+  var IDE = 'intellij';
+  var DEFAULT_NAME = 'Exemplo.java';
+
+  var INTELLIJ_LOGO = '<div class="intellij-logo" title="IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="intellijGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#intellijGradient)"/><rect x="3" y="3" width="18" height="18" fill="#000000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#FFFFFF" font-family="JetBrains Mono, Menlo, monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#FFFFFF"/></svg></div>';
+  var VSCODE_LOGO = '<div class="vscode-logo" title="VSCode"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L4.147 12 .326 15.26a1 1 0 0 0 .001 1.479l1.407 1.407a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.494 1.494 0 0 0 1.705.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 13.6L10.826 12l7.178-4.187z" fill="#007ACC"/></svg></div>';
+
+  /* icones tradicionais IntelliJ: play vazado verde, bug verde, stop vermelho */
+  var ICON_RUN_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var ICON_BUG_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869" stroke="none"/></svg>';
+  var ICON_STOP_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C" stroke="none"/></svg>';
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  var RE_JAVA = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(public|private|protected|class|interface|enum|record|extends|implements|return|new|static|final|void|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|throws|import|package|this|super|null|true|false|var|int|long|double|float|boolean|char|byte|short|instanceof|abstract|default|synchronized)\b|\b(\d+(?:\.\d+)?[LlFfDd]?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
+  var RE_PY = /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|[fbr]?"(?:[^"\\\n]|\\.)*"|[fbr]?'(?:[^'\\\n]|\\.)*')|(@\w+)|\b(def|return|if|elif|else|for|while|import|from|as|with|try|except|finally|raise|pass|break|continue|class|lambda|not|and|or|in|is|None|True|False|global|yield|async|await|del)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
+
+  function highlight(text, lang) {
+    var re = lang === 'java' ? RE_JAVA : RE_PY;
+    var cls = ['hl-com', 'hl-str', 'hl-ann', 'hl-kw', 'hl-num', 'hl-cls', 'hl-fn'];
+    var out = '', last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(text))) {
+      out += esc(text.slice(last, m.index));
+      var klass = '';
+      for (var g = 1; g <= 7; g++) if (m[g] !== undefined) { klass = cls[g - 1]; break; }
+      out += '<span class="' + klass + '">' + esc(m[0]) + '</span>';
+      last = re.lastIndex;
+    }
+    return out + esc(text.slice(last));
+  }
+
+  function filenameFor(pre) {
+    var el = pre.previousElementSibling;
+    if (el && el.classList && el.classList.contains('code-label')) {
+      var t = el.textContent.split('—')[0].replace('»', '').trim();
+      if (t) return t;
+    }
+    return DEFAULT_NAME;
+  }
+
+  function lineNumbersHtml(pre) {
+    var n = pre.textContent.replace(/\n$/, '').split('\n').length;
+    var out = '';
+    for (var i = 1; i <= n; i++) out += '<span>' + i + '</span>';
+    return out;
+  }
+
   document.querySelectorAll('article pre').forEach(function (pre) {
-    if (pre.parentElement && pre.parentElement.classList.contains('pre-janela')) return;
-    var janela = document.createElement('div');
-    janela.className = 'pre-janela';
-    var topo = document.createElement('div');
-    topo.className = 'pre-topo';
-    pre.parentNode.insertBefore(janela, pre);
-    janela.appendChild(topo);
-    janela.appendChild(pre);
+    if (pre.closest('.intellij-codeblock') || pre.closest('.vscode-codeblock')) return;
+
+    /* aplica syntax highlighting se o codigo ainda for texto puro */
+    var codeEl = pre.querySelector('code') || pre;
+    if (!codeEl.querySelector('span')) {
+      codeEl.innerHTML = highlight(codeEl.textContent, IDE === 'intellij' ? 'java' : 'python');
+    }
+
+    var name = filenameFor(pre);
+    var nums = lineNumbersHtml(pre);
+    var wrap = document.createElement('div');
+
+    if (IDE === 'intellij') {
+      wrap.className = 'intellij-codeblock';
+      wrap.innerHTML =
+        '<div class="intellij-header">' + INTELLIJ_LOGO +
+          '<span class="intellij-filename"></span>' +
+          '<div class="intellij-controls">' +
+            '<button class="intellij-btn intellij-btn-run" data-tooltip="Run (Shift+F10)" type="button" aria-label="Run">' + ICON_RUN_IJ + '</button>' +
+            '<button class="intellij-btn intellij-btn-debug" data-tooltip="Debug (Shift+F9)" type="button" aria-label="Debug">' + ICON_BUG_IJ + '</button>' +
+            '<button class="intellij-btn intellij-btn-stop" disabled data-tooltip="Stop (Ctrl+F2)" type="button" aria-label="Stop">' + ICON_STOP_IJ + '</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="intellij-body"><div class="intellij-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
+        '<div class="intellij-status" style="display:none"><span class="intellij-status-text">Running...</span></div>';
+      wrap.querySelector('.intellij-filename').textContent = name;
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.querySelector('.intellij-body').appendChild(pre);
+
+      var debugBtn = wrap.querySelector('.intellij-btn-debug');
+      var runBtn = wrap.querySelector('.intellij-btn-run');
+      var stopBtn = wrap.querySelector('.intellij-btn-stop');
+      var status = wrap.querySelector('.intellij-status');
+      var running = false, debug = false, timer = null;
+
+      debugBtn.addEventListener('click', function () {
+        debug = !debug;
+        debugBtn.classList.toggle('active', debug);
+        pre.style.opacity = debug ? '0.8' : '1';
+        runBtn.disabled = debug;
+      });
+      runBtn.addEventListener('click', function () {
+        if (running) return;
+        running = true;
+        runBtn.classList.add('running');
+        runBtn.disabled = true;
+        debugBtn.disabled = true;
+        stopBtn.disabled = false;
+        status.style.display = 'block';
+        timer = setTimeout(stop, 2000);
+      });
+      stopBtn.addEventListener('click', stop);
+      function stop() {
+        clearTimeout(timer);
+        running = false;
+        runBtn.classList.remove('running');
+        runBtn.disabled = debug;
+        debugBtn.disabled = false;
+        stopBtn.disabled = true;
+        status.style.display = 'none';
+      }
+    } else {
+      wrap.className = 'vscode-codeblock';
+      wrap.innerHTML =
+        '<div class="vscode-header">' + VSCODE_LOGO +
+          '<div class="vscode-tabs"><div class="vscode-tab active"><span class="vscode-tab-label"></span></div></div>' +
+          '<div class="vscode-controls">' +
+            '<button class="vscode-btn vscode-btn-run" data-tooltip="Run (Ctrl+Enter)" type="button" aria-label="Run">' + ICON_PLAY + '<span class="vscode-btn-text">Run</span></button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vscode-body"><div class="vscode-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
+        '<div class="vscode-statusbar"><span class="vscode-status-text">✓ Pronto</span></div>';
+      wrap.querySelector('.vscode-tab-label').textContent = name;
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.querySelector('.vscode-body').appendChild(pre);
+
+      var vsRun = wrap.querySelector('.vscode-btn-run');
+      var vsStatus = wrap.querySelector('.vscode-status-text');
+      var vsRunning = false;
+
+      vsRun.addEventListener('click', function () {
+        if (vsRunning) return;
+        vsRunning = true;
+        vsRun.disabled = true;
+        vsStatus.textContent = '► Executando...';
+        vsStatus.classList.add('running');
+        setTimeout(function () {
+          vsRunning = false;
+          vsRun.disabled = false;
+          vsStatus.textContent = '✓ Pronto';
+          vsStatus.classList.remove('running');
+        }, 1500);
+      });
+    }
   });
 })();
 </script>
+
 <style id="cap-css">
   /* ===== Modo capítulos ===== */
   #cap-progresso {
