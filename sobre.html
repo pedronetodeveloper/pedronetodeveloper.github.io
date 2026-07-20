@@ -89,16 +89,16 @@
   }
   .led-luminaria {
     position: relative; height: 4px; width: 100%;
-    background: linear-gradient(90deg, rgba(74,201,232,.05), #7DE3F7 8%, #A5EEFC 50%, #7DE3F7 92%, rgba(74,201,232,.05));
+    background: linear-gradient(90deg, rgba(245,158,11,.05), #FCD34D 8%, #FDE68A 50%, #FCD34D 92%, rgba(245,158,11,.05));
     box-shadow:
-      0 0 8px rgba(74,201,232,.95),
-      0 0 24px rgba(74,201,232,.6),
-      0 14px 42px rgba(74,201,232,.32);
+      0 0 8px rgba(245,158,11,.95),
+      0 0 24px rgba(245,158,11,.6),
+      0 14px 42px rgba(245,158,11,.32);
   }
   .led-luminaria::after {
     content: ''; position: absolute; top: 4px; left: 0; right: 0; height: 300px;
     background: radial-gradient(60% 100% at 50% 0%,
-      rgba(74,201,232,.26), rgba(74,201,232,.09) 45%, transparent 78%);
+      rgba(245,158,11,.26), rgba(245,158,11,.09) 45%, transparent 78%);
     pointer-events: none;
     opacity: var(--luz, 1);
   }
@@ -106,7 +106,7 @@
   .term {
     max-width: 760px; margin: 0 auto; text-align: left;
     background: #0B1220; border: 1px solid #334155; border-radius: 14px;
-    box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 46px rgba(74,201,232,.14);
+    box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 46px rgba(245,158,11,.14);
     overflow: hidden; font-family: 'JetBrains Mono', monospace;
   }
   .term-bar {
@@ -202,8 +202,39 @@
     transition: transform .2s, border-color .2s, box-shadow .25s;
   }
   .esperar-card:hover {
-    transform: translateY(-3px); border-color: var(--secondary);
+    transform: translateY(-3px);
     box-shadow: 0 12px 30px rgba(15,23,42,.1);
+  }
+  /* luminária LED amarela no hover (efeito "foco no assunto") — mobile first */
+  .esperar-card { position: relative; overflow: hidden; }
+  .esperar-card::before {
+    content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 3px;
+    border-radius: 0 0 3px 3px; pointer-events: none; z-index: 1;
+    background: linear-gradient(90deg, rgba(245,158,11,.05), #FCD34D 12%, #FDE68A 50%, #FCD34D 88%, rgba(245,158,11,.05));
+    box-shadow:
+      0 0 8px rgba(245,158,11,.95),
+      0 0 22px rgba(245,158,11,.55),
+      0 10px 30px rgba(245,158,11,.3);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .esperar-card::after {
+    content: ''; position: absolute; top: 3px; left: 0; right: 0; height: 78%;
+    pointer-events: none; z-index: 0;
+    background: radial-gradient(60% 100% at 50% 0%,
+      rgba(245,158,11,.16), rgba(245,158,11,.05) 45%, transparent 78%);
+    opacity: 0; transition: opacity .35s ease;
+  }
+  .esperar-card:hover::before, .esperar-card:hover::after {
+    opacity: 1;
+    animation: led-flicker 1.15s ease-out both;
+  }
+  /* mobile/touch (sem hover): luz acesa de forma sutil e constante */
+  @media (hover: none) {
+    .esperar-card::before { opacity: .75; }
+    .esperar-card::after { opacity: .6; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .esperar-card:hover::before, .esperar-card:hover::after { animation: none; }
   }
   .esperar-card .icone { font-size: 22px; }
   .esperar-card h3 { font-size: 16px; font-weight: 700; margin: 8px 0 6px; }
@@ -292,15 +323,15 @@
   }
   .logo-neto .led-bar {
     position: relative; height: 3px; border-radius: 3px;
-    background: linear-gradient(90deg, rgba(74,201,232,.15), #7DE3F7 12%, #7DE3F7 88%, rgba(74,201,232,.15));
+    background: linear-gradient(90deg, rgba(245,158,11,.15), #FCD34D 12%, #FCD34D 88%, rgba(245,158,11,.15));
     box-shadow:
-      0 0 6px rgba(74,201,232,.9),
-      0 0 14px rgba(74,201,232,.55),
-      0 10px 22px rgba(74,201,232,.35);
+      0 0 6px rgba(245,158,11,.9),
+      0 0 14px rgba(245,158,11,.55),
+      0 10px 22px rgba(245,158,11,.35);
   }
   .logo-neto .led-bar::after {
     content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 14px;
-    background: linear-gradient(180deg, rgba(74,201,232,.35), transparent);
+    background: linear-gradient(180deg, rgba(245,158,11,.35), transparent);
     filter: blur(3px); pointer-events: none;
   }
 </style>

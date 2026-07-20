@@ -410,13 +410,13 @@ TAXA = 0.05           # convenção: MAIÚSCULO = "não mexa"</code></pre>
     <div class="na-pratica">
       <span class="rotulo">🤖 na prática — automação com isso aqui</span>
       <p>Só com variável e f-string você já monta a mensagem de log de um backup:</p>
+    </div>
 <pre><code>from datetime import date
 
 projeto = "blog-do-neto"
 hoje = date.today()
 print(f"[backup] {projeto} salvo em {hoje:%d/%m/%Y}")
 # [backup] blog-do-neto salvo em 15/07/2026</code></pre>
-    </div>
 
     <h2>🔀 Condições e loops: o fluxo do script</h2>
     <div class="frase-chave">if decide, for percorre, while repete até a condição virar. E em Python, a indentação É o bloco — não é estética, é sintaxe.</div>
@@ -447,13 +447,13 @@ while saldo &gt; 0:
     <div class="na-pratica">
       <span class="rotulo">🤖 na prática — automação com isso aqui</span>
       <p>Um for + if e você tem um fiscal de arquivos gigantes na sua pasta:</p>
+    </div>
 <pre><code>from pathlib import Path
 
 for arquivo in Path("downloads").iterdir():
     tamanho_mb = arquivo.stat().st_size / 1_000_000
     if tamanho_mb &gt; 100:
         print(f"⚠️ {arquivo.name} está com {tamanho_mb:.0f} MB")</code></pre>
-    </div>
 
     <h2>🧰 Funções: o bloco que você reusa</h2>
     <div class="frase-chave">Função é como você para de copiar e colar código. Se você escreveu a mesma lógica duas vezes, era pra ser uma função.</div>
@@ -471,10 +471,10 @@ calcular_desconto(preco=200, percentual=5)   # 190.0 — nomeado, mais legível<
     <div class="na-pratica">
       <span class="rotulo">🤖 na prática — automação com isso aqui</span>
       <p>Uma função que decide o destino de cada arquivo — guarda ela, vamos usar na automação final:</p>
+    </div>
 <pre><code>def destino_por_extensao(arquivo):
     pastas = {".pdf": "documentos", ".png": "imagens", ".zip": "compactados"}
     return pastas.get(arquivo.suffix, "outros")   # sem match? vai pra "outros"</code></pre>
-    </div>
 
     <h2>📚 Coleções: list, dict e set</h2>
     <div class="frase-chave">list guarda em ordem, dict busca por chave, set garante que não repete. É o mesmo raciocínio do List/Map/Set do Java — com muito menos cerimônia.</div>
@@ -493,6 +493,7 @@ maiusculas = [t.upper() for t in techs if t != "AWS"]
     <div class="na-pratica">
       <span class="rotulo">🤖 na prática — automação com isso aqui</span>
       <p>Um dict e você tem um relatório do que está entulhando sua pasta:</p>
+    </div>
 <pre><code>from pathlib import Path
 
 contagem = {}
@@ -501,7 +502,6 @@ for arquivo in Path("downloads").iterdir():
     contagem[ext] = contagem.get(ext, 0) + 1
 
 print(contagem)   # {'.pdf': 12, '.png': 34, '.zip': 5, ...}</code></pre>
-    </div>
 
     <h2>🧯 Erros: try/except sem drama</h2>
     <div class="frase-chave">try/except é o try/catch do Python. A regra continua a mesma: capture só o que você tem como tratar — e nunca em silêncio.</div>
