@@ -109,13 +109,27 @@
     box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 46px rgba(245,158,11,.14);
     overflow: hidden; font-family: 'JetBrains Mono', monospace;
   }
-  .term-bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px 16px; background: #1E293B;
+  /* header estilo IntelliJ IDEA */
+  .ij-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: #1E293B; border-bottom: 1px solid #0F172A;
   }
-  .term-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot.d1 { background: #FF5F57; } .dot.d2 { background: #FEBC2E; } .dot.d3 { background: #28C840; }
-  .term-title { margin-left: 10px; font-size: 12px; color: #94A3B8; }
+  .ij-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .ij-logo svg { width: 100%; height: 100%; display: block; }
+  .ij-file {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: #E2E8F0; letter-spacing: .3px; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ij-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .ij-btn {
+    width: 26px; height: 26px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; opacity: .9; transition: background .15s, opacity .15s, filter .15s;
+  }
+  .ij-btn svg { width: 16px; height: 16px; display: block; }
+  .ij-btn:hover { opacity: 1; background: rgba(255,255,255,.1); filter: brightness(1.25); }
+  .ij-btn:disabled { opacity: .35; }
   .term-body {
     padding: 22px 26px 26px; font-size: 14.5px; line-height: 1.9;
     color: #CBD5E1;
@@ -407,9 +421,32 @@
 <div class="sobre-hero">
   <div class="container">
     <div class="term" aria-label="Terminal contando a história do blog">
-      <div class="term-bar">
-        <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
-        <span class="term-title">pedro@donetodev: ~/sobre</span>
+      <div class="ij-bar">
+        <span class="ij-logo" title="IntelliJ IDEA">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ijGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/>
+              </linearGradient>
+            </defs>
+            <rect width="24" height="24" fill="url(#ijGrad)"/>
+            <rect x="3" y="3" width="18" height="18" fill="#000"/>
+            <text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text>
+            <rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="ij-file">Sobre.java</span>
+        <span class="ij-controls">
+          <button class="ij-btn" type="button" aria-label="Run" title="Run">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="ij-btn" type="button" aria-label="Debug" title="Debug">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg>
+          </button>
+          <button class="ij-btn" type="button" disabled aria-label="Stop" title="Stop">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C"/></svg>
+          </button>
+        </span>
       </div>
       <div class="term-body">
         <p class="term-linha"><span class="prompt">$</span> <span id="sobre-cmd"></span><span class="term-cursor" id="sobre-cursor"></span></p>

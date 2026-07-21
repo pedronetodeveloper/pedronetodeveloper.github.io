@@ -323,17 +323,28 @@
     box-shadow: 0 14px 44px rgba(15,23,42,.08);
     overflow: hidden; position: relative; z-index: 1;
   }
-  .term-post .term-bar2 {
-    display: flex; align-items: center; gap: 8px;
-    padding: 11px 16px; background: var(--gray-100);
+  .term-post .ijp-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--gray-100);
     border-bottom: 1px solid var(--gray-200);
   }
-  .term-post .dot2 { width: 11px; height: 11px; border-radius: 50%; }
-  .d1x { background: #FF5F57; } .d2x { background: #FEBC2E; } .d3x { background: #28C840; }
-  .term-post .term-title2 {
-    margin-left: 8px; font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; color: var(--gray-500);
+  .term-post .ijp-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .term-post .ijp-logo svg { width: 100%; height: 100%; display: block; }
+  .term-post .ijp-file {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--primary); letter-spacing: .3px; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
+  .term-post .ijp-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .term-post .ijp-btn {
+    width: 26px; height: 26px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; opacity: .9; cursor: default;
+    transition: background .15s, filter .15s;
+  }
+  .term-post .ijp-btn svg { width: 16px; height: 16px; display: block; }
+  .term-post .ijp-btn:hover { opacity: 1; background: rgba(15,23,42,.06); filter: brightness(1.1); }
+  .term-post .ijp-btn:disabled { opacity: .35; }
   .term-post-body { padding: 30px 30px 28px; }
   .term-post-body h1 { margin-top: 12px !important; }
   .term-post-body h2 { font-size: 20px; font-weight: 700; margin: 24px 0 8px; }
@@ -365,9 +376,14 @@
 <div class="post-hero">
   <div class="container">
     <div class="term-post">
-      <div class="term-bar2">
-        <span class="dot2 d1x"></span><span class="dot2 d2x"></span><span class="dot2 d3x"></span>
-        <span class="term-title2">pedro@donetodev: ~/posts/01-fundacao-java.md</span>
+      <div class="ijp-bar">
+        <span class="ijp-logo" title="IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ijGradP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#ijGradP)"/><rect x="3" y="3" width="18" height="18" fill="#000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/></svg></span>
+        <span class="ijp-file">FundacaoJava.java</span>
+        <span class="ijp-controls">
+          <button class="ijp-btn" type="button" aria-label="Run" title="Run"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+          <button class="ijp-btn" type="button" aria-label="Debug" title="Debug"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg></button>
+          <button class="ijp-btn" type="button" disabled aria-label="Stop" title="Stop"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C"/></svg></button>
+        </span>
       </div>
       <div class="term-post-body">
     <span class="badge">Java</span><span class="serie-num">01 / fundação</span>

@@ -117,13 +117,27 @@
     overflow: hidden; font-family: 'JetBrains Mono', monospace;
     will-change: transform;
   }
-  .term-bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px 16px; background: #1E293B;
+  /* header estilo IntelliJ IDEA */
+  .ij-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: #1E293B; border-bottom: 1px solid #0F172A;
   }
-  .term-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot.d1 { background: #FF5F57; } .dot.d2 { background: #FEBC2E; } .dot.d3 { background: #28C840; }
-  .term-title { margin-left: 10px; font-size: 12px; color: #94A3B8; }
+  .ij-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .ij-logo svg { width: 100%; height: 100%; display: block; }
+  .ij-file {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: #E2E8F0; letter-spacing: .3px; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ij-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .ij-btn {
+    width: 26px; height: 26px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; opacity: .9; transition: background .15s, opacity .15s, filter .15s;
+  }
+  .ij-btn svg { width: 16px; height: 16px; display: block; }
+  .ij-btn:hover { opacity: 1; background: rgba(255,255,255,.1); filter: brightness(1.25); }
+  .ij-btn:disabled { opacity: .35; }
   .term-body {
     padding: 24px 26px 28px; font-size: 14.5px; line-height: 2;
     color: #CBD5E1; min-height: 360px;
@@ -529,14 +543,36 @@
 <section class="hero">
   <div class="container">
     <div class="term" aria-label="Terminal de apresentação do blog">
-      <div class="term-bar">
-        <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
-        <span class="term-title">pedro@donetodev: ~</span>
+      <div class="ij-bar">
+        <span class="ij-logo" title="IntelliJ IDEA">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ijGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/>
+              </linearGradient>
+            </defs>
+            <rect width="24" height="24" fill="url(#ijGrad)"/>
+            <rect x="3" y="3" width="18" height="18" fill="#000"/>
+            <text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text>
+            <rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="ij-file">BlogDoNetoDev.java</span>
+        <span class="ij-controls">
+          <button class="ij-btn" type="button" aria-label="Run" title="Run">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="ij-btn" type="button" aria-label="Debug" title="Debug">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg>
+          </button>
+          <button class="ij-btn" type="button" disabled aria-label="Stop" title="Stop">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C"/></svg>
+          </button>
+        </span>
       </div>
       <div class="term-body" id="term-body">
         <p class="term-linha"><span class="prompt">$</span> echo $BLOG</p>
         <h1>BLOG DO <em>NETO DEV</em></h1>
-        <p class="term-out">jornada de um arquiteto de TI júnior</p>
         <div id="term-roteiro"></div>
       </div>
     </div>
@@ -565,12 +601,11 @@
         <span class="leva-tag construindo">✦ leva 2 — estudando agora</span>
         <h3>O que estou aprendendo no dia a dia</h3>
         <ol>
-          <li class="breve"><span class="num">07</span> 🌱 Spring AI: IA generativa no mundo Java</li>
-          <li class="breve"><span class="num">08</span> 🔌 MCP com Spring AI</li>
-          <li class="breve"><span class="num">09</span> 💬 Chat stream com Java: integrando IA em serviços</li>
-          <li class="breve"><span class="num">10</span> 🅰️ Angular + TypeScript: o front entra na jornada</li>
-          <li class="breve"><span class="num">11</span> 🧩 Jargões bonitos: o que é DDD (Domain-Driven Design)</li>
-          <li class="breve"><span class="num">12</span> 🧱 Jargões bonitos: o que é SOLID</li>
+          <li class="breve"><span class="num">07</span> 🧩 Jargões bonitos: o que é DDD (Domain-Driven Design)</li>
+          <li class="breve"><span class="num">08</span> 🧱 Jargões bonitos: o que é SOLID</li>
+          <li class="breve"><span class="num">09</span> 🅰️ Angular + TypeScript: o front entra na jornada</li>
+          <li class="breve"><span class="num">10</span> 🌱 Spring AI: IA generativa no mundo Java</li>
+          <li class="breve"><span class="num">11</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
         </ol>
       </div>
     </div>
@@ -689,16 +724,17 @@
 
   const HELP_OUT = 'comandos: <a href="#posts">posts</a> · <a href="#trilha">trilha</a> · <a href="sobre.html">sobre</a> · <a href="#contato">contato</a> · ls · whoami · pwd · java · python · cloud · ia · clear · sudo';
 
-  const roteiro = [
+  // comandos que rotacionam, um por vez, a cada 10s
+  const rotativos = [
     { cmd: 'whoami',
       out: '<span class="out-forte">Pedro Neto</span> — dividindo o mapa da jornada com quem está começando' },
     { cmd: 'cat stack.txt',
       out: 'Java · Spring · Python & IaC · Cloud AWS/Azure · IA' },
     { cmd: 'ls blog/',
-      out: '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>' },
-    { cmd: 'help',
-      out: HELP_OUT }
+      out: '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>' }
   ];
+  // help fica fixo na tela
+  const helpEntry = { cmd: 'help', out: HELP_OUT };
 
   // validação: o help "de cima" (roteiro de abertura) ainda está na tela?
   let introVisivel = true;
@@ -851,35 +887,72 @@
   }
 
   // ===== roteiro de abertura =====
-  if (semAnimacao) {
-    roteiro.forEach(function (r) { alvo.appendChild(linhaCmd(r.cmd)); alvo.appendChild(linhaOut(r.out)); });
-    promptInterativo();
-    return;
+  // slot rotativo no topo: mostra 1 comando por vez
+  const rotSlot = document.createElement('div');
+  rotSlot.id = 'term-rotativo';
+  alvo.appendChild(rotSlot);
+
+  let rot = 0;
+  let rotTimer = null;
+
+  function pintarRotativo(r) {
+    rotSlot.innerHTML = '';
+    rotSlot.appendChild(linhaCmd(r.cmd));
+    rotSlot.appendChild(linhaOut(r.out));
   }
 
-  let i = 0;
-  function proximo() {
-    if (i >= roteiro.length) { promptInterativo(); return; }
-    const r = roteiro[i++];
+  // digita um comando (e sua saída) dentro de um container
+  function digitarLinha(container, r, done) {
     const p = document.createElement('p');
     p.className = 'term-linha';
     p.innerHTML = '<span class="prompt">$</span> <span class="cmd"></span><span class="term-cursor"></span>';
-    alvo.appendChild(p);
+    container.appendChild(p);
     const cmdEl = p.querySelector('.cmd');
     let j = 0;
     const digitar = setInterval(function () {
       cmdEl.textContent = r.cmd.slice(0, ++j);
       if (j >= r.cmd.length) {
         clearInterval(digitar);
-        p.querySelector('.term-cursor').remove();
+        const cur = p.querySelector('.term-cursor');
+        if (cur) cur.remove();
         setTimeout(function () {
-          alvo.appendChild(linhaOut(r.out));
-          setTimeout(proximo, 420);
+          container.appendChild(linhaOut(r.out));
+          if (done) done();
         }, 180);
       }
     }, 42);
   }
-  setTimeout(proximo, 1350);
+
+  // troca o comando rotativo a cada 10s (para se a tela for limpa)
+  function agendarRotacao() {
+    clearTimeout(rotTimer);
+    rotTimer = setTimeout(function trocar() {
+      if (!rotSlot.isConnected) return;
+      rot = (rot + 1) % rotativos.length;
+      rotSlot.innerHTML = '';
+      if (semAnimacao) pintarRotativo(rotativos[rot]);
+      else digitarLinha(rotSlot, rotativos[rot]);
+      rotTimer = setTimeout(trocar, 10000);
+    }, 10000);
+  }
+
+  if (semAnimacao) {
+    pintarRotativo(rotativos[0]);
+    alvo.appendChild(linhaCmd(helpEntry.cmd));
+    alvo.appendChild(linhaOut(helpEntry.out));
+    promptInterativo();
+    agendarRotacao();
+    return;
+  }
+
+  setTimeout(function () {
+    digitarLinha(rotSlot, rotativos[0], function () {
+      digitarLinha(alvo, helpEntry, function () {
+        promptInterativo();
+        agendarRotacao();
+      });
+    });
+  }, 1350);
 })();
 </script>
 <script id="luz-js">
