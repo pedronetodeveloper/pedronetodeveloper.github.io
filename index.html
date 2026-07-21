@@ -329,40 +329,6 @@
     .post-meta { font-size: 13px; }
   }
 
-  /* ===== Luminária LED amarela nos cards (efeito "foco no assunto") — mobile first ===== */
-  .post-card, .serie-card, .leva { position: relative; overflow: hidden; }
-  .post-card::before, .serie-card::before, .leva::before {
-    content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 3px;
-    border-radius: 0 0 3px 3px; pointer-events: none; z-index: 1;
-    background: linear-gradient(90deg, rgba(245,158,11,.05), #FCD34D 12%, #FDE68A 50%, #FCD34D 88%, rgba(245,158,11,.05));
-    box-shadow:
-      0 0 8px rgba(245,158,11,.95),
-      0 0 22px rgba(245,158,11,.55),
-      0 10px 30px rgba(245,158,11,.3);
-    opacity: 0; transition: opacity .3s ease;
-  }
-  .post-card::after, .serie-card::after, .leva::after {
-    content: ''; position: absolute; top: 3px; left: 0; right: 0; height: 78%;
-    pointer-events: none; z-index: 0;
-    background: radial-gradient(60% 100% at 50% 0%,
-      rgba(245,158,11,.16), rgba(245,158,11,.05) 45%, transparent 78%);
-    opacity: 0; transition: opacity .35s ease;
-  }
-  .post-card:hover::before, .serie-card:hover::before, .leva:hover::before,
-  .post-card:hover::after, .serie-card:hover::after, .leva:hover::after {
-    opacity: 1;
-    animation: led-flicker 1.15s ease-out both;
-  }
-  /* mobile/touch (sem hover): luz acesa de forma sutil e constante */
-  @media (hover: none) {
-    .post-card::before, .serie-card::before, .leva::before { opacity: .75; }
-    .post-card::after, .serie-card::after, .leva::after { opacity: .6; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .post-card:hover::before, .serie-card:hover::before, .leva:hover::before,
-    .post-card:hover::after, .serie-card:hover::after, .leva:hover::after { animation: none; }
-  }
-
   /* ===== Categorias ===== */
   .categorias { text-align: center; padding: 0 0 64px; }
   .categorias h2 { font-size: 22px; margin-bottom: 20px; }
