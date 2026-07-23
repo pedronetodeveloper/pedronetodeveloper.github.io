@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PPB6NBPG2C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PPB6NBPG2C');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Jargões bonitos: o que é DDD (Domain-Driven Design) — Blog Do Neto Dev</title>
+<meta name="description" content="DDD parece bicho de sete cabeças por causa do jargão. Traduzindo os termos assustadores — bounded context, agregado, linguagem ubíqua — pra português de gente, com Java na mão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --secondary: #3B82F6;
+    --accent: #F59E0B;
+    --bg: #FFFFFF;
+    --bg-soft: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --success: #10B981;
+    --danger: #EF4444;
+    --core: #8B5CF6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--primary);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 16.5px;
+  }
+  a { text-decoration: none; color: inherit; }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Header ===== */
+  header {
+    position: relative; z-index: 50;
+    background: rgba(255,255,255,.92);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 800; font-size: 18px; letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-mark {
+    background: var(--primary); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .logo-mark span { color: var(--accent); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a { font-size: 15px; font-weight: 500; color: var(--gray-700); transition: color .15s; }
+  nav ul a:hover, nav ul a.active { color: var(--secondary); }
+  .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+  /* ===== Hero ===== */
+  .post-hero { padding: 56px 0 8px; text-align: center; }
+  .badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; font-weight: 500; letter-spacing: .04em;
+    padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+    background: #FEF3C7; color: #92400E;
+  }
+  .serie-num { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--gray-500); margin-left: 10px; }
+  .post-hero h1 {
+    margin-top: 16px;
+    font-size: clamp(28px, 5vw, 40px); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.15;
+  }
+  .post-meta { margin-top: 14px; font-size: 14.5px; color: var(--gray-500); }
+  .intro { max-width: 660px; margin: 24px auto 0; color: var(--gray-700); text-align: center; }
+  .link-livro { color: var(--secondary); border-bottom: 1.5px solid var(--accent); transition: color .15s; }
+  .link-livro:hover { color: var(--accent); }
+
+  /* ===== Fita de livro ===== */
+  .livro-fita {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin: 28px auto 0; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .livro-fita .tag {
+    padding: 8px 16px; border-radius: 999px; font-weight: 500;
+    background: #EDE9FE; color: #6D28D9;
+  }
+  .livro-fita .seta { color: var(--gray-500); }
+  .livro-fita .tag-obj { background: #DBEAFE; color: #1D4ED8; }
+
+  /* ===== Artigo ===== */
+  article { padding: 8px 0 48px; }
+  article h2 { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin: 40px 0 14px; line-height: 1.3; }
+  article h3 { font-size: 18.5px; font-weight: 700; margin: 28px 0 10px; }
+  article p { margin-bottom: 16px; color: var(--gray-700); }
+  article p strong { color: var(--primary); }
+  article ul, article ol { margin: 0 0 16px 24px; color: var(--gray-700); }
+  article li { margin-bottom: 8px; }
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: .88em;
+    background: var(--gray-100); padding: 2px 6px; border-radius: 5px;
+    color: var(--primary);
+  }
+  pre {
+    background: var(--primary); color: #E2E8F0;
+    border-radius: 12px; padding: 20px 22px; overflow-x: auto;
+    margin: 18px 0 24px; font-size: 13.5px; line-height: 1.65;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); margin-bottom: -12px; margin-top: 18px; }
+
+  .mentalidade {
+    border-radius: 14px; padding: 22px 26px; margin: 8px 0 28px;
+    font-size: 17px; font-weight: 600; line-height: 1.5;
+    background: #EDE9FE; color: #4C1D95;
+  }
+  .mentalidade span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; color: #8B5CF6; }
+
+  /* ===== Cards de tradução de jargão ===== */
+  .jargao-lista { display: grid; gap: 16px; margin: 22px 0 28px; }
+  .jargao {
+    border: 1px solid var(--gray-200); border-radius: 14px;
+    padding: 20px 24px; background: var(--bg-soft);
+    border-left: 4px solid var(--secondary);
+  }
+  .jargao .termo {
+    font-family: 'JetBrains Mono', monospace; font-weight: 500;
+    margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .jargao .en { background: #DBEAFE; color: #1D4ED8; padding: 3px 9px; border-radius: 6px; font-size: 13px; }
+  .jargao .pt { color: var(--gray-500); font-size: 13px; }
+  .jargao .traducao { font-size: 16px; color: var(--gray-700); margin: 0; }
+  .jargao .traducao strong { color: var(--primary); }
+  .jargao.is-core { border-left-color: var(--core); }
+  .jargao.is-core .en { background: #EDE9FE; color: #6D28D9; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0 28px; }
+  .pc-card { border-radius: 14px; padding: 20px 22px; border: 1px solid var(--gray-200); }
+  .pc-card h4 { font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .pc-card ul { margin: 0 0 0 18px; font-size: 14.5px; }
+  .pc-card li { margin-bottom: 7px; }
+  .pc-pro { background: #ECFDF5; border-color: #A7F3D0; }
+  .pc-pro h4 { color: #065F46; }
+  .pc-con { background: #FEF2F2; border-color: #FECACA; }
+  .pc-con h4 { color: #991B1B; }
+
+  .quando-usar {
+    border-left: 4px solid var(--accent);
+    background: #FFFBEB; border-radius: 0 10px 10px 0;
+    padding: 18px 22px; margin: 20px 0 28px;
+  }
+  .quando-usar strong { color: #92400E; }
+
+  .callout-erro {
+    border-left: 4px solid var(--danger);
+    background: #FEF2F2; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .callout-erro strong { color: var(--danger); }
+
+  .callout-dica {
+    border-left: 4px solid var(--success);
+    background: #ECFDF5; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .callout-dica strong { color: #065F46; }
+
+  .diagrama {
+    background: var(--bg-soft); border: 1px solid var(--gray-200);
+    border-radius: 14px; padding: 22px; margin: 18px 0 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    overflow-x: auto; white-space: pre; line-height: 1.7; color: var(--gray-700);
+  }
+  .historia {
+    background: var(--bg-soft); border: 1px solid var(--gray-200);
+    border-radius: 18px; padding: 28px 30px; margin: 40px 0 8px;
+  }
+  .historia .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+  .historia h2 { margin-top: 8px; margin-bottom: 12px; }
+  .historia p { margin-bottom: 12px; }
+  .historia p:last-child { margin-bottom: 0; }
+
+  .veredito {
+    background: var(--primary); color: #fff; border-radius: 18px;
+    padding: 36px; margin: 48px 0 24px;
+  }
+  .veredito .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+  .veredito h3 { font-size: 22px; margin: 8px 0 10px; color: #fff; }
+  .veredito p { color: #94A3B8; margin-bottom: 0; }
+  .veredito p strong { color: #fff; }
+  .voltar { display: inline-block; margin-top: 8px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+  .voltar:hover { text-decoration: underline; }
+
+  /* ===== Footer ===== */
+  footer { border-top: 1px solid var(--gray-200); background: var(--bg-soft); padding: 36px 0; margin-top: 40px; }
+  .footer-inner {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-inner p { font-size: 14px; color: var(--gray-500); }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-links a { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+  .footer-links a:hover { color: var(--secondary); }
+
+  @media (max-width: 760px) {
+    nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0;
+      background: #fff; flex-direction: column; gap: 0; border-bottom: 1px solid var(--gray-200); }
+    nav ul.open { display: flex; }
+    nav ul li { border-top: 1px solid var(--gray-100); }
+    nav ul a { display: block; padding: 14px 24px; }
+    .menu-btn { display: block; }
+    .post-hero { padding: 36px 0 4px; }
+    pre { padding: 16px; font-size: 12.5px; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+<style id="tema-terminal">
+  html { background: #0B1220; }
+  header { position: relative !important; background: rgba(11,18,32,.97) !important; border-bottom: 1px solid #1E293B !important; }
+  header .logo { color: #E2E8F0; }
+  header .logo-mark { background: #1E293B; }
+  header nav ul a {
+    font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  header nav ul a::before { content: './'; color: #475569; }
+  header nav ul a:hover, header nav ul a.active { color: var(--accent) !important; }
+  header .menu-btn { color: #E2E8F0 !important; }
+  @media (max-width: 760px) {
+    header nav ul { background: #0B1220 !important; border-bottom: 1px solid #1E293B !important; }
+    header nav ul li { border-top: 1px solid #1E293B !important; }
+  }
+  footer { background: #0B1220 !important; border-top: 1px solid #1E293B !important; }
+  footer .footer-inner p {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 12.5px !important;
+    color: #64748B !important;
+  }
+  footer .footer-inner p::before { content: '$ echo '; color: var(--accent); }
+  footer .footer-links a {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 13px !important;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  footer .footer-links a::before { content: '↗ '; color: #475569; }
+  footer .footer-links a:hover { color: var(--accent) !important; }
+  .logo-neto {
+    display: inline-flex; flex-direction: column; gap: 6px;
+    font-weight: 800; font-size: 17px; letter-spacing: -.02em;
+    color: #E2E8F0; line-height: 1; padding-top: 3px;
+  }
+  .logo-neto .led-bar {
+    position: relative; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(245,158,11,.15), #FCD34D 12%, #FCD34D 88%, rgba(245,158,11,.15));
+    box-shadow:
+      0 0 6px rgba(245,158,11,.9),
+      0 0 14px rgba(245,158,11,.55),
+      0 10px 22px rgba(245,158,11,.35);
+  }
+  .logo-neto .led-bar::after {
+    content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 14px;
+    background: linear-gradient(180deg, rgba(245,158,11,.35), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+</style>
+<style id="tema-terminal-corpo">
+  .code-label { color: #92400E !important; }
+  .code-label::before { content: '» '; color: var(--accent); }
+  article h2:not(:first-child) {
+    border-top: 1px dashed var(--gray-200);
+    padding-top: 36px; margin-top: 48px;
+  }
+  .historia h2, .veredito h2 {
+    border-top: none !important; padding-top: 0 !important; margin-top: 8px !important;
+  }
+  ::selection { background: #0F172A; color: #F59E0B; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg-soft); }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+<style id="hero-terminal">
+  .post-hero { padding: 0 0 8px !important; }
+  header .led-wrap {
+    position: absolute; left: 0; right: 0; bottom: -3px;
+    z-index: 51; pointer-events: none;
+    animation: led-flicker 1.15s ease-out both;
+  }
+  @keyframes led-flicker {
+    0% { opacity: 0; } 8% { opacity: .7; } 13% { opacity: .15; }
+    19% { opacity: .9; } 24% { opacity: .35; } 32%, 100% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { header .led-wrap { animation: none; } }
+  .led-luminaria {
+    position: relative; height: 4px; width: 100%;
+    background: linear-gradient(90deg, rgba(245,158,11,.08), #FBBF24 8%, #FDE68A 50%, #FBBF24 92%, rgba(245,158,11,.08));
+    box-shadow:
+      0 0 8px rgba(251,191,36,.8),
+      0 0 20px rgba(251,191,36,.45),
+      0 8px 24px rgba(251,191,36,.25);
+  }
+  .led-luminaria::after {
+    content: ''; position: absolute; left: 4%; right: 4%; top: 4px; height: 22px;
+    background: linear-gradient(180deg, rgba(251,191,36,.28), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+  .post-hero .container { padding-top: 48px; }
+  .term-post {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
+    box-shadow: 0 14px 44px rgba(15,23,42,.08);
+    overflow: hidden; position: relative; z-index: 1;
+  }
+  .term-post .ijp-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .term-post .ijp-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .term-post .ijp-logo svg { width: 100%; height: 100%; display: block; }
+  .term-post .ijp-file {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--primary); letter-spacing: .3px; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .term-post .ijp-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .term-post .ijp-btn {
+    width: 26px; height: 26px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; opacity: .9; cursor: default;
+    transition: background .15s, filter .15s;
+  }
+  .term-post .ijp-btn svg { width: 16px; height: 16px; display: block; }
+  .term-post .ijp-btn:hover { opacity: 1; background: rgba(15,23,42,.06); filter: brightness(1.1); }
+  .term-post .ijp-btn:disabled { opacity: .35; }
+  .term-post-body { padding: 30px 30px 28px; }
+  .term-post-body h1 { margin-top: 12px !important; }
+  .term-post-body p { color: var(--gray-700); margin-bottom: 12px; }
+  @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="../index.html" class="logo">
+      <span class="logo-neto"><span class="led-bar"></span>Blog Do Neto Dev</span>
+    </a>
+    <nav>
+      <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+      <ul id="menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#posts" class="active">Posts</a></li>
+        <li><a href="../index.html#trilha">Trilha</a></li>
+        <li><a href="../sobre.html">Sobre</a></li>
+        <li><a href="../index.html#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
+</header>
+
+<div class="post-hero">
+  <div class="container">
+    <div class="term-post">
+      <div class="ijp-bar">
+        <span class="ijp-logo" title="IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ijGradP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#ijGradP)"/><rect x="3" y="3" width="18" height="18" fill="#000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/></svg></span>
+        <span class="ijp-file">OQueEhDDD.java</span>
+        <span class="ijp-controls">
+          <button class="ijp-btn" type="button" aria-label="Run" title="Run"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+          <button class="ijp-btn" type="button" aria-label="Debug" title="Debug"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg></button>
+          <button class="ijp-btn" type="button" disabled aria-label="Stop" title="Stop"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C"/></svg></button>
+        </span>
+      </div>
+      <div class="term-post-body">
+    <span class="badge">Conceitos</span><span class="serie-num">07 / jargões bonitos</span>
+    <h1>Jargões bonitos:<br>o que é DDD (Domain-Driven Design)</h1>
+    <div class="post-meta">Pedro Neto • 22 jul 2026 • 14 min de leitura</div>
+    <p class="intro">Tô lendo o <strong><a href="https://www.amazon.com.br/Aprenda-Domain-driven-Design-Arquitetura-Estrat%C3%A9gia/dp/8550819611?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MVGN0YQ2ZL0X&dib=eyJ2IjoiMSJ9.AYsF-mRQLylds0aAADKLWTgpdCcF9bCEGDksaOn7j_s.04TcuaMeCSRfTt4FZXuNrutdtY1tSDjS4e7wsFf1tkg&dib_tag=se&keywords=aprendendo+ddd&qid=1784775419&sprefix=aprendendo+dd%2Caps%2C208&sr=8-1&linkCode=ll2&tag=pedroneto0aa-20&linkId=1c49edac42f4fc2bec654825f5f85c31&ref_=as_li_ss_tl" target="_blank" rel="noopener" class="link-livro">"Learn Domain-Driven Design"</a></strong>, do Vlad Khononov, e percebi uma coisa: O que assusta em DDD não é a ideia — é o <strong>vocabulário</strong>. Bounded context, agregado, linguagem ubíqua… parece feitiço. Esse post é um tradutor: pego cada termo gourmetizado e falo o que ele quer dizer <strong>em português do povão</strong>, com Java na mão.</p>
+    <div class="livro-fita">
+      <span class="tag">📖 Learn DDD — Vlad Khononov</span>
+      <span class="seta">→</span>
+      <span class="tag tag-obj">tradução sem susto</span>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="container">
+
+    <p>Todo mundo joga a sigla <strong>DDD</strong> na mesa como se fosse óbvio. Aí você vai atrás e ganha um Dicionário de jargões para aprender: <em>ubiquitous language</em>, <em>bounded context</em>, <em>aggregate root</em>, <em>anti-corruption layer</em>. Dá até vontade de fechar a aba e voltar pra Netflix.</p>
+    <p>Mas quando você tira a casca do vocabulário, sobra uma ideia simples — e que, honestamente, você já pratica de um jeito torto no dia a dia.</p>
+
+    <div class="mentalidade">
+      <span>a ideia em uma frase</span>
+      DDD não é um framework, nem uma pasta cheia de <em>patterns</em>. É desenhar o software <strong>com foco no jeito que o negócio realmente funciona</strong> — e chamar as coisas no código pelo mesmo nome que quem entende do negócio usa, facilitando a comunicação.
+    </div>
+
+    <p>Repara o que essa frase <strong>não</strong> diz. Não fala de anotação, de banco, de arquitetura de pastas. DDD começa muito antes do código: começa em <strong>entender o problema</strong>. O código é a última etapa, não a primeira.</p>
+
+    <h2>O maior mito: "DDD é um monte de pattern"</h2>
+    <p>Esse é o engano que o próprio Vlad ataca logo no começo do livro. Muita gente acha que "fazer DDD" é criar classe <code>Repository</code>, <code>Entity</code>, <code>ValueObject</code> e pronto. Isso é só <strong>metade</strong> — a metade menos importante, inclusive.</p>
+    <p>DDD se divide em duas partes, e a ordem importa:</p>
+
+    <div class="jargao-lista">
+      <div class="jargao is-core">
+        <div class="termo"><span class="en">Strategic Design</span><span class="pt">design estratégico</span></div>
+        <p class="traducao"><strong>Entender o negócio antes de codar.</strong> Que problema a empresa resolve? Quais partes são o diferencial dela e quais são só "burocracia necessária"? É a parte que quase ninguém mostra — e é a que dá o dinheiro.</p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Tactical Design</span><span class="pt">design tático</span></div>
+        <p class="traducao"><strong>Os patterns de código.</strong> Entidade, value object, agregado, repositório. Importante, sim — mas só depois que o estratégico te disse <em>onde</em> vale a pena caprichar.</p>
+      </div>
+    </div>
+
+    <p>A sacada é essa: <strong>você não aplica os patterns em tudo</strong>. Aplica onde o negócio é complexo e vale a pena. No resto, um CRUD simples serve. Guarda essa ideia — ela volta no fim.</p>
+
+    <h2>O glossário traduzido</h2>
+    <p>Agora o prato principal. Cada termo assustador, o que ele significa de verdade, e uma analogia pra fixar.</p>
+
+    <div class="jargao-lista">
+      <div class="jargao">
+        <div class="termo"><span class="en">Domain</span><span class="pt">domínio</span></div>
+        <p class="traducao"><strong>É o negócio em si.</strong> Se você trabalha num banco, o domínio é conta, empréstimo, fatura. Se é num e-commerce, é pedido, carrinho, estoque, entrega. É o "assunto" que o software existe pra resolver — nada a ver com tecnologia.</p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Ubiquitous Language</span><span class="pt">linguagem ubíqua</span></div>
+        <p class="traducao"><strong>Todo mundo chamando a coisa pelo mesmo nome.</strong> Se o pessoal do negócio fala "apólice", o código não pode ter uma classe <code>Contrato</code>. A regra é: o nome que o especialista usa na reunião é o mesmo nome da classe. Acabou a tradução mental entre "o que o cliente falou" e "o que virou no sistema".</p>
+      </div>
+      <div class="jargao is-core">
+        <div class="termo"><span class="en">Core Subdomain</span><span class="pt">subdomínio principal</span></div>
+        <p class="traducao"><strong>Onde mora o diferencial da empresa.</strong> O motor de crédito de um banco, o algoritmo de recomendação da Netflix. É complexo, muda toda hora e é o que faz a empresa ganhar da concorrência. <strong>Aqui você investe DDD tático de verdade.</strong></p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Supporting Subdomain</span><span class="pt">subdomínio de apoio</span></div>
+        <p class="traducao"><strong>Necessário, mas não é o diferencial.</strong> Um cadastro de fornecedores, um catálogo interno. A empresa precisa, mas ninguém escolhe ela por causa disso. Aqui um código mais simples resolve.</p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Generic Subdomain</span><span class="pt">subdomínio genérico</span></div>
+        <p class="traducao"><strong>Problema que já foi resolvido por alguém.</strong> Autenticação, envio de e-mail, pagamento. Não reinventa: usa Keycloak, usa Stripe, compra pronto. Gastar cérebro aqui é desperdício.</p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Bounded Context</span><span class="pt">contexto delimitado</span></div>
+        <p class="traducao"><strong>A fronteira onde uma palavra tem um significado só.</strong> "Produto" pra quem vende é preço e foto; pra quem estoca é peso e prateleira; pra quem entrega é volume e endereço. É o mesmo produto — mas cada área tem seu próprio modelo. Bounded context é você admitir isso e <strong>não tentar fazer uma classe gigante que serve pra todo mundo</strong>.</p>
+      </div>
+    </div>
+
+    <div class="callout-dica">
+      <strong>O clique do bounded context:</strong> se você já viu uma classe <code>Cliente</code> com 40 campos porque "cada time precisava de um pedaço", você já sentiu na pele a falta de bounded context. A solução do DDD não é uma classe pra todos — são vários modelos menores, cada um dono do seu contexto.
+    </div>
+
+    <h2>Agora sim, o código: entidade, value object e agregado</h2>
+    <p>Esses três são o coração do design tático. Vou usar de contexto um pedido de e-commerce — um exemplo clássico.</p>
+
+    <div class="jargao-lista">
+      <div class="jargao">
+        <div class="termo"><span class="en">Entity</span><span class="pt">entidade</span></div>
+        <p class="traducao"><strong>Tem identidade e muda ao longo do tempo.</strong> Um <code>Pedido</code> é uma entidade: ele tem um id, e o pedido #42 continua sendo o #42 mesmo depois que você adiciona itens ou muda o status.</p>
+      </div>
+      <div class="jargao">
+        <div class="termo"><span class="en">Value Object</span><span class="pt">objeto de valor</span></div>
+        <p class="traducao"><strong>Não tem identidade — vale pelo conteúdo.</strong> Um <code>Dinheiro</code> (valor + moeda) ou um <code>Endereco</code>. R$ 10 é igual a qualquer outro R$ 10. Não faz sentido perguntar "qual é o id desse dinheiro?". É imutável: se muda, vira outro.</p>
+      </div>
+      <div class="jargao is-core">
+        <div class="termo"><span class="en">Aggregate</span><span class="pt">agregado</span></div>
+        <p class="traducao"><strong>Um grupo de objetos tratado como uma unidade só.</strong> O <code>Pedido</code> e seus <code>ItemPedido</code> andam juntos: você não mexe num item por fora, mexe através do pedido. A "porta de entrada" desse grupo é a <em>aggregate root</em> (a raiz) — no caso, o próprio <code>Pedido</code>. Ela é a dona das regras e garante que o conjunto nunca fique inconsistente.</p>
+      </div>
+    </div>
+
+    <p>Na prática isso vira uma classe que <strong>protege as próprias regras</strong>. Antes dela, alguns value objects pequenos que se validam sozinhos: <code>Quantidade</code> (não aceita zero nem negativo), <code>Moeda</code>, <code>ProdutoId</code> e <code>PedidoId</code> — esse último é a <strong>identidade do pedido, gerada pelo próprio domínio</strong> (não é o id do banco). Com eles prontos, repara que ninguém adiciona item na lista por fora — tudo passa por um método do <code>Pedido</code>:</p>
+
+    <p class="code-label">Dinheiro.java — um value object: imutável, se valida sozinho</p>
+<pre><code>public record Dinheiro(BigDecimal valor, Moeda moeda) {
+
+    public Dinheiro {
+        if (valor == null || valor.signum() &lt; 0)
+            throw new IllegalArgumentException("Valor não pode ser negativo");
+        if (moeda == null)
+            throw new IllegalArgumentException("Moeda é obrigatória");
+    }
+
+    public static Dinheiro zero(Moeda moeda) {
+        return new Dinheiro(BigDecimal.ZERO, moeda);
+    }
+
+    public Dinheiro somar(Dinheiro outro) {
+        if (!this.moeda.equals(outro.moeda))
+            throw new IllegalArgumentException("Não dá pra somar moedas diferentes");
+        return new Dinheiro(this.valor.add(outro.valor), this.moeda);
+    }
+}</code></pre>
+
+    <p class="code-label">Pedido.java — a aggregate root: dona das regras do conjunto</p>
+<pre><code>public class Pedido {
+
+    private final PedidoId id;          // identidade própria, não o id do banco
+    private final Moeda moeda;          // definida quando o pedido nasce
+    private final List&lt;ItemPedido&gt; itens = new ArrayList&lt;&gt;();
+    private StatusPedido status;
+
+    private Pedido(PedidoId id, Moeda moeda) {   // construtor privado
+        this.id = id;
+        this.moeda = moeda;
+        this.status = StatusPedido.ABERTO;
+    }
+
+    public static Pedido abrir(Moeda moeda) {    // factory com nome de negócio
+        return new Pedido(PedidoId.novo(), moeda);
+    }
+
+    // a ÚNICA porta pra mexer nos itens — a regra mora aqui dentro
+    public void adicionarItem(ProdutoId produto, Quantidade qtd, Dinheiro preco) {
+        if (status != StatusPedido.ABERTO)
+            throw new PedidoFechadoException(id);
+        if (!preco.moeda().equals(moeda))
+            throw new MoedaInvalidaException(moeda, preco.moeda());
+        itens.add(new ItemPedido(produto, qtd, preco));
+    }
+
+    public Dinheiro total() {
+        return itens.stream()
+            .map(ItemPedido::subtotal)
+            .reduce(Dinheiro.zero(moeda), Dinheiro::somar);   // seed na moeda certa
+    }
+
+    public void finalizar() {
+        if (itens.isEmpty())
+            throw new PedidoVazioException(id);
+        this.status = StatusPedido.FECHADO;
+    }
+
+    // NÃO existe getItens() que devolve a lista mutável.
+    // ninguém mexe nos itens por fora — só através do Pedido.
+    public List&lt;ItemPedido&gt; itens() {
+        return List.copyOf(itens); // cópia read-only
+    }
+}</code></pre>
+
+    <p>Esse é o <strong>modelo rico</strong> (rich domain model): comportamento e regras moram <em>dentro</em> do objeto de negócio. Repara no que ele já garante de graça — o pedido nasce por um método com nome de negócio (<code>Pedido.abrir</code>), gera a própria identidade, e não tem como existir um <code>Pedido</code> com quantidade negativa ou item numa moeda diferente da dele.</p>
+
+    <div class="callout-dica">
+      <strong>Por que juntar dado e comportamento assim:</strong> o caminho oposto seria um <code>Pedido</code> só com getters e setters e a regra jogada num <code>PedidoService</code> por fora. O problema é que aí qualquer código consegue montar um pedido inconsistente, e a mesma regra acaba repetida em vários lugares. Concentrar o comportamento no agregado é o que evita isso — e é justamente pra isso que o DDD tático existe.
+    </div>
+
+    <h2>Como isso se organiza: o mapa de contextos</h2>
+    <p>Zoom out. Num sistema DDD de verdade, você não tem um modelão único — você tem vários bounded contexts conversando. Cada um com seu próprio "Produto", suas próprias regras:</p>
+
+    <div class="diagrama">        VENDAS                    ESTOQUE                   ENTREGA
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│  Produto         │      │  Produto         │      │  Produto         │
+│   • preço        │      │   • quantidade   │      │   • peso         │
+│   • foto         │      │   • prateleira   │      │   • volume       │
+│  Pedido (root)   │ ──▶  │  Reserva         │ ──▶  │  Remessa         │
+└──────────────────┘      └──────────────────┘      └──────────────────┘
+   mesmo NOME, modelos diferentes — cada contexto é dono do seu</div>
+
+    <p>Quando dois contextos precisam trocar dados e um não pode "sujar" o modelo do outro, entra a <strong>anti-corruption layer</strong> (camada anticorrupção) + 1 jargão gourmet,<strong>é só um tradutor na fronteira</strong>: converte o "Produto do Estoque" pro "Produto da Entrega" sem deixar um conceito vazar pro outro.</p>
+
+    <h2>Quando vale a pena (e quando é exagero)</h2>
+    <p>Aqui volta aquela ideia lá do começo: <strong>DDD tático não é pra tudo</strong>. Aplicar agregado, value object e repositório num CRUD de cadastro de cidades é explodir mosquito com uma 12, sendo que uma raquete eletricá resolveria.</p>
+
+    <div class="pros-cons">
+      <div class="pc-card pc-pro">
+        <h4>✅ Vale o DDD tático quando…</h4>
+        <ul>
+          <li><strong>Tem regra de negócio de verdade</strong>: cálculo de juros, elegibilidade, políticas que mudam.</li>
+          <li><strong>É o core da empresa</strong>: o diferencial competitivo, onde erro custa caro.</li>
+          <li><strong>Muita gente mexe</strong>: o modelo rico protege as regras de 30 devs com pressa.</li>
+          <li><strong>Vida longa</strong>: sistema que vai viver 10+ anos e evoluir sem parar.</li>
+        </ul>
+      </div>
+      <div class="pc-card pc-con">
+        <h4>❌ É exagero quando…</h4>
+        <ul>
+          <li><strong>É CRUD puro</strong>: cadastrar, listar, editar, sem regra nenhuma.</li>
+          <li><strong>É subdomínio genérico</strong>: login, e-mail — usa pronto.</li>
+          <li><strong>MVP com prazo</strong>: valida a ideia primeiro, refina depois.</li>
+          <li><strong>Time pequeno e domínio simples</strong>: a burocracia custa mais que entrega.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quando-usar">
+      <strong>A régua honesta:</strong> use o <em>estratégico</em> sempre — entender o negócio e falar a mesma língua nunca é desperdício, custa zero linha de código. Já o <em>tático</em> (agregados, value objects e afins) reserve pro core, onde a complexidade justifica. Essa é, no fundo, a mensagem central do livro do Vlad: DDD é sobre <strong>gastar sua energia de design onde o negócio realmente é difícil</strong>.
+    </div>
+
+    <div class="historia">
+      <span class="rotulo">~/background $</span>
+      <h2>Por que eu tô mexendo com isso agora</h2>
+      <p>Diferente dos posts de fundamento, esse aqui é da <strong>leva 2</strong> — o que estou estudando <em>hoje</em>. Tô lendo o <strong><a href="https://www.amazon.com.br/Aprenda-Domain-driven-Design-Arquitetura-Estrat%C3%A9gia/dp/8550819611?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MVGN0YQ2ZL0X&dib=eyJ2IjoiMSJ9.AYsF-mRQLylds0aAADKLWTgpdCcF9bCEGDksaOn7j_s.04TcuaMeCSRfTt4FZXuNrutdtY1tSDjS4e7wsFf1tkg&dib_tag=se&keywords=aprendendo+ddd&qid=1784775419&sprefix=aprendendo+dd%2Caps%2C208&sr=8-1&linkCode=ll2&tag=pedroneto0aa-20&linkId=1c49edac42f4fc2bec654825f5f85c31&ref_=as_li_ss_tl" target="_blank" rel="noopener" class="link-livro">"Learn Domain-Driven Design"</a></strong>, do Vlad Khononov, em paralelo ao trabalho — e a razão é bem específica: na entrevista para entrar no meu time atual, um especialista me perguntou o que era DDD. Eu tinha certeza de que aplicava aquilo no dia a dia da empresa anterior, mas não soube explicar naquele momento. Assim que a call acabou, comprei o livro. E, com pouco tempo de leitura, ele já me ajudou: tirou o medo daqueles jargões bonitos que fazem a gente parecer três vezes mais inteligente. O livro insiste que DDD é sobre negócio, não sobre pattern — e isso é muito real.</p>
+      <p>No <strong>Banco Pan</strong>, onde sou arquiteto jr no time de IDP, isso não é teoria de livro: é a segunda-feira. Sistema financeiro é o exemplo perfeito de onde o DDD tático se paga — regra de negócio densa, muita gente mexendo e código que precisa durar. Ver na prática o que eu estava lendo foi o que fez a ficha cair.</p>
+      <p>Se você está começando e esse vocabulário te assustava, respira: a ideia é simples, o susto é só do vocabulário. Aprenda o estratégico primeiro — ele vale pra qualquer projeto.</p>
+    </div>
+
+    <div class="veredito">
+      <span class="rotulo">$ git log --oneline entendendo-ddd</span>
+      <h3>O resumo pra levar pra casa</h3>
+      <p>DDD é <strong>alinhar código com negócio</strong> e <strong>chamar as coisas pelo nome certo</strong>. O jargão assusta, mas por baixo é isso. Comece pelo estratégico — entender o domínio e falar a língua de quem entende dele. Deixe os patterns táticos pro core, onde a complexidade justifica. O resto é CRUD, e CRUD tá tudo bem.</p>
+    </div>
+
+    <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
+    <a href="06-ia-na-nuvem.html" class="voltar" style="float: right;">← Anterior: IA na nuvem</a>
+
+  </div>
+</article>
+
+<footer id="contato">
+  <div class="footer-inner">
+    <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/pedro-neto-07415b21b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<style id="acc-css">
+  details.mentalidade, details.callout-erro, details.callout-dica { padding: 0 !important; }
+  details.mentalidade summary, details.callout-erro summary, details.callout-dica summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px;
+  }
+  details.mentalidade summary { padding: 16px 26px; }
+  details.mentalidade summary::-webkit-details-marker,
+  details.callout-erro summary::-webkit-details-marker,
+  details.callout-dica summary::-webkit-details-marker { display: none; }
+  details.mentalidade summary .acc-label { display: inline !important; margin: 0 !important; }
+  details.callout-erro summary .acc-label { font-weight: 700; color: var(--danger); font-size: 15.5px; }
+  details.callout-dica summary .acc-label { font-weight: 700; color: #065F46; font-size: 15.5px; }
+  details.mentalidade .seta-acc, details.callout-erro .seta-acc, details.callout-dica .seta-acc {
+    font-size: 12px; flex-shrink: 0; transition: transform .2s ease;
+    display: inline !important; margin: 0 !important; color: var(--gray-500);
+  }
+  details[open] > summary .seta-acc { transform: rotate(180deg); }
+  details.mentalidade .acc-conteudo { padding: 0 26px 18px; }
+  details.callout-erro .acc-conteudo, details.callout-dica .acc-conteudo { padding: 2px 20px 14px; font-weight: 400; }
+</style>
+<script id="acc-js">
+(function () {
+  document.querySelectorAll('div.mentalidade').forEach(div => {
+    const label = div.querySelector('span');
+    const det = document.createElement('details');
+    det.className = div.className;
+    det.setAttribute('open', '');
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = label ? label.textContent : 'a ideia';
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (label) label.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+
+  document.querySelectorAll('div.callout-erro, div.callout-dica').forEach(div => {
+    const ehErro = div.classList.contains('callout-erro');
+    const strong = div.querySelector('strong');
+    const titulo = strong ? strong.textContent.replace(/:\s*$/, '') : (ehErro ? 'Atenção' : 'Dica');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = (ehErro ? '⚠️ ' : '💡 ') + titulo;
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (strong) strong.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    if (cont.firstChild && cont.firstChild.nodeType === 3) {
+      cont.firstChild.textContent = cont.firstChild.textContent.replace(/^\s+/, '');
+    }
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+})();
+</script>
+
+<style id="ide-components">
+  /* ===== Code Block IntelliJ ===== */
+  .intellij-codeblock {
+    display: flex; flex-direction: column;
+    border-radius: 16px; border: 1px solid #1E293B;
+    background: #0F172A; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 18px 0 24px;
+  }
+  .intellij-header {
+    display: flex; align-items: center;
+    padding: 12px 16px; background: #1E293B;
+    border-bottom: 1px solid #0F172A; gap: 12px;
+  }
+  .intellij-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 2px; border-radius: 4px; transition: all 150ms; }
+  .intellij-logo svg { width: 100%; height: 100%; }
+  .intellij-logo:hover { background: rgba(187,134,252,.15); box-shadow: 0 0 8px rgba(187,134,252,.3); }
+  .intellij-filename {
+    color: #E2E8F0; font-size: 13.5px; font-weight: 600;
+    font-family: 'Inter', sans-serif; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .3px;
+  }
+  .intellij-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .intellij-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border: none; background: transparent;
+    cursor: pointer; border-radius: 4px; transition: all 150ms;
+    opacity: .85; position: relative;
+  }
+  .intellij-btn:not(:disabled):hover { opacity: 1; background: rgba(255,255,255,.1); transform: translateY(-1px); }
+  .intellij-btn:not(:disabled):hover svg { filter: brightness(1.25); }
+  .intellij-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .intellij-btn svg { width: 17px; height: 17px; }
+  .intellij-btn::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; padding: 4px 8px; border-radius: 4px;
+    font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #1E293B;
+    font-family: 'Inter', sans-serif; font-weight: 500; z-index: 10;
+  }
+  .intellij-btn:hover::after { opacity: 1; }
+  .intellij-btn-debug.active { opacity: 1; background: rgba(89,168,105,.15); border-bottom: 2px solid #59A869; }
+  .intellij-btn-run.running { animation: intellij-pulse 2s infinite; }
+  @keyframes intellij-pulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+  .intellij-body { display: flex; overflow: hidden; background: #0F172A; }
+  .intellij-line-numbers {
+    display: flex; flex-direction: column;
+    padding: 20px 8px; color: #606366;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #1E293B; min-width: 46px;
+  }
+  .intellij-body pre {
+    flex: 1; margin: 0 !important; border-radius: 0 !important;
+    background: #0F172A !important; color: #A9B7C6 !important;
+  }
+  .intellij-status {
+    padding: 8px 16px; background: #1E293B; border-top: 1px solid #0F172A;
+    color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  }
+  .intellij-status-text { animation: intellij-blink 1s infinite; }
+  @keyframes intellij-blink { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+  /* Syntax highlighting — IntelliJ Darcula */
+  .intellij-codeblock .hl-com { color: #808080; font-style: italic; }
+  .intellij-codeblock .hl-str { color: #6A8759; }
+  .intellij-codeblock .hl-ann { color: #BBB529; }
+  .intellij-codeblock .hl-kw  { color: #CC7832; }
+  .intellij-codeblock .hl-num { color: #6897BB; }
+  .intellij-codeblock .hl-cls { color: #4EC9B0; }
+  .intellij-codeblock .hl-fn  { color: #FFC66D; }
+
+  @media (max-width: 760px) {
+    .intellij-header { padding: 10px 12px; gap: 8px; }
+    .intellij-logo { width: 20px; height: 20px; }
+    .intellij-filename { font-size: 12px; }
+    .intellij-btn { width: 27px; height: 27px; }
+    .intellij-btn svg { width: 15px; height: 15px; }
+    .intellij-btn::after { display: none; }
+    .intellij-line-numbers { padding: 16px 6px; font-size: 12px; min-width: 34px; }
+  }
+</style>
+<script id="pre-js">
+(function () {
+  var INTELLIJ_LOGO = '<a class="intellij-logo" href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener" title="Baixar IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="intellijGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#intellijGradient)"/><rect x="3" y="3" width="18" height="18" fill="#000000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#FFFFFF" font-family="JetBrains Mono, Menlo, monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#FFFFFF"/></svg></a>';
+  var ICON_RUN_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var ICON_BUG_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869" stroke="none"/></svg>';
+  var ICON_STOP_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C" stroke="none"/></svg>';
+
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var RE_JAVA = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(public|private|protected|class|interface|enum|record|extends|implements|return|new|static|final|void|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|throws|import|package|this|super|null|true|false|var|int|long|double|float|boolean|char|byte|short|instanceof|abstract|default|synchronized)\b|\b(\d+(?:\.\d+)?[LlFfDd]?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
+
+  function highlight(text) {
+    var re = RE_JAVA;
+    var cls = ['hl-com', 'hl-str', 'hl-ann', 'hl-kw', 'hl-num', 'hl-cls', 'hl-fn'];
+    var out = '', last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(text))) {
+      out += esc(text.slice(last, m.index));
+      var klass = '';
+      for (var g = 1; g <= 7; g++) if (m[g] !== undefined) { klass = cls[g - 1]; break; }
+      out += '<span class="' + klass + '">' + esc(m[0]) + '</span>';
+      last = re.lastIndex;
+    }
+    return out + esc(text.slice(last));
+  }
+
+  function filenameFor(pre) {
+    var el = pre.previousElementSibling;
+    if (el && el.classList && el.classList.contains('code-label')) {
+      var t = el.textContent.split('—')[0].replace('»', '').trim();
+      if (t) return t;
+    }
+    return 'Exemplo.java';
+  }
+
+  function lineNumbersHtml(pre) {
+    var n = pre.textContent.replace(/\n$/, '').split('\n').length;
+    var out = '';
+    for (var i = 1; i <= n; i++) out += '<span>' + i + '</span>';
+    return out;
+  }
+
+  document.querySelectorAll('article pre').forEach(function (pre) {
+    if (pre.closest('.intellij-codeblock')) return;
+    var codeEl = pre.querySelector('code') || pre;
+    if (!codeEl.querySelector('span')) {
+      codeEl.innerHTML = highlight(codeEl.textContent);
+    }
+    var name = filenameFor(pre);
+    var nums = lineNumbersHtml(pre);
+    var wrap = document.createElement('div');
+    wrap.className = 'intellij-codeblock';
+    wrap.innerHTML =
+      '<div class="intellij-header">' + INTELLIJ_LOGO +
+        '<span class="intellij-filename"></span>' +
+        '<div class="intellij-controls">' +
+          '<button class="intellij-btn intellij-btn-run" data-tooltip="Run (Shift+F10)" type="button" aria-label="Run">' + ICON_RUN_IJ + '</button>' +
+          '<button class="intellij-btn intellij-btn-debug" data-tooltip="Debug (Shift+F9)" type="button" aria-label="Debug">' + ICON_BUG_IJ + '</button>' +
+          '<button class="intellij-btn intellij-btn-stop" disabled data-tooltip="Stop (Ctrl+F2)" type="button" aria-label="Stop">' + ICON_STOP_IJ + '</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="intellij-body"><div class="intellij-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
+      '<div class="intellij-status" style="display:none"><span class="intellij-status-text">Running...</span></div>';
+    wrap.querySelector('.intellij-filename').textContent = name;
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.querySelector('.intellij-body').appendChild(pre);
+
+    var debugBtn = wrap.querySelector('.intellij-btn-debug');
+    var runBtn = wrap.querySelector('.intellij-btn-run');
+    var stopBtn = wrap.querySelector('.intellij-btn-stop');
+    var status = wrap.querySelector('.intellij-status');
+    var running = false, debug = false, timer = null;
+
+    debugBtn.addEventListener('click', function () {
+      debug = !debug;
+      debugBtn.classList.toggle('active', debug);
+      pre.style.opacity = debug ? '0.8' : '1';
+      runBtn.disabled = debug;
+    });
+    runBtn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      runBtn.classList.add('running');
+      runBtn.disabled = true;
+      debugBtn.disabled = true;
+      stopBtn.disabled = false;
+      status.style.display = 'block';
+      timer = setTimeout(stop, 2000);
+    });
+    stopBtn.addEventListener('click', stop);
+    function stop() {
+      clearTimeout(timer);
+      running = false;
+      runBtn.classList.remove('running');
+      runBtn.disabled = debug;
+      debugBtn.disabled = false;
+      stopBtn.disabled = true;
+      status.style.display = 'none';
+    }
+  });
+})();
+</script>
+
+<style id="cap-css">
+  /* ===== Modo capítulos ===== */
+  #cap-progresso {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    z-index: 60; transition: width .3s ease;
+  }
+  #cap-nav {
+    position: fixed; bottom: 27px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 60;
+    background: rgba(15,23,42,.96); color: #E2E8F0;
+    border-radius: 999px; padding: 10px 12px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.35);
+    font-size: 15px; max-width: calc(100vw - 24px);
+    backdrop-filter: blur(6px);
+  }
+  #cap-nav button {
+    border: none; cursor: pointer; border-radius: 999px;
+    background: #1E293B; color: #E2E8F0; font-family: inherit;
+    font-size: 16px; font-weight: 600; padding: 10px 18px;
+    transition: background .15s; white-space: nowrap;
+  }
+  #cap-nav button:hover:not(:disabled) { background: var(--secondary); }
+  #cap-nav button:disabled { opacity: .3; cursor: default; }
+  #cap-modo { font-size: 13px !important; font-weight: 500 !important; color: #94A3B8 !important; }
+  #cap-info {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 6px 10px; border-radius: 999px; min-width: 0;
+  }
+  #cap-info:hover { background: #1E293B; }
+  #cap-contador { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); white-space: nowrap; }
+  #cap-titulo-atual { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; font-weight: 500; }
+  #cap-menu {
+    position: fixed; bottom: 91px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.45); padding: 8px;
+    display: none; z-index: 61; max-height: 55vh; overflow-y: auto;
+    min-width: 300px; max-width: calc(100vw - 24px);
+  }
+  #cap-menu.aberto { display: block; }
+  #cap-menu button {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    color: #CBD5E1; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 14px;
+  }
+  #cap-menu button:hover { background: #1E293B; }
+  #cap-menu button.atual { color: var(--accent); font-weight: 600; }
+  @keyframes capFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  body.modo-capitulos article { padding-bottom: 120px; }
+  body.modo-capitulos .cap { display: none; }
+  body.modo-capitulos .cap.ativa { display: block; animation: capFade .28s ease; }
+  body.modo-corrido article { padding-bottom: 100px; }
+  body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
+  body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
+  @media (max-width: 760px) {
+    #cap-nav { bottom: 19px; padding: 8px 10px; font-size: 14px; }
+    #cap-nav button { font-size: 14px; padding: 8px 14px; }
+    #cap-titulo-atual { max-width: 100px; font-size: 13.5px; }
+    #cap-menu { bottom: 79px; }
+  }
+</style>
+<script id="cap-js">
+(function () {
+  const artigo = document.querySelector('article .container');
+  if (!artigo) return;
+  const capitulos = [];
+
+  function tituloDe(el) {
+    if (!el || el.nodeType !== 1) return null;
+    if (el.tagName === 'H2') return el.textContent.trim();
+    const c = el.classList;
+    if (c.contains('mentalidade')) return '💭 A ideia central';
+    if (c.contains('historia')) return '📖 A história por trás';
+    if (c.contains('veredito')) return '🏁 Veredito';
+    return null;
+  }
+
+  const CAPITULOS = [
+    ['💭', '💭 A ideia central'],
+    ['O glossário', '📖 O glossário traduzido'],
+    ['Agora sim', '⌨️ O código na prática'],
+    ['Como isso', '🗺️ Na prática e o fecho']
+  ];
+
+  function inicioDe(raw) {
+    if (!raw) return null;
+    for (const par of CAPITULOS) {
+      if (raw.startsWith(par[0])) return par[1];
+    }
+    return null;
+  }
+
+  function dividir(container) {
+    let atual = null;
+    for (const n of Array.from(container.childNodes)) {
+      if (n.nodeType === 8) continue;
+      if (n.nodeType === 3 && !n.textContent.trim()) continue;
+      const el = n.nodeType === 1 ? n : null;
+      if (el && el.tagName === 'SCRIPT') { continue; }
+      const novo = inicioDe(tituloDe(el));
+      if (novo || !atual) {
+        atual = document.createElement('section');
+        atual.className = 'cap';
+        atual.dataset.titulo = novo || 'Introdução';
+        container.insertBefore(atual, n);
+        capitulos.push(atual);
+      }
+      atual.appendChild(n);
+    }
+  }
+
+  dividir(artigo);
+  if (!capitulos.length) return;
+
+  // ===== UI =====
+  const barra = document.createElement('div'); barra.id = 'cap-progresso';
+  const nav = document.createElement('div'); nav.id = 'cap-nav';
+  nav.innerHTML = '<button id="cap-prev" aria-label="Capítulo anterior">←</button>' +
+    '<div id="cap-info" title="Ver capítulos"><span id="cap-contador"></span><span id="cap-titulo-atual"></span></div>' +
+    '<button id="cap-prox" aria-label="Próximo capítulo">→</button>' +
+    '<button id="cap-modo"></button>';
+  const menu = document.createElement('div'); menu.id = 'cap-menu';
+  document.body.append(barra, nav, menu);
+
+  capitulos.forEach((cap, i) => {
+    const b = document.createElement('button');
+    b.textContent = (i + 1) + '. ' + cap.dataset.titulo;
+    b.onclick = () => { ir(i); fecharMenu(); };
+    menu.appendChild(b);
+  });
+
+  const prev = document.getElementById('cap-prev');
+  const prox = document.getElementById('cap-prox');
+  const contador = document.getElementById('cap-contador');
+  const tituloAtual = document.getElementById('cap-titulo-atual');
+  const btnModo = document.getElementById('cap-modo');
+  const info = document.getElementById('cap-info');
+
+  let idx = 0;
+  function ir(i, rolar = true) {
+    idx = Math.max(0, Math.min(capitulos.length - 1, i));
+    const cap = capitulos[idx];
+    capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    const heroPost = document.querySelector('.post-hero');
+    if (heroPost) heroPost.style.display = (idx === 0) ? '' : 'none';
+    barra.style.width = ((idx + 1) / capitulos.length * 100) + '%';
+    contador.textContent = (idx + 1) + ' / ' + capitulos.length;
+    tituloAtual.textContent = cap.dataset.titulo;
+    info.title = cap.dataset.titulo + ' — clique para ver os capítulos';
+    prev.disabled = idx === 0;
+    prox.disabled = idx === capitulos.length - 1;
+    const botoes = Array.from(menu.querySelectorAll('button'));
+    botoes.forEach(b => b.classList.remove('atual'));
+    if (botoes[idx]) botoes[idx].classList.add('atual');
+    if (rolar) window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function fecharMenu() { menu.classList.remove('aberto'); }
+  info.onclick = (e) => { e.stopPropagation(); menu.classList.toggle('aberto'); };
+  document.addEventListener('click', (e) => { if (!menu.contains(e.target)) fecharMenu(); });
+  prev.onclick = () => ir(idx - 1);
+  prox.onclick = () => ir(idx + 1);
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('modo-capitulos')) return;
+    if (e.key === 'ArrowRight') ir(idx + 1);
+    if (e.key === 'ArrowLeft') ir(idx - 1);
+    if (e.key === 'Escape') fecharMenu();
+  });
+
+  // ===== modo de leitura =====
+  function aplicarModo(modo) {
+    document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
+    document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
+    btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
+    const heroPost2 = document.querySelector('.post-hero');
+    if (heroPost2 && modo !== 'capitulos') heroPost2.style.display = '';
+    btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
+    try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {}
+    if (modo === 'capitulos') ir(idx, false);
+  }
+  btnModo.onclick = () => {
+    aplicarModo(document.body.classList.contains('modo-capitulos') ? 'corrido' : 'capitulos');
+  };
+
+  let salvo = 'capitulos';
+  try { salvo = localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) {}
+  aplicarModo(salvo);
+})();
+</script>
+<style id="ao-topo-css">
+  #ao-topo {
+    position: fixed; right: 20px; bottom: 24px; z-index: 60;
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #1E293B; color: var(--accent);
+    border: 1px solid #334155; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35), 0 0 18px rgba(245,158,11,.25);
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+  }
+  #ao-topo.mostra { opacity: 1; visibility: visible; transform: none; }
+  #ao-topo:hover { background: #273449; box-shadow: 0 10px 28px rgba(0,0,0,.42), 0 0 24px rgba(245,158,11,.4); }
+  #ao-topo svg { width: 22px; height: 22px; }
+  @media (max-width: 760px) { #ao-topo { right: 14px; bottom: 84px; width: 42px; height: 42px; } }
+</style>
+<button id="ao-topo" type="button" aria-label="Voltar ao topo" title="Voltar ao topo">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script id="ao-topo-js">
+(function () {
+  var b = document.getElementById('ao-topo');
+  if (!b) return;
+  function upd() { b.classList.toggle('mostra', window.scrollY > 400); }
+  window.addEventListener('scroll', upd, { passive: true });
+  b.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  upd();
+})();
+</script>
+
+</body>
+</html>
