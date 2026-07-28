@@ -1044,11 +1044,11 @@ organizar()</code></pre>
   body.modo-corrido article { padding-bottom: 100px; }
   body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
   body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
+  /* ===== No celular: só leitura corrida ===== */
+  /* nada de barra de capítulos, menu ou progresso — a tela é pequena demais */
   @media (max-width: 760px) {
-    #cap-nav { bottom: 19px; padding: 8px 10px; font-size: 14px; }
-    #cap-nav button { font-size: 14px; padding: 8px 14px; }
-    #cap-titulo-atual { max-width: 100px; font-size: 13.5px; }
-    #cap-menu { bottom: 79px; }
+    #cap-nav, #cap-menu, #cap-progresso { display: none !important; }
+    body.modo-corrido article, body.modo-capitulos article { padding-bottom: 32px; }
   }
 </style>
 <script id="cap-js">
@@ -1198,23 +1198,44 @@ organizar()</code></pre>
   });
 
   // ===== modo de leitura =====
-  function aplicarModo(modo) {
+  // no celular a leitura é sempre corrida: nada de capítulos nem de botão de modo
+  const telaPequena = window.matchMedia('(max-width: 760px)');
+
+  function aplicarModo(modo, salvar = true) {
     document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
     document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
     btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
     const heroPost2 = document.querySelector('.post-hero');
     if (heroPost2 && modo !== 'capitulos') heroPost2.style.display = '';
     btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
-    try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {}
+    // só grava a escolha feita no desktop — o corrido forçado do mobile não sobrescreve
+    if (salvar) { try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {} }
     if (modo === 'capitulos') ir(idx, false);
   }
+
+  function preferenciaSalva() {
+    try { return localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) { return 'capitulos'; }
+  }
+
+  function sincronizar() {
+    if (telaPequena.matches) {
+      aplicarModo('corrido', false);   // travado no corrido, sem salvar
+      fecharMenu();
+    } else {
+      aplicarModo(preferenciaSalva(), false);
+    }
+  }
+
   btnModo.onclick = () => {
+    if (telaPequena.matches) return;   // no celular o botão nem aparece
     aplicarModo(document.body.classList.contains('modo-capitulos') ? 'corrido' : 'capitulos');
   };
 
-  let salvo = 'capitulos';
-  try { salvo = localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) {}
-  aplicarModo(salvo);
+  // reavalia se girar a tela ou redimensionar a janela
+  if (telaPequena.addEventListener) telaPequena.addEventListener('change', sincronizar);
+  else if (telaPequena.addListener) telaPequena.addListener(sincronizar);
+
+  sincronizar();
 })();
 </script>
 <style id="ao-topo-css">
@@ -1231,7 +1252,8 @@ organizar()</code></pre>
   #ao-topo.mostra { opacity: 1; visibility: visible; transform: none; }
   #ao-topo:hover { background: #273449; box-shadow: 0 10px 28px rgba(0,0,0,.42), 0 0 24px rgba(245,158,11,.4); }
   #ao-topo svg { width: 22px; height: 22px; }
-  @media (max-width: 760px) { #ao-topo { right: 14px; bottom: 84px; width: 42px; height: 42px; } }
+  /* no celular não existe barra de capítulos, então o botão pode ficar embaixo mesmo */
+  @media (max-width: 760px) { #ao-topo { right: 14px; bottom: 20px; width: 42px; height: 42px; } }
 </style>
 <button id="ao-topo" type="button" aria-label="Voltar ao topo" title="Voltar ao topo">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
