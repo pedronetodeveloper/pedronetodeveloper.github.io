@@ -548,7 +548,7 @@ public class ProdutoController {
     boolean existsByNome(String nome);
 }</code></pre>
 
-      <p>Cinco arquivos, quase nada de código "meu", e a API está no ar com validação, transação e persistência. É por isso que o Spring dominou o mercado: <strong>o custo de entrar é baixíssimo e a entrega é imediata</strong>. Com esse setup, um jr se vira sozinho e coloca feature em produção na primeira semana.</p>
+      <p>Cinco arquivos, quase nada de código "meu", e a API está no ar com validação, transação e persistência. É por isso que o Spring dominou o mercado: <strong>o custo de entrar é baixíssimo e a entrega é imediata</strong>. Com esse setup, um  se vira sozinho e coloca feature em produção na primeira semana.</p>
 
       <h2>Vantagens e pontos de atenção</h2>
       <p>Nada aqui é "errado". São escolhas — e toda escolha tem um custo que aparece dependendo do tamanho e da vida útil do sistema:</p>
@@ -750,7 +750,7 @@ public class UseCaseConfig {
           <h4>❌ Desvantagens</h4>
           <ul>
             <li><strong>Mais código</strong>: ports, adapters, mapeamento domínio ↔ entidade. Um CRUD dobra de tamanho.</li>
-            <li><strong>Curva de aprendizado</strong>: jr chega perdido — "por que tem três classes Produto??"</li>
+            <li><strong>Curva de aprendizado</strong>:  chega perdido — "por que tem três classes Produto??"</li>
             <li><strong>Overkill frequente</strong>: pra CRUD sem regra, é burocracia pura.</li>
             <li><strong>Disciplina constante</strong>: basta um dev com pressa importar JPA no domínio e a arquitetura furou.</li>
           </ul>
@@ -770,7 +770,7 @@ public class UseCaseConfig {
       <h2>A história por trás dessas duas abas</h2>
       <p>Essas abas não saíram de livro — são literalmente as duas metades da minha carreira até aqui.</p>
       <p>A primeira metade foi na <strong>TIVIT</strong>, a consultoria do meu primeiro emprego. Lá eu fazia projetos pequenos, pra clientes e internos, e o <strong>MVC era a escolha certa</strong>: entregas rápidas, baixa complexidade — sem motivo pra burocratizar o que era simples. Foi entregando assim que saí de estagiário pra <strong>fullstack pleno em pouco mais de 2 anos</strong>.</p>
-      <p>O hexagonal eu conhecia só de teoria — <strong>nunca tinha visto na prática até chegar no Banco Pan</strong>, onde estou hoje como arquiteto jr. Aqui o cenário inverte: projeto complexo, vida longa, e eu faço parte time de <strong>IDP (Internal Developer Platform)</strong> da empresa. Nesse contexto, desacoplar do framework deixa de ser preciosismo e vira necessidade.</p>
+      <p>O hexagonal eu conhecia só de teoria — <strong>nunca tinha visto na prática até chegar no Banco Pan</strong>, onde estou hoje como arquiteto . Aqui o cenário inverte: projeto complexo, vida longa, e eu faço parte time de <strong>IDP (Internal Developer Platform)</strong> da empresa. Nesse contexto, desacoplar do framework deixa de ser preciosismo e vira necessidade.</p>
       <p>Se a sua realidade hoje parece com a minha da TIVIT, abraça o MVC sem culpa. Se parece com a do Pan, o hexagonal vai fazer sentido rapidinho. As duas fases me construíram — e provavelmente vão construir você também.</p>
     </div>
 
