@@ -1163,7 +1163,6 @@ resource "aws_s3_bucket" "curriculos" {
     if (!el || el.nodeType !== 1) return null;
     if (el.tagName === 'H2') return el.textContent.trim();
     const c = el.classList;
-    if (c.contains('mentalidade')) return '💭 A mentalidade';
     if (c.contains('historia')) return '📖 A história por trás';
     if (c.contains('proximo-post')) return '⏭️ Próximo post';
     if (c.contains('veredito')) return '🏁 Veredito';
@@ -1173,7 +1172,6 @@ resource "aws_s3_bucket" "curriculos" {
   // Agrupamento: só títulos que casam com um prefixo abaixo iniciam capítulo novo.
   // O resto (h2 sem prefixo listado, próximo-post, conclusão) continua no capítulo atual.
   const CAPITULOS = [
-    ['💭', '💭 A mentalidade'],
     ['CRUD', '⚙️ CRUD de usuário'],
     ['Perfil', '📄 Perfil com currículo'],
     ['E o ', '📝 A infra, a dupla e a história'],

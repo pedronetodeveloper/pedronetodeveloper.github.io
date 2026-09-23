@@ -686,7 +686,7 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
       <span class="rotulo">~/background $</span>
       <h2>A história por trás desse post</h2>
       <p>Tudo que você leu aqui foi o que me carregou na prática. Comecei como estagiário na <strong>TIVIT</strong>, uma consultoria onde fazia projetos pra clientes e internos — e em pouco mais de 2 anos saí de estagiário pra <strong>fullstack pleno</strong>.</p>
-      <p>Nessa trajetória, <strong>o que separou minha evolução de estagiário a  foi o básico bem dominado.</strong> Variável, loop, exceção, entidade, record, stream — é isso que aparece em TODO code review, em TODA sprint, em qualquer stack. Domina o alicerce que o resto vem.</p>
+      <p>Nessa trajetória, <strong>o que separou minha evolução de estagiário a arquiteto júnior foi o básico bem dominado.</strong> Variável, loop, exceção, entidade, record, stream — é isso que aparece em TODO code review, em TODA sprint, em qualquer stack. Domina o alicerce que o resto vem.</p>
     </div>
 
     <h2>Conclusão</h2>
@@ -1169,7 +1169,6 @@ public List&lt;ProdutoResponse&gt; listarAtivos() {
     if (!el || el.nodeType !== 1) return null;
     if (el.tagName === 'H2') return el.textContent.trim();
     const c = el.classList;
-    if (c.contains('mentalidade')) return '💭 A mentalidade';
     if (c.contains('historia')) return '📖 A história por trás';
     if (c.contains('proximo-post')) return '⏭️ Próximo post';
     if (c.contains('veredito')) return '🏁 Veredito';

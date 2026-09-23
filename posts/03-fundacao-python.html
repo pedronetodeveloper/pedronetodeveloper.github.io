@@ -1061,7 +1061,6 @@ organizar()</code></pre>
     if (!el || el.nodeType !== 1) return null;
     if (el.tagName === 'H2') return el.textContent.trim();
     const c = el.classList;
-    if (c.contains('mentalidade')) return '💭 A mentalidade';
     if (c.contains('historia')) return '📖 A história por trás';
     if (c.contains('proximo-post')) return '⏭️ Próximo post';
     if (c.contains('veredito')) return '🏁 Veredito';

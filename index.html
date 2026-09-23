@@ -238,7 +238,10 @@
   .serie-card p { font-size: 14.5px; color: var(--gray-700); }
 
   /* ===== Trilha (levas) ===== */
-  .levas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .levas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 1100px) {
+    .levas { grid-template-columns: 1fr; }
+  }
   .leva {
     background: #fff; border: 1px solid var(--gray-200); border-radius: 16px;
     padding: 24px 26px;
@@ -489,7 +492,7 @@
 
 <header>
   <div class="container nav">
-    <a href="#" class="logo">
+    <a href="index.html" class="logo">
       <span class="logo-neto"><span class="led-bar"></span>Blog Do Neto Dev</span>
     </a>
     <nav>
@@ -549,11 +552,11 @@
 <section class="serie" id="trilha">
   <div class="container">
     <h2>A trilha do blog</h2>
-    <p class="section-sub">O mapa da jornada. A <strong>primeira leva</strong> são os fundamentos que me levaram de estagiário a  — o que você precisa pelo menos ter ouvido falar no início de carreira. A <strong>segunda</strong> é o que estou estudando hoje, no dia a dia. E em todos os posts: o assunto explicado com a minha experiência, minha visão de como começar e os erros que eu mesmo cometi.</p>
+    <p class="section-sub">O mapa da jornada. A <strong>leva 1</strong> são os fundamentos que me levaram de estagiário a arquiteto de TI júnior. A <strong>leva 2</strong> aprofunda conceitos e vocabulário (DDD, SOLID, dicionários). A <strong>leva 3</strong> é o próximo degrau: front Angular, IA no Java, SDD/Kiro e projeto de portfólio. Em todos os posts: experiência real, visão de como começar e erros que eu mesmo cometi.</p>
     <div class="levas">
       <div class="leva">
         <span class="leva-tag concluida">✔ leva 1 — publicada</span>
-        <h3>Fundamentos: de estagiário a </h3>
+        <h3>Fundamentos: de estagiário a arquiteto júnior</h3>
         <ol>
           <li><a href="posts/01-fundacao-java.html"><span class="num">01</span> ☕ Fundação em Java</a></li>
           <li><a href="posts/02-mvc-vs-hexagonal.html"><span class="num">02</span> 🏛️ Spring MVC vs Hexagonal</a></li>
@@ -563,15 +566,25 @@
           <li><a href="posts/06-ia-na-nuvem.html"><span class="num">06</span> 🤖 IA na nuvem: Bedrock, SageMaker e Lex</a></li>
         </ol>
       </div>
-      <div class="leva futuro">
-        <span class="leva-tag construindo">✦ leva 2 — estudando agora</span>
-        <h3>O que estou aprendendo no dia a dia</h3>
+      <div class="leva">
+        <span class="leva-tag concluida">✔ leva 2 — publicada</span>
+        <h3>Fundamentos parte 2: conceitos e vocabulário</h3>
         <ol>
-          <li><a href="posts/07-o-que-e-ddd.html"><span class="num">07</span> 🧩 Jargões bonitos: o que é DDD (Domain-Driven Design)</a></li>
-          <li class="breve"><span class="num">08</span> 🧱 Jargões bonitos: o que é SOLID</li>
-          <li class="breve"><span class="num">09</span> 🅰️ Angular + TypeScript: o front entra na jornada</li>
-          <li class="breve"><span class="num">10</span> 🌱 Spring AI: IA generativa no mundo Java</li>
-          <li class="breve"><span class="num">11</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
+          <li><a href="posts/07-o-que-e-ddd.html"><span class="num">07</span> 🧩 Jargões bonitos: o que é DDD</a></li>
+          <li><a href="posts/08-o-que-e-solid.html"><span class="num">08</span> 🧱 Jargões bonitos: o que é SOLID</a></li>
+          <li><a href="posts/09-dicionario-do-jr.html"><span class="num">09</span> 📖 Dicionário do jr I: o básico do básico</a></li>
+          <li><a href="posts/10-dicionario-do-jr-avancado.html"><span class="num">10</span> ✨ Dicionário do jr II: jargões mais recentes</a></li>
+        </ol>
+      </div>
+      <div class="leva futuro">
+        <span class="leva-tag construindo">✦ leva 3 — em construção</span>
+        <h3>Front, IA, SDD e portfólio</h3>
+        <ol>
+          <li class="breve"><span class="num">11</span> 🅰️ Angular + TypeScript: o front entra na jornada</li>
+          <li class="breve"><span class="num">12</span> 🌱 Spring AI: IA generativa no mundo Java</li>
+          <li class="breve"><span class="num">13</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
+          <li class="breve"><span class="num">14</span> 📋 SDD + Kiro: a base do Spec-Driven</li>
+          <li class="breve"><span class="num">15</span> 🗂️ Projeto de portfólio</li>
         </ol>
       </div>
     </div>
@@ -581,8 +594,44 @@
 <section class="posts" id="posts">
   <div class="container">
     <h2>Posts recentes</h2>
-    <p class="section-sub">Direto ao ponto, com erro comum incluso.</p>
+    <p class="section-sub">Direto ao ponto.</p>
     <div class="posts-grid">
+      <article class="post-card">
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-spring">Conceitos</span>
+        </div>
+        <h3><a href="posts/10-dicionario-do-jr-avancado.html">Dicionário do jr II: jargões mais recentes</a></h3>
+        <div class="card-body">
+          <p>Codebase harness, MCP, agentes, vibecoding, SDD… o vocabulário atual em uma frase cada — pra reconhecer a conversa sem fingir expertise.</p>
+          <div class="post-meta"><span>Pedro Neto • 9 min</span><span class="read-link">→ Leia</span></div>
+        </div>
+      </article>
+      <article class="post-card">
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-spring">Conceitos</span>
+        </div>
+        <h3><a href="posts/09-dicionario-do-jr.html">Dicionário do jr I: o básico do básico</a></h3>
+        <div class="card-body">
+          <p>Vocabulário mínimo: API, CRUD, cast, Git, HTTP, banco — cada termo em uma frase. O ingresso pra entender a daily sem travar.</p>
+          <div class="post-meta"><span>Pedro Neto • 10 min</span><span class="read-link">→ Leia</span></div>
+        </div>
+      </article>
+      <article class="post-card">
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-spring">Conceitos</span>
+        </div>
+        <h3><a href="posts/08-o-que-e-solid.html">Jargões bonitos: o que é SOLID</a></h3>
+        <div class="card-body">
+          <p>Cinco letras, cinco perguntas de review. SOLID em português de gente, com Java na mão — e a régua de quando vira sobrevivência vs teatro de pattern.</p>
+          <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
+        </div>
+      </article>
       <article class="post-card">
         <div class="card-top">
           <span class="avatar">PN</span>
@@ -603,7 +652,7 @@
         </div>
         <h3><a href="posts/01-fundacao-java.html">Fundação em Java: o essencial pra se virar no backend</a></h3>
         <div class="card-body">
-          <p>De variáveis e loops até entidades, records, casts, Collections e Streams — o alicerce que todo  de backend usa TODO dia, explicado sem enrolação.</p>
+          <p>De variáveis e loops até entidades, records, casts, Collections e Streams — o alicerce que todo jr de backend usa TODO dia, explicado sem enrolação.</p>
           <div class="post-meta"><span>Pedro Neto • 15 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
@@ -651,7 +700,7 @@
         </div>
         <h3><a href="posts/05-fundacao-cloud.html">Fundação em Cloud: AWS e Azure pra quem está começando</a></h3>
         <div class="card-body">
-          <p>O que é nuvem e os serviços que todo  deve conhecer — S3, EC2, Lambda, IAM e os equivalentes na Azure. Sem competição: aprendeu numa, sabe na outra.</p>
+          <p>O que é nuvem e os serviços que todo jr deve conhecer — S3, EC2, Lambda, IAM e os equivalentes na Azure. Sem competição: aprendeu numa, sabe na outra.</p>
           <div class="post-meta"><span>Pedro Neto • 16 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
@@ -675,10 +724,10 @@
   <div class="container">
     <h2>Categorias</h2>
     <div class="cat-list">
-      <a href="#" class="cat-pill">☕ Java</a>
-      <a href="#" class="cat-pill">🐍 Python &amp; IaC</a>
-      <a href="#" class="cat-pill">☁️ AWS</a>
-      <a href="#" class="cat-pill">🤖 Spring AI ✦ em breve</a>
+      <a href="posts/01-fundacao-java.html" class="cat-pill">☕ Java</a>
+      <a href="posts/03-fundacao-python.html" class="cat-pill">🐍 Python &amp; IaC</a>
+      <a href="posts/05-fundacao-cloud.html" class="cat-pill">☁️ AWS</a>
+      <a href="#trilha" class="cat-pill">🤖 Spring AI ✦ em breve</a>
     </div>
   </div>
 </section>
@@ -700,14 +749,14 @@
   const term = document.querySelector('.term');
   if (!alvo || !term) return;
 
-  const HELP_OUT = 'comandos: <a href="#posts">posts</a> · <a href="#trilha">trilha</a> · <a href="sobre.html">sobre</a> · <a href="#contato">contato</a> · ls · whoami · pwd · java · python · cloud · ia · clear · sudo';
+  const HELP_OUT = 'comandos: <a href="#posts">posts</a> · <a href="#trilha">trilha</a> · <a href="sobre.html">sobre</a> · <a href="#contato">contato</a> · ls · whoami · pwd · java · python · cloud · ia · ddd · solid · dicionario · clear · sudo';
 
   // comandos que rotacionam, um por vez, a cada 10s
   const rotativos = [
     { cmd: 'whoami',
       out: '<span class="out-forte">Pedro Neto</span> — dividindo o mapa da jornada com quem está começando' },
     { cmd: 'cat stack.txt',
-      out: 'Java · Spring · Python & IaC · Cloud AWS/Azure · IA' },
+      out: 'Java · Spring · Python & IaC · Cloud · IA · DDD · SOLID' },
     { cmd: 'ls blog/',
       out: '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>' }
   ];
@@ -849,6 +898,14 @@
         return '☁️ começa por aqui: <a href="posts/05-fundacao-cloud.html">05 — Fundação em Cloud</a>';
       case 'ia': case 'ai':
         return '🤖 começa por aqui: <a href="posts/06-ia-na-nuvem.html">06 — IA na nuvem</a>';
+      case 'ddd':
+        return '🧩 começa por aqui: <a href="posts/07-o-que-e-ddd.html">07 — O que é DDD</a>';
+      case 'solid':
+        return '🧱 começa por aqui: <a href="posts/08-o-que-e-solid.html">08 — O que é SOLID</a>';
+      case 'dicionario': case 'dic': case 'glossario': case 'jr':
+        return '📖 começa por aqui: <a href="posts/09-dicionario-do-jr.html">09 — Dicionário I (básico)</a> · <a href="posts/10-dicionario-do-jr-avancado.html">10 — Dicionário II</a>';
+      case 'harness': case 'mcp': case 'agent': case 'vibecoding':
+        return '✨ parte 2: <a href="posts/10-dicionario-do-jr-avancado.html">10 — Dicionário do jr II</a>';
       case 'clear': case 'cls': case 'limpar':
         return '__CLEAR__';
       case 'sudo':

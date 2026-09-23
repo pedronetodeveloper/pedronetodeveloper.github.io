@@ -602,7 +602,7 @@
       <span class="rotulo">~/background $</span>
       <h2>Por que eu tô mexendo com isso agora</h2>
       <p>Diferente dos posts de fundamento, esse aqui é da <strong>leva 2</strong> — o que estou estudando <em>hoje</em>. Tô lendo o <strong><a href="https://www.amazon.com.br/Aprenda-Domain-driven-Design-Arquitetura-Estrat%C3%A9gia/dp/8550819611?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MVGN0YQ2ZL0X&dib=eyJ2IjoiMSJ9.AYsF-mRQLylds0aAADKLWTgpdCcF9bCEGDksaOn7j_s.04TcuaMeCSRfTt4FZXuNrutdtY1tSDjS4e7wsFf1tkg&dib_tag=se&keywords=aprendendo+ddd&qid=1784775419&sprefix=aprendendo+dd%2Caps%2C208&sr=8-1&linkCode=ll2&tag=pedroneto0aa-20&linkId=1c49edac42f4fc2bec654825f5f85c31&ref_=as_li_ss_tl" target="_blank" rel="noopener" class="link-livro">"Learn Domain-Driven Design"</a></strong>, do Vlad Khononov, em paralelo ao trabalho — e a razão é bem específica: na entrevista para entrar no meu time atual, um especialista me perguntou o que era DDD. Eu tinha certeza de que aplicava aquilo no dia a dia da empresa anterior, mas não soube explicar naquele momento. Assim que a call acabou, comprei o livro. E, com pouco tempo de leitura, ele já me ajudou: tirou o medo daqueles jargões bonitos que fazem a gente parecer três vezes mais inteligente. O livro insiste que DDD é sobre negócio, não sobre pattern — e isso é muito real.</p>
-      <p>No <strong>Banco Pan</strong>, onde sou arquiteto  no time de IDP, isso não é teoria de livro: é a segunda-feira. Sistema financeiro é o exemplo perfeito de onde o DDD tático se paga — regra de negócio densa, muita gente mexendo e código que precisa durar. Ver na prática o que eu estava lendo foi o que fez a ficha cair.</p>
+      <p>No <strong>BTG Pactual</strong>, onde sou arquiteto de TI júnior no time de IDP, isso não é teoria de livro: é a segunda-feira. Sistema financeiro é o exemplo perfeito de onde o DDD tático se paga — regra de negócio densa, muita gente mexendo e código que precisa durar. Ver na prática o que eu estava lendo foi o que fez a ficha cair.</p>
       <p>Se você está começando e esse vocabulário te assustava, respira: a ideia é simples, o susto é só do vocabulário. Aprenda o estratégico primeiro — ele vale pra qualquer projeto.</p>
     </div>
 
@@ -612,8 +612,14 @@
       <p>DDD é <strong>alinhar código com negócio</strong> e <strong>chamar as coisas pelo nome certo</strong>. O jargão assusta, mas por baixo é isso. Comece pelo estratégico — entender o domínio e falar a língua de quem entende dele. Deixe os patterns táticos pro core, onde a complexidade justifica. O resto é CRUD, e CRUD tá tudo bem.</p>
     </div>
 
-    <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
-    <a href="06-ia-na-nuvem.html" class="voltar" style="float: right;">← Anterior: IA na nuvem</a>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:8px;">
+      <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
+      <span>
+        <a href="06-ia-na-nuvem.html" class="voltar">← Anterior: IA na nuvem</a>
+        &nbsp;·&nbsp;
+        <a href="08-o-que-e-solid.html" class="voltar">Próximo: SOLID →</a>
+      </span>
+    </div>
 
   </div>
 </article>
@@ -955,14 +961,12 @@
     if (!el || el.nodeType !== 1) return null;
     if (el.tagName === 'H2') return el.textContent.trim();
     const c = el.classList;
-    if (c.contains('mentalidade')) return '💭 A ideia central';
     if (c.contains('historia')) return '📖 A história por trás';
     if (c.contains('veredito')) return '🏁 Veredito';
     return null;
   }
 
   const CAPITULOS = [
-    ['💭', '💭 A ideia central'],
     ['O glossário', '📖 O glossário traduzido'],
     ['Agora sim', '⌨️ O código na prática'],
     ['Como isso', '🗺️ Na prática e o fecho']
