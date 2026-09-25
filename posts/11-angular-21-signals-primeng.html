@@ -323,44 +323,27 @@
     box-shadow: 0 14px 44px rgba(15,23,42,.08);
     overflow: hidden; position: relative; z-index: 1;
   }
-  .term-post .vsc-titlebar {
+  .term-post .vsp-bar {
     display: flex; align-items: center; gap: 12px;
-    padding: 0 12px 0 14px; height: 38px;
-    background: #3C3C3C; border-bottom: 1px solid #2B2B2B;
+    padding: 6px 12px; background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
   }
-  .term-post .vsc-traffic {
-    display: flex; gap: 7px; flex-shrink: 0; align-items: center;
+  .term-post .vsp-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .term-post .vsp-logo svg { width: 100%; height: 100%; display: block; }
+  .term-post .vsp-tab {
+    display: flex; align-items: center; gap: 7px; flex-grow: 1;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .term-post .vsc-traffic span {
-    width: 11px; height: 11px; border-radius: 50%; display: block;
+  .term-post .vsp-tab::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }
+  .term-post .vsp-run {
+    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    padding: 5px 12px; background: #16A34A; color: #fff;
+    border: none; border-radius: 4px; cursor: default;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
   }
-  .term-post .vsc-traffic .c { background: #FF5F57; }
-  .term-post .vsc-traffic .m { background: #FEBC2E; }
-  .term-post .vsc-traffic .e { background: #28C840; }
-  .term-post .vsc-tabs { display: flex; align-items: stretch; flex: 1; min-width: 0; height: 100%; }
-  .term-post .vsc-tab {
-    display: flex; align-items: center; gap: 8px;
-    padding: 0 14px; height: 100%;
-    background: #1E1E1E; color: #CCCCCC;
-    border-top: 2px solid #007ACC;
-    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 500;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
-  }
-  .term-post .vsc-tab .vsc-ts {
-    width: 14px; height: 14px; flex-shrink: 0; border-radius: 2px;
-    background: #3178C6; color: #fff;
-    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .term-post .vsc-actions {
-    display: flex; gap: 2px; flex-shrink: 0; margin-left: auto;
-  }
-  .term-post .vsc-actions button {
-    width: 28px; height: 28px; border: none; background: transparent; color: #CCCCCC;
-    border-radius: 4px; cursor: default; font-size: 14px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .term-post .vsc-actions button:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .term-post .vsp-run svg { width: 12px; height: 12px; display: block; }
   .term-post-body { padding: 30px 30px 28px; }
   .term-post-body h1 { margin-top: 12px !important; }
   .term-post-body p { color: var(--gray-700); margin-bottom: 12px; }
@@ -391,15 +374,10 @@
 <div class="post-hero">
   <div class="container">
     <div class="term-post">
-      <div class="vsc-titlebar" aria-hidden="true">
-        <div class="vsc-traffic"><span class="c"></span><span class="m"></span><span class="e"></span></div>
-        <div class="vsc-tabs">
-          <div class="vsc-tab"><span class="vsc-ts">TS</span>orders-desk.component.ts</div>
-        </div>
-        <div class="vsc-actions">
-          <button type="button" title="Split Editor" aria-label="Split">⌟</button>
-          <button type="button" title="More" aria-label="More">⋯</button>
-        </div>
+      <div class="vsp-bar">
+        <span class="vsp-logo" title="VSCode"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L4.147 12 .326 15.26a1 1 0 0 0 .001 1.479l1.407 1.407a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.494 1.494 0 0 0 1.705.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 13.6L10.826 12l7.178-4.187z" fill="#007ACC"/></svg></span>
+        <span class="vsp-tab">orders-desk.component.ts</span>
+        <button class="vsp-run" type="button" aria-label="Run" title="Run"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span>Run</span></button>
       </div>
       <div class="term-post-body">
     <span class="badge">Conceitos</span><span class="serie-num">11 / leva 3 — Angular · TypeScript · PrimeNG</span>
@@ -920,108 +898,96 @@ export class OrderFiltersBar {
 </script>
 
 <style id="ide-components">
-  /* ===== Code Block VS Code (Dark+) ===== */
+  /* ===== Code Block VSCode (Dracula) — igual Fundação Python ===== */
   .vscode-codeblock {
     display: flex; flex-direction: column;
-    border-radius: 10px; border: 1px solid #2B2B2B;
-    background: #1E1E1E; overflow: hidden;
-    box-shadow: 0 8px 28px rgba(0,0,0,.28);
-    font-family: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+    border-radius: 12px; border: 1px solid #44475A;
+    background: #282A36; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    font-family: 'JetBrains Mono', monospace;
     margin: 18px 0 24px;
   }
-  .vscode-tabbar {
+  .vscode-header {
     display: flex; align-items: center;
-    background: #252526; border-bottom: 1px solid #1E1E1E;
-    min-height: 36px; padding-right: 8px;
+    padding: 8px 12px; background: #21222C;
+    border-bottom: 1px solid #44475A; gap: 12px;
   }
-  .vscode-logo {
-    width: 22px; height: 22px; margin: 0 10px 0 12px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 4px; transition: background .15s;
+  .vscode-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3px; border-radius: 3px; transition: all 150ms; }
+  .vscode-logo svg { width: 100%; height: 100%; }
+  .vscode-logo:hover { background: rgba(88,175,243,.2); box-shadow: 0 0 6px rgba(88,175,243,.3); }
+  .vscode-tabs { display: flex; flex-grow: 1; overflow-x: auto; }
+  .vscode-tab {
+    display: flex; align-items: center;
+    padding: 8px 16px; background: #21222C; color: #F8F8F2;
+    font-size: 12px; border-bottom: 2px solid #50FA7B; white-space: nowrap;
   }
-  .vscode-logo:hover { background: rgba(0,122,204,.18); }
-  .vscode-logo svg { width: 18px; height: 18px; display: block; }
-  .vscode-tab-active {
-    display: flex; align-items: center; gap: 8px;
-    height: 36px; padding: 0 14px;
-    background: #1E1E1E; color: #CCCCCC;
-    border-top: 2px solid #007ACC;
-    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 500;
-    flex: 1; min-width: 0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .vscode-tab-active .vsc-file-icon {
-    width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0;
-    background: #3178C6; color: #fff;
-    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
-    display: inline-flex; align-items: center; justify-content: center;
-  }
-  .vscode-controls { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
+  .vscode-tab-label { display: flex; align-items: center; gap: 6px; }
+  .vscode-tab-label::before { content: ''; width: 8px; height: 8px; background: #50FA7B; border-radius: 50%; }
+  .vscode-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
   .vscode-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border: none; background: transparent;
-    cursor: pointer; border-radius: 4px; transition: background .15s, opacity .15s;
-    opacity: .85; position: relative; color: #CCCCCC;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 6px 12px; background: #50FA7B; color: #282A36;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    transition: all 150ms; position: relative;
   }
-  .vscode-btn:not(:disabled):hover { opacity: 1; background: rgba(255,255,255,.08); }
-  .vscode-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .vscode-btn svg { width: 15px; height: 15px; }
+  .vscode-btn:hover:not(:disabled) { background: #44FF99; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(80,250,123,.2); }
+  .vscode-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .vscode-btn svg { width: 13px; height: 13px; }
   .vscode-btn::after {
     content: attr(data-tooltip);
     position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
-    background: #252526; color: #CCCCCC; padding: 4px 8px; border-radius: 4px;
-    font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
-    transition: opacity 150ms; border: 1px solid #3C3C3C;
-    font-family: 'Inter', sans-serif; font-weight: 500; z-index: 10;
+    background: #44475A; color: #F8F8F2; padding: 4px 8px; border-radius: 4px;
+    font-size: 10px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #6272A4; z-index: 10;
   }
   .vscode-btn:hover::after { opacity: 1; }
-  .vscode-btn-copy.copied { color: #89D185; }
-  .vscode-body { display: flex; overflow: hidden; background: #1E1E1E; }
+  .vscode-body { display: flex; overflow: hidden; background: #282A36; }
   .vscode-line-numbers {
     display: flex; flex-direction: column;
-    padding: 16px 10px; color: #858585;
-    font-size: 13px; line-height: 1.65; text-align: right;
-    user-select: none; border-right: 1px solid #2B2B2B; min-width: 44px;
+    padding: 20px 8px; color: #6272A4;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #44475A; min-width: 42px;
   }
   .vscode-body pre {
     flex: 1; margin: 0 !important; border-radius: 0 !important;
-    background: #1E1E1E !important; color: #D4D4D4 !important;
-    padding: 16px 18px !important;
+    background: #282A36 !important; color: #F8F8F2 !important;
   }
   .vscode-statusbar {
-    display: flex; align-items: center; gap: 12px;
-    padding: 0 12px; height: 24px;
-    background: #007ACC; color: #fff;
-    font-size: 11.5px; font-family: 'JetBrains Mono', monospace;
+    padding: 6px 16px; background: #21222C; border-top: 1px solid #44475A;
+    color: #6272A4; font-size: 11px; font-family: 'JetBrains Mono', monospace;
   }
-  .vscode-statusbar .vsc-status-msg { margin-left: auto; opacity: .95; display: none; }
-  .vscode-statusbar .vsc-status-msg.on { display: inline; }
+  .vscode-status-text.running { color: #50FA7B; }
 
-  /* Syntax highlighting — VS Code Dark+ */
-  .vscode-codeblock .hl-com { color: #6A9955; font-style: italic; }
-  .vscode-codeblock .hl-str { color: #CE9178; }
-  .vscode-codeblock .hl-ann { color: #DCDCAA; }
-  .vscode-codeblock .hl-kw  { color: #569CD6; }
-  .vscode-codeblock .hl-num { color: #B5CEA8; }
-  .vscode-codeblock .hl-cls { color: #4EC9B0; }
-  .vscode-codeblock .hl-fn  { color: #DCDCAA; }
+  /* Syntax highlighting — Dracula */
+  .vscode-codeblock .hl-com { color: #6272A4; }
+  .vscode-codeblock .hl-str { color: #F1FA8C; }
+  .vscode-codeblock .hl-ann { color: #50FA7B; }
+  .vscode-codeblock .hl-kw  { color: #FF79C6; }
+  .vscode-codeblock .hl-num { color: #BD93F9; }
+  .vscode-codeblock .hl-cls { color: #8BE9FD; }
+  .vscode-codeblock .hl-fn  { color: #50FA7B; }
 
   @media (max-width: 760px) {
-    .vscode-tabbar { min-height: 34px; }
-    .vscode-tab-active { font-size: 11.5px; padding: 0 10px; }
-    .vscode-btn { width: 26px; height: 26px; }
+    .vscode-logo { width: 20px; height: 20px; }
     .vscode-btn::after { display: none; }
-    .vscode-line-numbers { padding: 14px 6px; font-size: 12px; min-width: 34px; }
-    .vscode-body pre { padding: 14px 12px !important; font-size: 12.5px; }
+    .vscode-line-numbers { padding: 16px 6px; font-size: 12px; min-width: 34px; }
+    .vscode-tab { padding: 6px 12px; font-size: 11px; }
+    .vscode-btn { padding: 4px 8px; font-size: 11px; }
+    .vscode-btn-text { display: none; }
+    .vscode-statusbar { padding: 4px 12px; font-size: 10px; }
   }
 </style>
 <script id="pre-js">
 (function () {
-  var VSCODE_LOGO = '<a class="vscode-logo" href="https://code.visualstudio.com/" target="_blank" rel="noopener" title="Visual Studio Code"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#007ACC" d="M17.9 2.4 9.7 8.1 5.4 4.9 3 6.1v11.8l2.4 1.2 4.3-3.2 8.2 5.7L21 20.4V3.6z"/><path fill="#1F9CF0" d="M17.9 2.4 21 3.6v16.8l-3.1 1.2-8.2-5.7 6.4-5.1-6.4-5.1z"/><path fill="#0078D4" opacity=".85" d="M5.4 4.9 3 6.1v11.8l2.4 1.2 4.3-3.2V8.1z"/></svg></a>';
-  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-  var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+  var DEFAULT_NAME = 'exemplo.ts';
 
-  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  var VSCODE_LOGO = '<a class="vscode-logo" href="https://code.visualstudio.com/download" target="_blank" rel="noopener" title="Baixar VS Code"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L4.147 12 .326 15.26a1 1 0 0 0 .001 1.479l1.407 1.407a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.494 1.494 0 0 0 1.705.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 13.6L10.826 12l7.178-4.187z" fill="#007ACC"/></svg></a>';
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
 
   var RE_TS = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\]|\\.)*`)|(@\w+)|\b(public|private|protected|class|interface|enum|type|extends|implements|return|new|static|readonly|const|let|var|function|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|import|export|from|as|this|super|null|true|false|undefined|async|await|of|in|typeof|keyof|infer|never|unknown|any|void|string|number|boolean|object|satisfies|override|abstract|default|instanceof)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
 
@@ -1044,13 +1010,9 @@ export class OrderFiltersBar {
     var el = pre.previousElementSibling;
     if (el && el.classList && el.classList.contains('code-label')) {
       var t = el.textContent.split('—')[0].replace('»', '').trim();
-      if (t) {
-        // Prefer a .ts-looking label when the label is descriptive
-        if (/\.(ts|html|css)$/i.test(t)) return t;
-        return t;
-      }
+      if (t) return t;
     }
-    return 'exemplo.ts';
+    return DEFAULT_NAME;
   }
 
   function lineNumbersHtml(pre) {
@@ -1062,47 +1024,45 @@ export class OrderFiltersBar {
 
   document.querySelectorAll('article pre').forEach(function (pre) {
     if (pre.closest('.vscode-codeblock')) return;
+
     var codeEl = pre.querySelector('code') || pre;
-    var raw = codeEl.textContent;
     if (!codeEl.querySelector('span')) {
-      codeEl.innerHTML = highlight(raw);
+      codeEl.innerHTML = highlight(codeEl.textContent);
     }
+
     var name = filenameFor(pre);
     var nums = lineNumbersHtml(pre);
     var wrap = document.createElement('div');
     wrap.className = 'vscode-codeblock';
     wrap.innerHTML =
-      '<div class="vscode-tabbar">' + VSCODE_LOGO +
-        '<div class="vscode-tab-active"><span class="vsc-file-icon">TS</span><span class="vscode-filename"></span></div>' +
+      '<div class="vscode-header">' + VSCODE_LOGO +
+        '<div class="vscode-tabs"><div class="vscode-tab active"><span class="vscode-tab-label"></span></div></div>' +
         '<div class="vscode-controls">' +
-          '<button class="vscode-btn vscode-btn-copy" data-tooltip="Copy" type="button" aria-label="Copy">' + ICON_COPY + '</button>' +
+          '<button class="vscode-btn vscode-btn-run" data-tooltip="Run (Ctrl+Enter)" type="button" aria-label="Run">' + ICON_PLAY + '<span class="vscode-btn-text">Run</span></button>' +
         '</div>' +
       '</div>' +
       '<div class="vscode-body"><div class="vscode-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
-      '<div class="vscode-statusbar"><span>TypeScript</span><span>UTF-8</span><span class="vsc-status-msg">Copied</span></div>';
-    wrap.querySelector('.vscode-filename').textContent = name;
+      '<div class="vscode-statusbar"><span class="vscode-status-text">✓ Pronto</span></div>';
+    wrap.querySelector('.vscode-tab-label').textContent = name;
     pre.parentNode.insertBefore(wrap, pre);
     wrap.querySelector('.vscode-body').appendChild(pre);
 
-    var copyBtn = wrap.querySelector('.vscode-btn-copy');
-    var statusMsg = wrap.querySelector('.vsc-status-msg');
-    copyBtn.addEventListener('click', function () {
-      var textToCopy = raw;
-      function done() {
-        copyBtn.classList.add('copied');
-        copyBtn.innerHTML = ICON_CHECK;
-        statusMsg.classList.add('on');
-        setTimeout(function () {
-          copyBtn.classList.remove('copied');
-          copyBtn.innerHTML = ICON_COPY;
-          statusMsg.classList.remove('on');
-        }, 1600);
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy).then(done).catch(done);
-      } else {
-        done();
-      }
+    var vsRun = wrap.querySelector('.vscode-btn-run');
+    var vsStatus = wrap.querySelector('.vscode-status-text');
+    var vsRunning = false;
+
+    vsRun.addEventListener('click', function () {
+      if (vsRunning) return;
+      vsRunning = true;
+      vsRun.disabled = true;
+      vsStatus.textContent = '► Executando...';
+      vsStatus.classList.add('running');
+      setTimeout(function () {
+        vsRunning = false;
+        vsRun.disabled = false;
+        vsStatus.textContent = '✓ Pronto';
+        vsStatus.classList.remove('running');
+      }, 1500);
     });
   });
 })();
