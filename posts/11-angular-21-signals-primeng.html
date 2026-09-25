@@ -470,6 +470,11 @@ export const appConfig: ApplicationConfig = {
   }
 }</code></pre>
 
+    <div class="callout-dica">
+      <strong>Demo no blog</strong>
+      <p>Aperte <strong>Demo</strong> nesse bloco (desktop ou celular): abre um modal com skeleton shimmer e, em seguida, a lista fake de pedidos. É HTML/CSS/JS — não é Angular rodando.</p>
+    </div>
+
     <div class="quando-usar">
       <strong>Trade-off:</strong> ainda dá pra usar <code>*ngIf</code> / <code>*ngFor</code> em código legado. Em feature nova Angular 21, control flow nativo. Menos diretiva importada, menos surpresa de change detection no template.
     </div>
@@ -973,7 +978,110 @@ export class OrderFiltersBar {
     .vscode-tab { padding: 6px 12px; font-size: 11px; }
     .vscode-btn { padding: 4px 8px; font-size: 11px; }
     .vscode-btn-text { display: none; }
-    .vscode-statusbar { padding: 4px 12px; font-size: 10px; }  }
+    .vscode-statusbar { padding: 4px 12px; font-size: 10px; }
+  }
+
+  /* ===== Simulação p-skeleton (modal) ===== */
+  .demo-overlay {
+    position: fixed; inset: 0; z-index: 80;
+    background: rgba(15, 23, 42, .55);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .2s ease, visibility .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .demo-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
+  body.demo-modal-open { overflow: hidden; touch-action: none; }
+  .demo-modal {
+    width: min(520px, 100%);
+    max-height: min(86vh, 640px);
+    background: #fff; border-radius: 16px;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, .28);
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateY(12px) scale(.98);
+    transition: transform .22s ease;
+  }
+  .demo-overlay.open .demo-modal { transform: none; }
+  .demo-modal-head {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 16px 16px 12px; border-bottom: 1px solid var(--gray-200);
+    background: var(--bg-soft);
+  }
+  .demo-modal-head h3 {
+    margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: var(--primary);
+  }
+  .demo-modal-head p {
+    margin: 4px 0 0; font-size: 12.5px; color: var(--gray-500); line-height: 1.4;
+  }
+  .demo-modal-close {
+    margin-left: auto; flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: #fff; color: var(--gray-700); cursor: pointer;
+    font-size: 22px; line-height: 1;
+    border: 1px solid var(--gray-200);
+  }
+  .demo-modal-close:hover { background: var(--gray-100); }
+  .demo-modal-body { padding: 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .demo-phase {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: #065F46; background: #ECFDF5; border: 1px solid #A7F3D0;
+    display: inline-block; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px;
+  }
+  .demo-phase.done { color: #1D4ED8; background: #DBEAFE; border-color: #BFDBFE; }
+  .demo-skel-row {
+    height: 2.75rem; border-radius: 8px; margin-bottom: 10px;
+    background: linear-gradient(90deg, #E5E7EB 0%, #F3F4F6 40%, #E5E7EB 80%);
+    background-size: 200% 100%;
+    animation: demo-shimmer 1.1s ease-in-out infinite;
+  }
+  @keyframes demo-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .demo-skel-row { animation: none; background: #E5E7EB; }
+    .demo-overlay, .demo-modal { transition: none; }
+  }
+  .demo-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .demo-table th {
+    text-align: left; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--gray-500); font-weight: 600;
+    padding: 0 0 10px; border-bottom: 1px solid var(--gray-200);
+  }
+  .demo-table td {
+    padding: 12px 8px 12px 0; border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700); vertical-align: middle;
+  }
+  .demo-table tr:last-child td { border-bottom: none; }
+  .demo-tag {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+  }
+  .demo-tag.paid { background: #ECFDF5; color: #065F46; }
+  .demo-tag.pending { background: #FFFBEB; color: #92400E; }
+  .demo-tag.shipped { background: #DBEAFE; color: #1D4ED8; }
+  .demo-modal-foot {
+    padding: 12px 16px 16px; border-top: 1px solid var(--gray-200);
+    font-size: 12px; color: var(--gray-500); line-height: 1.45;
+  }
+  .demo-modal-foot strong { color: var(--primary); }
+  @media (max-width: 760px) {
+    .demo-overlay {
+      align-items: flex-end; padding: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .demo-modal {
+      width: 100%; max-height: 88vh; border-radius: 18px 18px 0 0;
+      transform: translateY(24px);
+    }
+    .demo-overlay.open .demo-modal { transform: none; }
+    .demo-modal-head { padding: 14px 14px 10px; }
+    .demo-modal-body { padding: 14px; }
+    .demo-table { font-size: 13px; }
+    .demo-table td:nth-child(2) { white-space: nowrap; }
+  }
 </style>
 <script id="pre-js">
 (function () {
@@ -984,6 +1092,7 @@ export class OrderFiltersBar {
   function esc(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
+
   var RE_TS = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\]|\\.)*`)|(@\w+)|\b(public|private|protected|class|interface|enum|type|extends|implements|return|new|static|readonly|const|let|var|function|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|import|export|from|as|this|super|null|true|false|undefined|async|await|of|in|typeof|keyof|infer|never|unknown|any|void|string|number|boolean|object|satisfies|override|abstract|default|instanceof)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
 
   function highlight(text) {
@@ -1005,19 +1114,96 @@ export class OrderFiltersBar {
     var el = pre.previousElementSibling;
     if (el && el.classList && el.classList.contains('code-label')) {
       var t = el.textContent.split('—')[0].replace('»', '').trim();
-      if (t) {
-        // Prefer a .ts-looking label when the label is descriptive
-        if (/\.(ts|html|css)$/i.test(t)) return t;
-        return t;
-      }
+      if (t) return t;
     }
-    return DEFAULT_NAME;  }
+    return DEFAULT_NAME;
+  }
 
   function lineNumbersHtml(pre) {
     var n = pre.textContent.replace(/\n$/, '').split('\n').length;
     var out = '';
     for (var i = 1; i <= n; i++) out += '<span>' + i + '</span>';
     return out;
+  }
+
+  var demoOverlay = null;
+  var demoTimer = null;
+  var demoPrevFocus = null;
+
+  function ensureDemoModal() {
+    if (demoOverlay) return demoOverlay;
+    demoOverlay = document.createElement('div');
+    demoOverlay.className = 'demo-overlay';
+    demoOverlay.setAttribute('role', 'dialog');
+    demoOverlay.setAttribute('aria-modal', 'true');
+    demoOverlay.setAttribute('aria-labelledby', 'demo-skel-title');
+    demoOverlay.innerHTML =
+      '<div class="demo-modal">' +
+        '<div class="demo-modal-head">' +
+          '<div>' +
+            '<h3 id="demo-skel-title">Orders Desk — loading</h3>' +
+            '<p>Simulação do control flow com <code>p-skeleton</code></p>' +
+          '</div>' +
+          '<button type="button" class="demo-modal-close" aria-label="Fechar">×</button>' +
+        '</div>' +
+        '<div class="demo-modal-body"></div>' +
+        '<div class="demo-modal-foot"><strong>Simulação em HTML/CSS/JS</strong> — não é Angular nem PrimeNG rodando. No app real, o <code>httpResource</code> troca o status e o template reage.</div>' +
+      '</div>';
+    document.body.appendChild(demoOverlay);
+
+    demoOverlay.addEventListener('click', function (e) {
+      if (e.target === demoOverlay) closeDemoModal();
+    });
+    demoOverlay.querySelector('.demo-modal-close').addEventListener('click', closeDemoModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && demoOverlay.classList.contains('open')) closeDemoModal();
+    });
+    return demoOverlay;
+  }
+
+  function closeDemoModal() {
+    if (!demoOverlay) return;
+    clearTimeout(demoTimer);
+    demoOverlay.classList.remove('open');
+    document.body.classList.remove('demo-modal-open');
+    if (demoPrevFocus && typeof demoPrevFocus.focus === 'function') {
+      try { demoPrevFocus.focus(); } catch (err) {}
+    }
+    demoPrevFocus = null;
+  }
+
+  function runSkeletonDemo(triggerBtn) {
+    var overlay = ensureDemoModal();
+    var body = overlay.querySelector('.demo-modal-body');
+    var title = overlay.querySelector('#demo-skel-title');
+    demoPrevFocus = triggerBtn || document.activeElement;
+    clearTimeout(demoTimer);
+
+    title.textContent = 'Orders Desk — loading';
+    body.innerHTML =
+      '<span class="demo-phase">status() === \'loading\'</span>' +
+      '<div class="demo-skel-row" aria-hidden="true"></div>' +
+      '<div class="demo-skel-row" aria-hidden="true"></div>' +
+      '<div class="demo-skel-row" aria-hidden="true"></div>' +
+      '<div class="demo-skel-row" aria-hidden="true"></div>';
+
+    document.body.classList.add('demo-modal-open');
+    overlay.classList.add('open');
+    overlay.querySelector('.demo-modal-close').focus();
+
+    demoTimer = setTimeout(function () {
+      title.textContent = 'Orders Desk — pedidos';
+      body.innerHTML =
+        '<span class="demo-phase done">@else → @for (track order.id)</span>' +
+        '<table class="demo-table">' +
+          '<thead><tr><th>Cliente</th><th>Total</th><th>Status</th></tr></thead>' +
+          '<tbody>' +
+            '<tr><td>Acme Latam</td><td>R$&nbsp;1.280,00</td><td><span class="demo-tag paid">PAID</span></td></tr>' +
+            '<tr><td>Nova Mesa</td><td>R$&nbsp;420,50</td><td><span class="demo-tag pending">PENDING</span></td></tr>' +
+            '<tr><td>Beta Store</td><td>R$&nbsp;3.010,00</td><td><span class="demo-tag shipped">SHIPPED</span></td></tr>' +
+          '</tbody>' +
+        '</table>';
+    }, 1400);
   }
 
   document.querySelectorAll('article pre').forEach(function (pre) {
@@ -1030,13 +1216,14 @@ export class OrderFiltersBar {
 
     var name = filenameFor(pre);
     var nums = lineNumbersHtml(pre);
+    var isSkeletonDemo = /p-skeleton/i.test(raw);
     var wrap = document.createElement('div');
     wrap.className = 'vscode-codeblock';
     wrap.innerHTML =
       '<div class="vscode-header">' + VSCODE_LOGO +
         '<div class="vscode-tabs"><div class="vscode-tab active"><span class="vscode-tab-label"></span></div></div>' +
         '<div class="vscode-controls">' +
-          '<button class="vscode-btn vscode-btn-run" data-tooltip="Run (Ctrl+Enter)" type="button" aria-label="Run">' + ICON_PLAY + '<span class="vscode-btn-text">Run</span></button>' +
+          '<button class="vscode-btn vscode-btn-run" data-tooltip="' + (isSkeletonDemo ? 'Simular loading' : 'Run (Ctrl+Enter)') + '" type="button" aria-label="' + (isSkeletonDemo ? 'Simular p-skeleton' : 'Run') + '">' + ICON_PLAY + '<span class="vscode-btn-text">' + (isSkeletonDemo ? 'Demo' : 'Run') + '</span></button>' +
         '</div>' +
       '</div>' +
       '<div class="vscode-body"><div class="vscode-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
@@ -1053,14 +1240,16 @@ export class OrderFiltersBar {
       if (vsRunning) return;
       vsRunning = true;
       vsRun.disabled = true;
-      vsStatus.textContent = '► Executando...';
+      vsStatus.textContent = isSkeletonDemo ? '► Simulando…' : '► Executando...';
       vsStatus.classList.add('running');
+      if (isSkeletonDemo) runSkeletonDemo(vsRun);
       setTimeout(function () {
         vsRunning = false;
         vsRun.disabled = false;
         vsStatus.textContent = '✓ Pronto';
         vsStatus.classList.remove('running');
-      }, 1500);    });
+      }, isSkeletonDemo ? 1600 : 1500);
+    });
   });
 })();
 </script>
