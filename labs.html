@@ -9,11 +9,12 @@
 
   gtag('config', 'G-PPB6NBPG2C');
 </script>
+<script>(function (d) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; d.classList.add('js-motion'); setTimeout(function () { if (!window.blogMotion) d.classList.remove('js-motion'); }, 2500); })(document.documentElement);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Labs & iniciativas — Blog Do Neto Dev</title>
-<meta name="description" content="Labs e iniciativas em público: quickstart de agentes, DocFlow, serverless AWS, specs do CoreLedger e o próprio blog — o que tem em cada repo e pra quê existe.">
+<meta name="description" content="Labs e iniciativas em público: quickstart de agentes, DocFlow, serverless AWS e specs do CoreLedger — o que tem em cada repo e pra quê existe.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -151,8 +152,6 @@
   .md-h2 { color: var(--accent); font-weight: 700; margin-top: 12px; }
   .md-p { color: #CBD5E1; margin-top: 8px; }
   .md-p strong { color: #fff; }
-  #sobre-saida > * { opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease; }
-  #sobre-saida > .mostra { opacity: 1; transform: none; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: 'JetBrains Mono', monospace; font-size: 13px;
@@ -456,9 +455,26 @@
   ::-webkit-scrollbar-track { background: var(--bg-soft); }
   ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--gray-500);
+    margin-bottom: 6px !important;
+  }
+  .eyebrow::before { content: '// '; color: var(--accent); }
+  .lab-card.featured { --card-bg: linear-gradient(180deg, #FFFBEB 0%, #fff 48%); }
 </style>
+<link rel="stylesheet" href="assets/motion.css">
+<script src="assets/motion.js" defer></script>
 </head>
-<body>
+<body data-motion="full">
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cd ~/labs</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
 
 <header>
   <div class="nav">
@@ -480,7 +496,7 @@
   <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
-<div class="sobre-hero">
+<div class="sobre-hero" data-hero data-sl="labs">
   <div class="container">
     <div class="term" aria-label="Terminal listando labs e iniciativas">
       <div class="ij-bar">
@@ -512,7 +528,7 @@
       </div>
       <div class="term-body">
         <p class="term-linha"><span class="prompt">$</span> <span id="sobre-cmd"></span><span class="term-cursor" id="sobre-cursor"></span></p>
-        <div id="sobre-saida">
+        <div id="sobre-saida" data-saida>
           <h1 class="md-h1">Labs &amp; iniciativas</h1>
           <p class="md-sub">Evidência em público — o que eu construí, pra quê, e o que tem dentro.</p>
           <p class="md-h2">## ls ~/labs</p>
@@ -523,21 +539,29 @@
   </div>
 </div>
 
-<section class="bloco">
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-trilho">
+    <span>python</span><span>aws sam</span><span>lambda</span><span>angular</span><span>primeng</span><span>textract</span><span>sqs</span><span>dynamodb</span><span>copilot</span><span>skills</span><span>sdd</span><span>specs</span>
+    <span>python</span><span>aws sam</span><span>lambda</span><span>angular</span><span>primeng</span><span>textract</span><span>sqs</span><span>dynamodb</span><span>copilot</span><span>skills</span><span>sdd</span><span>specs</span>
+  </div>
+</div>
+
+<section class="bloco" data-sl="manifesto">
   <div class="container">
-    <div class="manifesto" style="margin-top: 24px;">
+    <div class="manifesto" style="margin-top: 24px;" data-reveal>
       Construir em público é freio de mão: o código (ou a spec) prova a conversa do blog.
     </div>
-    <p style="margin-top: 18px; margin-bottom: 0;">Curadoria honesta — só o que tem história clara. O restante do GitHub continua em <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">github.com/pedronetodeveloper</a>.</p>
+    <p style="margin-top: 18px; margin-bottom: 0;" data-reveal>Curadoria honesta — só o que tem história clara. O restante do GitHub continua em <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">github.com/pedronetodeveloper</a>.</p>
   </div>
 </section>
 
 <section class="bloco" id="labs">
   <div class="container">
-    <h2>Iniciativas em público</h2>
+    <p class="eyebrow" data-reveal>5 repos · curadoria com história</p>
+    <h2 data-scramble>Iniciativas em público</h2>
     <div class="labs-grid">
 
-      <article class="lab-card featured lab-anchor" id="quickstart-agentes">
+      <article class="lab-card featured lab-anchor" data-reveal data-card data-sl="quickstart-agentes" id="quickstart-agentes">
         <div class="lab-top">
           <span class="lab-tag comunidade">Comunidade</span>
           <span class="lab-stack">Copilot · Skills · Templates</span>
@@ -550,7 +574,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="docflow">
+      <article class="lab-card lab-anchor" data-reveal data-card data-sl="docflow" id="docflow">
         <div class="lab-top">
           <span class="lab-tag front">Front</span>
           <span class="lab-stack">Angular 19 · PrimeNG</span>
@@ -563,7 +587,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="onboarding-lambdas">
+      <article class="lab-card lab-anchor" data-reveal data-card data-sl="onboarding-lambdas" id="onboarding-lambdas">
         <div class="lab-top">
           <span class="lab-tag serverless">Serverless</span>
           <span class="lab-stack">Python · AWS SAM</span>
@@ -576,7 +600,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="tcc-documentos">
+      <article class="lab-card lab-anchor" data-reveal data-card data-sl="tcc-documentos" id="tcc-documentos">
         <div class="lab-top">
           <span class="lab-tag serverless">Serverless</span>
           <span class="lab-stack">Python · Textract</span>
@@ -589,7 +613,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="coreledger-specs">
+      <article class="lab-card lab-anchor" data-reveal data-card data-sl="coreledger-specs" id="coreledger-specs">
         <div class="lab-top">
           <span class="lab-tag specs">Specs</span>
           <span class="lab-stack">SDD · Kiro-style</span>
@@ -606,16 +630,16 @@
   </div>
 </section>
 
-<div class="container">
-  <div class="cta">
+<div class="container" data-sl="cta">
+  <div class="cta" data-reveal>
     <span class="rotulo">$ gh repo list pedronetodeveloper</span>
-    <h2>Quer ver o restante?</h2>
+    <h2 data-scramble>Quer ver o restante?</h2>
     <p>Aqui está a curadoria com história. No GitHub tem o inventário completo — inclusive o que ainda é rascunho.</p>
-    <a href="https://github.com/pedronetodeveloper" class="btn" target="_blank" rel="noopener">Abrir meu GitHub →</a>
+    <a href="https://github.com/pedronetodeveloper" class="btn" target="_blank" rel="noopener" data-magnet>Abrir meu GitHub →</a>
   </div>
 </div>
 
-<footer id="contato">
+<footer id="contato" data-sl="contato">
   <div class="footer-inner">
     <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
     <div class="footer-links">
@@ -657,7 +681,7 @@
         }, 240);
       }
     }, 42);
-  }, 500);
+  }, document.documentElement.classList.contains('js-motion') ? 1050 : 500);
 })();
 </script>
 
