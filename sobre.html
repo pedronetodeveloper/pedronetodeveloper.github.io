@@ -9,6 +9,7 @@
 
   gtag('config', 'G-PPB6NBPG2C');
 </script>
+<script>(function (d) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; d.classList.add('js-motion'); setTimeout(function () { if (!window.blogMotion) d.classList.remove('js-motion'); }, 2500); })(document.documentElement);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -396,8 +397,17 @@
   ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
+<link rel="stylesheet" href="assets/motion.css">
+<script src="assets/motion.js" defer></script>
 </head>
-<body>
+<body data-motion="full" data-sl-arq="sobre.md">
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cd ~/sobre</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
 
 <header>
   <div class="nav">
@@ -419,7 +429,7 @@
   <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
-<div class="sobre-hero">
+<div class="sobre-hero" data-hero data-sl="historia">
   <div class="container">
     <div class="term" aria-label="Terminal contando a história do blog">
       <div class="ij-bar">
@@ -463,39 +473,39 @@
   </div>
 </div>
 
-<section class="bloco">
+<section class="bloco" data-sl="manifesto">
   <div class="container">
-    <div class="manifesto" style="margin-top: 24px;">
+    <div class="manifesto" style="margin-top: 24px;" data-reveal>
       Se um post daqui te destravar em algo que eu também já travei, o blog cumpriu o papel.
     </div>
-    <p style="margin-top: 20px;">Ah, e antes que você repare no capricho do site e desconfie: sim, o HTML e o CSS daqui foram feitos com uma mãozinha de IA 🤖 — dev bom é dev que automatiza, né? Agora o conteúdo é outra história: cada post é pensado, escrito e revisado por mim, com as minhas vivências. IA aqui só carregou o piano. 😄</p>
+    <p style="margin-top: 20px;" data-reveal>Ah, e antes que você repare no capricho do site e desconfie: sim, o HTML e o CSS daqui foram feitos com uma mãozinha de IA 🤖 — dev bom é dev que automatiza, né? Agora o conteúdo é outra história: cada post é pensado, escrito e revisado por mim, com as minhas vivências. IA aqui só carregou o piano. 😄</p>
   </div>
 </section>
 
-<section class="bloco">
+<section class="bloco" data-sl="quem-escreve">
   <div class="container">
-    <h2>Quem escreve</h2>
-    <p>Sou <strong>Pedro Neto</strong>, de São Paulo — desenvolvedor fullstack com 3 anos de estrada e hoje arquiteto de TI júnior. Sou formado em <strong>Sistemas de Informação</strong> pela <a href="https://sptech.school" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">SPTech School</a>. Minha trajetória até o momento é curta e intensa, e é exatamente ela que abastece os posts:</p>
-    <div class="trajetoria">
-      <div class="marco">
+    <h2 data-scramble>Quem escreve</h2>
+    <p data-reveal>Sou <strong>Pedro Neto</strong>, de São Paulo — desenvolvedor fullstack com 3 anos de estrada e hoje arquiteto de TI júnior. Sou formado em <strong>Sistemas de Informação</strong> pela <a href="https://sptech.school" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">SPTech School</a>. Minha trajetória até o momento é curta e intensa, e é exatamente ela que abastece os posts:</p>
+    <div class="trajetoria" data-linha>
+      <div class="marco" data-reveal="left">
         <span class="quando">O começo — estágio na <a href="https://tivit.com" target="_blank" rel="noopener" style="color: #9B1C1C; font-weight: 600;">TIVIT</a></span>
         <h3>🎓 Primeiro projeto de verdade</h3>
         <p>Um sistema de cadastro de currículos pro RH: back em Python com Azure Functions, front em HTML e CSS cru, REST feito na mão — porque a gente nem sabia que existia atalho. Mas o deploy já nascia do jeito certo: esteira no Azure Pipelines.</p>
       </div>
-      <div class="marco">
+      <div class="marco" data-reveal="left">
         <span class="quando">A evolução — de estagiário a fullstack pleno</span>
         <h3>🚀 Pouco mais de 2 anos, muitos projetos</h3>
         <p>Na consultoria, fazia projetos pra clientes e internos — pequenos, de entrega rápida, quase sempre em Spring MVC porque era o que fazia sentido pra baixa complexidade, tambem trabalhei bastantes agentes de AI em Python para criação de aceleradores internos. Foi entregando assim que subi de estagiário pra fullstack pleno.</p>
       </div>
-      <div class="marco atual">
+      <div class="marco atual" data-reveal="left">
         <span class="quando">Hoje — <a href="https://www.btgpactual.com" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">BTG Pactual</a></span>
         <h3>🏦 Arquiteto de TI júnior</h3>
         <p>Faço parte do time de IDP (Internal Developer Platform) da empresa. Aqui o cenário inverteu: projeto complexo, vida longa, arquitetura hexagonal pregada no dia a dia. É a fase que mais me ensina, e a que mais rende post.</p>
       </div>
     </div>
-    <p style="margin-top: 24px;">Fora do trabalho, sigo construindo em público: no meu <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">GitHub</a> — e no catálogo <a href="labs.html" style="color: var(--secondary); font-weight: 600;">Labs</a> — você encontra desde serverless em Python na AWS até um quickstart de agentes de IA pra comunidade, com a história de cada iniciativa.</p>
+    <p style="margin-top: 24px;" data-reveal>Fora do trabalho, sigo construindo em público: no meu <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">GitHub</a> — e no catálogo <a href="labs.html" style="color: var(--secondary); font-weight: 600;">Labs</a> — você encontra desde serverless em Python na AWS até um quickstart de agentes de IA pra comunidade, com a história de cada iniciativa.</p>
     <p style="margin-top: 20px; margin-bottom: 0;"><strong>Certificações:</strong></p>
-    <div class="certs">
+    <div class="certs" data-reveal>
       <span class="cert"><span class="emissor">AWS</span> Certified Cloud Practitioner (CLF-C02)</span>
       <span class="cert"><span class="emissor">Oracle</span> Data Management Foundations</span>
       <span class="cert"><span class="emissor">AWS</span> Agentic AI Demonstrated</span>
@@ -505,26 +515,26 @@
   </div>
 </section>
 
-<section class="bloco">
+<section class="bloco" data-sl="esperar">
   <div class="container">
-    <h2>O que esperar de cada post</h2>
+    <h2 data-scramble>O que esperar de cada post</h2>
     <div class="esperar-grid">
-      <div class="esperar-card">
+      <div class="esperar-card" data-reveal data-card="led">
         <span class="icone">📖</span>
         <h3>Explicação + história real</h3>
         <p>O conceito explicado de forma direta, sempre amarrado à experiência que eu tive com ele na prática — com o background no final de cada post.</p>
       </div>
-      <div class="esperar-card">
+      <div class="esperar-card" data-reveal data-card="led">
         <span class="icone">🧭</span>
         <h3>Minha visão de como começar</h3>
         <p>O caminho que eu recomendaria pra mim mesmo no passado: por onde entrar, o que ignorar no início e o que dominar primeiro.</p>
       </div>
-      <div class="esperar-card">
+      <div class="esperar-card" data-reveal data-card="led">
         <span class="icone">⚠️</span>
         <h3>Os erros que EU cometi</h3>
         <p>Todo post tem pelo menos um erro real, meu ou que vi de perto — como identificar, como sair dele e como não repetir.</p>
       </div>
-      <div class="esperar-card">
+      <div class="esperar-card" data-reveal data-card="led">
         <span class="icone">💻</span>
         <h3>Código que funciona</h3>
         <p>Exemplos copiáveis, sem dependência escondida, do jeito que o mercado usa — e honestidade quando algo é opinião, não regra.</p>
@@ -533,16 +543,16 @@
   </div>
 </section>
 
-<div class="container">
-  <div class="cta">
+<div class="container" data-sl="cta">
+  <div class="cta" data-reveal>
     <span class="rotulo">$ cd ../posts</span>
-    <h2>Bora aprender junto?</h2>
+    <h2 data-scramble>Bora aprender junto?</h2>
     <p>A série começa no alicerce de Java e vai até rodar na nuvem — cada post construindo sobre o anterior.</p>
-    <a href="index.html#posts" class="btn">Ver os posts →</a>
+    <a href="index.html#posts" class="btn" data-magnet>Ver os posts →</a>
   </div>
 </div>
 
-<footer id="contato">
+<footer id="contato" data-sl="contato">
   <div class="footer-inner">
     <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
     <div class="footer-links">
@@ -584,7 +594,7 @@
         }, 240);
       }
     }, 42);
-  }, 500);
+  }, document.documentElement.classList.contains('js-motion') ? 1050 : 500);
 })();
 </script>
 

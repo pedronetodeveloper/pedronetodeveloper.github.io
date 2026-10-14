@@ -1,0 +1,182 @@
+/* =====================================================================
+   Blog Do Neto Dev — camada de motion compartilhada.
+   Tudo que esconde/anima conteúdo só existe sob html.js-motion (adicionada
+   no <head> quando não há prefers-reduced-motion). Sem JS, nada some.
+   ===================================================================== */
+:root {
+  --m-ease-out: cubic-bezier(.16, 1, .3, 1);
+  --m-ease-io: cubic-bezier(.77, 0, .18, 1);
+  --m-amber: #F59E0B;
+  --m-amber-hi: #FCD34D;
+  --m-ink: #0B1220;
+}
+
+/* ---------- boot / transição entre páginas ---------- */
+.boot { display: none; }
+html.js-motion .boot {
+  position: fixed; inset: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 22px;
+  background: var(--m-ink); color: #CBD5E1;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: clamp(10.5px, 3vw, 14px); line-height: 1.6;
+  clip-path: inset(0 0 0 0);
+  /* fallback: some sozinho mesmo se o motion.js não rodar */
+  animation: boot-out .75s var(--m-ease-io) .45s forwards;
+}
+@keyframes boot-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+html.js-motion .boot.saiu {
+  animation: none;
+  clip-path: inset(0 0 100% 0); visibility: hidden; pointer-events: none;
+  transition: clip-path .75s var(--m-ease-io), visibility 0s linear .75s;
+}
+html.js-motion .boot.cobrindo {
+  animation: boot-in .6s var(--m-ease-io) forwards;
+  visibility: visible; pointer-events: auto; transition: none;
+}
+@keyframes boot-in {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.boot p { margin: 0; overflow-wrap: anywhere; }
+.boot .prompt { color: var(--m-amber); }
+.boot-barra {
+  width: 200px; max-width: 70vw; height: 2px; margin-top: 14px;
+  background: #1E293B; border-radius: 2px; overflow: hidden;
+}
+.boot-barra i {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--m-amber-hi), var(--m-amber));
+  box-shadow: 0 0 10px rgba(245,158,11,.8);
+  transform: scaleX(0); transform-origin: left;
+  animation: boot-load .5s var(--m-ease-out) .05s forwards;
+}
+.boot.cobrindo .boot-barra i { transform: scaleX(0); animation: boot-load-saida .55s var(--m-ease-out) .1s forwards; }
+@keyframes boot-load { to { transform: scaleX(1); } }
+@keyframes boot-load-saida { to { transform: scaleX(1); } }
+
+/* o flicker do LED do header só começa quando o boot sai */
+html.js-motion .led-wrap { animation-delay: .75s; }
+
+/* ---------- LED de progresso + statusline vim (injetados pelo JS) ---------- */
+.scroll-led, .statusline { display: none; }
+html.js-motion .scroll-led {
+  display: block; position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 250;
+  transform-origin: left; transform: scaleX(var(--prog, 0));
+  background: linear-gradient(90deg, var(--m-amber-hi), var(--m-amber));
+  box-shadow: 0 0 8px rgba(245,158,11,.9), 0 0 18px rgba(245,158,11,.5);
+  pointer-events: none;
+}
+@media (min-width: 900px) and (pointer: fine) {
+  html.js-motion .statusline {
+    display: flex; position: fixed; right: 20px; bottom: 20px; z-index: 250;
+    font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; line-height: 1;
+    background: var(--m-ink); border: 1px solid #1E293B; border-radius: 7px; overflow: hidden;
+    box-shadow: 0 12px 30px rgba(2,6,23,.35);
+    opacity: 0; transform: translateY(12px); pointer-events: none;
+    transition: opacity .5s var(--m-ease-out), transform .5s var(--m-ease-out);
+  }
+  html.js-motion .statusline.on { opacity: 1; transform: none; }
+}
+.sl-modo { background: var(--m-amber); color: var(--m-ink); font-weight: 700; padding: 7px 10px; }
+.sl-arq { color: #CBD5E1; padding: 7px 12px; min-width: 210px; }
+.sl-arq b { color: var(--m-amber); font-weight: 500; }
+.sl-pct { color: #64748B; padding: 7px 10px; border-left: 1px solid #1E293B; min-width: 48px; text-align: right; }
+
+/* ---------- hero: grid "blueprint" com parallax + spotlight ---------- */
+[data-hero] { position: relative; overflow: hidden; }
+[data-hero]::before {
+  content: ''; position: absolute; inset: -80px 0 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(148,163,184,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(75% 65% at 50% 35%, #000 25%, transparent 80%);
+          mask-image: radial-gradient(75% 65% at 50% 35%, #000 25%, transparent 80%);
+  transform: translate3d(0, var(--grid-y, 0px), 0);
+}
+[data-hero]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 40%), rgba(59,130,246,.13), transparent 70%);
+  opacity: var(--spot, 0); transition: opacity .5s ease;
+}
+[data-hero] > .container { position: relative; z-index: 1; }
+/* entrada do terminal: usa translate/scale individuais pra não brigar com o
+   transform inline do parallax (--luz) */
+html.js-motion [data-hero] .term {
+  opacity: 0; translate: 0 28px; scale: .975;
+  transition: opacity 1s var(--m-ease-out), translate 1s var(--m-ease-out), scale 1s var(--m-ease-out);
+}
+html.js-motion [data-hero] .term.on { opacity: 1; translate: none; scale: none; }
+/* saída do terminal (linhas ganham .mostra no script da página): entra desfocando */
+html.js-motion [data-saida] > * {
+  opacity: 0; filter: blur(6px); transform: translateY(12px);
+  transition: opacity .7s var(--m-ease-out), transform .7s var(--m-ease-out), filter .7s var(--m-ease-out);
+}
+html.js-motion [data-saida] > .mostra { opacity: 1; filter: none; transform: none; }
+
+/* ---------- faixa de stack em loop ---------- */
+.ticker {
+  background: var(--m-ink); overflow: hidden; padding: 20px 0 22px;
+  border-top: 1px solid #1E293B; border-bottom: 1px solid #1E293B;
+}
+.ticker-trilho { display: flex; width: max-content; animation: ticker 48s linear infinite; }
+.ticker span {
+  font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500;
+  font-size: clamp(24px, 5vw, 50px); line-height: 1; letter-spacing: -.02em;
+  white-space: nowrap; padding: 0 24px;
+  color: transparent; -webkit-text-stroke: 1px #475569;
+}
+.ticker span:nth-child(4n + 1) {
+  color: var(--m-amber); -webkit-text-stroke: 0;
+  text-shadow: 0 0 22px rgba(245,158,11,.4);
+}
+.ticker span::after { content: '/'; margin-left: 48px; color: #1E293B; -webkit-text-stroke: 0; text-shadow: none; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-trilho { animation: none; } }
+
+/* ---------- reveal em cascata (como saída de `ls`) ---------- */
+html.js-motion [data-reveal] {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity .9s var(--m-ease-out), transform .9s var(--m-ease-out);
+  transition-delay: var(--d, 0s);
+}
+html.js-motion [data-reveal="left"] { transform: translateX(-26px); }
+html.js-motion [data-reveal].on { opacity: 1; transform: none; }
+
+/* ---------- linha da timeline que "acende" com o scroll ---------- */
+html.js-motion [data-linha]::after {
+  content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(180deg, var(--m-amber-hi), var(--m-amber));
+  box-shadow: 0 0 8px rgba(245,158,11,.7);
+  transform-origin: top; transform: scaleY(var(--tl, 0));
+  pointer-events: none;
+}
+
+/* ---------- cards: LED scan, spotlight e tilt ---------- */
+[data-card] { position: relative; overflow: hidden; }
+[data-card]:not([data-card="led"])::before {
+  content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 3px; z-index: 2;
+  border-radius: 0 0 3px 3px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(245,158,11,.05), var(--m-amber-hi) 12%, #FDE68A 50%, var(--m-amber-hi) 88%, rgba(245,158,11,.05));
+  box-shadow: 0 0 8px rgba(245,158,11,.95), 0 0 22px rgba(245,158,11,.55);
+  opacity: 0; transform: scaleX(.2);
+  transition: opacity .35s ease, transform .6s var(--m-ease-out);
+}
+[data-card]:not([data-card="led"]):hover::before { opacity: 1; transform: none; }
+[data-card].scan::before { animation: m-scan 1.4s var(--m-ease-out) both; }
+@keyframes m-scan {
+  0% { opacity: 0; transform: scaleX(0); }
+  30% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+@media (hover: hover) and (pointer: fine) {
+  html.js-motion [data-card]:hover {
+    /* --card-bg: gradiente próprio do card, preservado sob o spotlight */
+    background-image: radial-gradient(300px circle at var(--sx, 50%) var(--sy, 50%), rgba(59,130,246,.08), transparent 65%), var(--card-bg, none);
+  }
+}
+[data-card].tilt { transition: transform .12s linear, border-color .2s, box-shadow .25s; will-change: transform; }
+
+[data-magnet] { will-change: transform; }
+[data-magnet].magnet { transition: transform .15s linear; }

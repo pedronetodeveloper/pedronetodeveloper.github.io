@@ -9,6 +9,7 @@
 
   gtag('config', 'G-PPB6NBPG2C');
 </script>
+<script>(function (d) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; d.classList.add('js-motion'); setTimeout(function () { if (!window.blogMotion) d.classList.remove('js-motion'); }, 2500); })(document.documentElement);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -408,8 +409,17 @@
   .term-post-body p { color: var(--gray-700); margin-bottom: 12px; }
   @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
 </style>
+<link rel="stylesheet" href="../assets/motion.css">
+<script src="../assets/motion.js" defer></script>
 </head>
-<body>
+<body data-motion="lite">
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cat posts/05-fundacao-cloud.md</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
 
 <header>
   <div class="nav">

@@ -9,6 +9,7 @@
 
   gtag('config', 'G-PPB6NBPG2C');
 </script>
+<script>(function (d) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; d.classList.add('js-motion'); setTimeout(function () { if (!window.blogMotion) d.classList.remove('js-motion'); }, 2500); })(document.documentElement);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -488,8 +489,17 @@
   ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
+<link rel="stylesheet" href="assets/motion.css">
+<script src="assets/motion.js" defer></script>
 </head>
-<body>
+<body data-motion="full" data-sl-arq="index.html">
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cd ~</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
 
 <header>
   <div class="container nav">
@@ -511,7 +521,7 @@
   <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
 </header>
 
-<section class="hero">
+<section class="hero" data-hero data-sl="hero">
   <div class="container">
     <div class="term" aria-label="Terminal de apresentação do blog">
       <div class="ij-bar">
@@ -551,12 +561,19 @@
   </div>
 </section>
 
-<section class="serie" id="trilha">
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-trilho">
+    <span>java</span><span>spring</span><span>python</span><span>iac</span><span>aws</span><span>azure</span><span>bedrock</span><span>ddd</span><span>solid</span><span>angular</span><span>signals</span><span>primeng</span>
+    <span>java</span><span>spring</span><span>python</span><span>iac</span><span>aws</span><span>azure</span><span>bedrock</span><span>ddd</span><span>solid</span><span>angular</span><span>signals</span><span>primeng</span>
+  </div>
+</div>
+
+<section class="serie" id="trilha" data-sl="trilha">
   <div class="container">
-    <h2>A trilha do blog</h2>
-    <p class="section-sub">O mapa da jornada. A <strong>leva 1</strong> são os fundamentos que me levaram de estagiário a arquiteto de TI júnior. A <strong>leva 2</strong> aprofunda conceitos e vocabulário (DDD, SOLID, dicionários). A <strong>leva 3</strong> é o próximo degrau: front Angular, IA no Java, SDD/Kiro e projeto de portfólio. Em todos os posts: experiência real, visão de como começar e erros que eu mesmo cometi.</p>
+    <h2 data-scramble>A trilha do blog</h2>
+    <p class="section-sub" data-reveal>O mapa da jornada. A <strong>leva 1</strong> são os fundamentos que me levaram de estagiário a arquiteto de TI júnior. A <strong>leva 2</strong> aprofunda conceitos e vocabulário (DDD, SOLID, dicionários). A <strong>leva 3</strong> é o próximo degrau: front Angular, IA no Java, SDD/Kiro e projeto de portfólio. Em todos os posts: experiência real, visão de como começar e erros que eu mesmo cometi.</p>
     <div class="levas">
-      <div class="leva">
+      <div class="leva" data-reveal data-card>
         <span class="leva-tag concluida">✔ leva 1 — publicada</span>
         <h3>Fundamentos: de estagiário a arquiteto júnior</h3>
         <ol>
@@ -568,7 +585,7 @@
           <li><a href="posts/06-ia-na-nuvem.html"><span class="num">06</span> 🤖 IA na nuvem: Bedrock, SageMaker e Lex</a></li>
         </ol>
       </div>
-      <div class="leva">
+      <div class="leva" data-reveal data-card>
         <span class="leva-tag concluida">✔ leva 2 — publicada</span>
         <h3>Fundamentos parte 2: conceitos e vocabulário</h3>
         <ol>
@@ -578,7 +595,7 @@
           <li><a href="posts/10-dicionario-do-jr-avancado.html"><span class="num">10</span> ✨ Dicionário do jr II: jargões mais recentes</a></li>
         </ol>
       </div>
-      <div class="leva futuro">
+      <div class="leva futuro" data-reveal data-card>
         <span class="leva-tag construindo">✦ leva 3 — em construção</span>
         <h3>Front, IA, SDD e portfólio</h3>
         <ol>
@@ -593,12 +610,12 @@
   </div>
 </section>
 
-<section class="posts" id="posts">
+<section class="posts" id="posts" data-sl="posts">
   <div class="container">
-    <h2>Posts recentes</h2>
-    <p class="section-sub">Direto ao ponto.</p>
+    <h2 data-scramble>Posts recentes</h2>
+    <p class="section-sub" data-reveal>Direto ao ponto.</p>
     <div class="posts-grid">
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -610,7 +627,7 @@
           <div class="post-meta"><span>Pedro Neto • 18 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -622,7 +639,7 @@
           <div class="post-meta"><span>Pedro Neto • 9 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -634,7 +651,7 @@
           <div class="post-meta"><span>Pedro Neto • 10 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -646,7 +663,7 @@
           <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -658,7 +675,7 @@
           <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -670,7 +687,7 @@
           <div class="post-meta"><span>Pedro Neto • 15 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -682,7 +699,7 @@
           <div class="post-meta"><span>Pedro Neto • 15 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -694,7 +711,7 @@
           <div class="post-meta"><span>Pedro Neto • 14 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -706,7 +723,7 @@
           <div class="post-meta"><span>Pedro Neto • 13 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -718,7 +735,7 @@
           <div class="post-meta"><span>Pedro Neto • 16 min</span><span class="read-link">→ Leia</span></div>
         </div>
       </article>
-      <article class="post-card">
+      <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
           <span class="autor">Pedro Neto</span>
@@ -734,20 +751,20 @@
   </div>
 </section>
 
-<section class="categorias">
+<section class="categorias" data-sl="categorias">
   <div class="container">
-    <h2>Categorias</h2>
-    <div class="cat-list">
-      <a href="posts/01-fundacao-java.html" class="cat-pill">☕ Java</a>
-      <a href="posts/03-fundacao-python.html" class="cat-pill">🐍 Python &amp; IaC</a>
-      <a href="posts/05-fundacao-cloud.html" class="cat-pill">☁️ AWS</a>
-      <a href="posts/11-angular-21-signals-primeng.html" class="cat-pill">🅰️ Angular</a>
-      <a href="#trilha" class="cat-pill">🤖 Spring AI ✦ em breve</a>
+    <h2 data-scramble>Categorias</h2>
+    <div class="cat-list" data-reveal>
+      <a href="posts/01-fundacao-java.html" class="cat-pill" data-magnet>☕ Java</a>
+      <a href="posts/03-fundacao-python.html" class="cat-pill" data-magnet>🐍 Python &amp; IaC</a>
+      <a href="posts/05-fundacao-cloud.html" class="cat-pill" data-magnet>☁️ AWS</a>
+      <a href="posts/11-angular-21-signals-primeng.html" class="cat-pill" data-magnet>🅰️ Angular</a>
+      <a href="#trilha" class="cat-pill" data-magnet>🤖 Spring AI ✦ em breve</a>
     </div>
   </div>
 </section>
 
-<footer id="contato">
+<footer id="contato" data-sl="contato">
   <div class="container footer-inner">
     <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
     <div class="footer-links">
@@ -782,6 +799,11 @@
   let introVisivel = true;
 
   const semAnimacao = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function navegar(href) {
+    if (window.blogMotion) window.blogMotion.ir(href);
+    else location.href = href;
+  }
 
   function esc(s) {
     const d = document.createElement('div');
@@ -898,9 +920,9 @@
       case 'trilha':
         location.hash = '#trilha'; return 'abrindo trilha/ ...';
       case 'labs': case 'lab': case 'portfolio': case 'portfólio':
-        setTimeout(function () { location.href = 'labs.html'; }, 350); return 'abrindo labs/ ...';
+        setTimeout(function () { navegar('labs.html'); }, 350); return 'abrindo labs/ ...';
       case 'sobre':
-        setTimeout(function () { location.href = 'sobre.html'; }, 350); return 'abrindo sobre.md ...';
+        setTimeout(function () { navegar('sobre.html'); }, 350); return 'abrindo sobre.md ...';
       case 'contato':
         location.hash = '#contato'; return 'abrindo contato.txt ...';
       case 'whoami':
@@ -1004,7 +1026,7 @@
         agendarRotacao();
       });
     });
-  }, 1350);
+  }, document.documentElement.classList.contains('js-motion') ? 1450 : 1350);
 })();
 </script>
 <script id="luz-js">
