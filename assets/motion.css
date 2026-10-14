@@ -19,7 +19,7 @@ html.js-motion .boot {
   padding: 0 22px;
   background: var(--m-ink); color: #CBD5E1;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: clamp(11.5px, 3.4vw, 14px); line-height: 1.6;
+  font-size: clamp(10.5px, 3vw, 14px); line-height: 1.6;
   clip-path: inset(0 0 0 0);
   /* fallback: some sozinho mesmo se o motion.js não rodar */
   animation: boot-out .75s var(--m-ease-io) .45s forwards;
@@ -38,7 +38,7 @@ html.js-motion .boot.cobrindo {
   from { clip-path: inset(100% 0 0 0); }
   to { clip-path: inset(0 0 0 0); }
 }
-.boot p { margin: 0; word-break: break-all; }
+.boot p { margin: 0; overflow-wrap: anywhere; }
 .boot .prompt { color: var(--m-amber); }
 .boot-barra {
   width: 200px; max-width: 70vw; height: 2px; margin-top: 14px;
