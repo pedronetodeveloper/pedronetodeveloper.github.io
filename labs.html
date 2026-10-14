@@ -9,11 +9,12 @@
 
   gtag('config', 'G-PPB6NBPG2C');
 </script>
+<script>if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Labs & iniciativas — Blog Do Neto Dev</title>
-<meta name="description" content="Labs e iniciativas em público: quickstart de agentes, DocFlow, serverless AWS, specs do CoreLedger e o próprio blog — o que tem em cada repo e pra quê existe.">
+<meta name="description" content="Labs e iniciativas em público: quickstart de agentes, DocFlow, serverless AWS e specs do CoreLedger — o que tem em cada repo e pra quê existe.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -457,8 +458,176 @@
   ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
+<style id="motion-labs">
+  /* ===== Motion (piloto Labs): efeitos só existem com html.js-motion ===== */
+  :root {
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --ease-io: cubic-bezier(.77, 0, .18, 1);
+  }
+
+  /* boot / transição entre páginas */
+  .boot { display: none; }
+  html.js-motion .boot {
+    position: fixed; inset: 0; z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    background: #0B1220; color: #CBD5E1;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    clip-path: inset(0 0 0 0);
+    transition: clip-path .75s var(--ease-io);
+    animation: boot-out .75s var(--ease-io) .45s forwards;
+  }
+  @keyframes boot-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+  html.js-motion .boot.saiu, html.js-motion .boot.armado { animation: none; }
+  html.js-motion .boot.saiu { clip-path: inset(0 0 100% 0); pointer-events: none; }
+  html.js-motion .boot.armado { clip-path: inset(100% 0 0 0); transition: none; }
+  .boot .prompt { color: var(--accent); }
+  .boot-barra {
+    width: 200px; height: 2px; margin-top: 14px;
+    background: #1E293B; border-radius: 2px; overflow: hidden;
+  }
+  .boot-barra i {
+    display: block; height: 100%;
+    background: var(--accent); box-shadow: 0 0 10px rgba(245,158,11,.8);
+    transform: scaleX(0); transform-origin: left;
+    animation: boot-load .5s var(--ease-out) .05s forwards;
+  }
+  @keyframes boot-load { to { transform: scaleX(1); } }
+  html.js-motion .led-wrap { animation-delay: .75s; }
+
+  /* progresso de leitura (LED) + statusline estilo vim */
+  .scroll-led, .statusline { display: none; }
+  html.js-motion .scroll-led {
+    display: block; position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 250;
+    transform-origin: left; transform: scaleX(var(--prog, 0));
+    background: linear-gradient(90deg, #FCD34D, #F59E0B);
+    box-shadow: 0 0 8px rgba(245,158,11,.9), 0 0 18px rgba(245,158,11,.5);
+    pointer-events: none;
+  }
+  @media (min-width: 900px) and (pointer: fine) {
+    html.js-motion .statusline {
+      display: flex; position: fixed; right: 20px; bottom: 20px; z-index: 250;
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1;
+      background: #0B1220; border: 1px solid #1E293B; border-radius: 7px; overflow: hidden;
+      box-shadow: 0 12px 30px rgba(2,6,23,.35);
+      opacity: 0; transform: translateY(12px); pointer-events: none;
+      transition: opacity .5s var(--ease-out), transform .5s var(--ease-out);
+    }
+    html.js-motion .statusline.on { opacity: 1; transform: none; }
+  }
+  .sl-modo { background: var(--accent); color: #0B1220; font-weight: 700; padding: 7px 10px; }
+  .sl-arq { color: #CBD5E1; padding: 7px 12px; min-width: 210px; }
+  .sl-arq b { color: var(--accent); font-weight: 500; }
+  .sl-pct { color: #64748B; padding: 7px 10px; border-left: 1px solid #1E293B; min-width: 48px; text-align: right; }
+
+  /* hero: grid de "blueprint" com parallax + spotlight no cursor */
+  .sobre-hero { position: relative; overflow: hidden; }
+  .sobre-hero::before {
+    content: ''; position: absolute; inset: -80px 0 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(148,163,184,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.08) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(75% 65% at 50% 35%, #000 25%, transparent 80%);
+            mask-image: radial-gradient(75% 65% at 50% 35%, #000 25%, transparent 80%);
+    transform: translate3d(0, var(--grid-y, 0px), 0);
+  }
+  .sobre-hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 40%), rgba(59,130,246,.13), transparent 70%);
+    opacity: var(--spot, 0); transition: opacity .5s ease;
+  }
+  .sobre-hero .container { position: relative; z-index: 1; }
+  html.js-motion .sobre-hero .term {
+    opacity: 0; transform: translateY(28px) scale(.975);
+    transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+  }
+  html.js-motion .sobre-hero .term.on { opacity: 1; transform: none; }
+  html.js-motion #sobre-saida > * {
+    filter: blur(6px); transform: translateY(12px);
+    transition: opacity .7s var(--ease-out), transform .7s var(--ease-out), filter .7s var(--ease-out);
+  }
+  html.js-motion #sobre-saida > .mostra { filter: none; transform: none; }
+
+  /* faixa de stack em loop (velocidade reage ao scroll) */
+  .ticker {
+    background: #0B1220; overflow: hidden; padding: 20px 0 22px;
+    border-top: 1px solid #1E293B; border-bottom: 1px solid #1E293B;
+  }
+  .ticker-trilho { display: flex; width: max-content; animation: ticker 42s linear infinite; }
+  .ticker span {
+    font-family: 'JetBrains Mono', monospace; font-weight: 500;
+    font-size: clamp(26px, 5vw, 54px); line-height: 1; letter-spacing: -.02em;
+    white-space: nowrap; padding: 0 26px;
+    color: transparent; -webkit-text-stroke: 1px #475569;
+  }
+  .ticker span:nth-child(4n + 1) {
+    color: var(--accent); -webkit-text-stroke: 0;
+    text-shadow: 0 0 22px rgba(245,158,11,.4);
+  }
+  .ticker span::after { content: '/'; margin-left: 52px; color: #1E293B; -webkit-text-stroke: 0; text-shadow: none; }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-trilho { animation: none; } }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--gray-500);
+    margin-bottom: 6px !important;
+  }
+  .eyebrow::before { content: '// '; color: var(--accent); }
+
+  /* reveal ao entrar na viewport, em cascata como saída de `ls` */
+  html.js-motion [data-reveal] {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+    transition-delay: var(--d, 0s);
+  }
+  html.js-motion [data-reveal].on { opacity: 1; transform: none; }
+
+  /* cards: LED que "liga" no reveal/hover, spotlight e tilt (desktop) */
+  .lab-card { overflow: hidden; }
+  .lab-card::before {
+    content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 3px; z-index: 2;
+    border-radius: 0 0 3px 3px; pointer-events: none;
+    background: linear-gradient(90deg, rgba(245,158,11,.05), #FCD34D 12%, #FDE68A 50%, #FCD34D 88%, rgba(245,158,11,.05));
+    box-shadow: 0 0 8px rgba(245,158,11,.95), 0 0 22px rgba(245,158,11,.55);
+    opacity: 0; transform: scaleX(.2);
+    transition: opacity .35s ease, transform .6s var(--ease-out);
+  }
+  .lab-card:hover::before { opacity: 1; transform: none; }
+  .lab-card.scan::before { animation: scan 1.4s var(--ease-out) both; }
+  @keyframes scan {
+    0% { opacity: 0; transform: scaleX(0); }
+    30% { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(1); }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lab-card::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: radial-gradient(280px circle at var(--sx, 50%) var(--sy, 50%), rgba(59,130,246,.10), transparent 65%);
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .lab-card:hover::after { opacity: 1; }
+  }
+  .lab-card.tilt { transition: transform .12s linear, border-color .2s, box-shadow .25s; will-change: transform; }
+
+  .cta .btn { will-change: transform; }
+  .cta .btn.magnet { transition: transform .15s linear; }
+</style>
 </head>
 <body>
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cd ~/labs</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
+<div class="scroll-led" aria-hidden="true"></div>
+<div class="statusline" aria-hidden="true">
+  <span class="sl-modo">NORMAL</span>
+  <span class="sl-arq">labs.html <b id="sl-secao"></b></span>
+  <span class="sl-pct" id="sl-pct">Top</span>
+</div>
 
 <header>
   <div class="nav">
@@ -523,21 +692,29 @@
   </div>
 </div>
 
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-trilho">
+    <span>python</span><span>aws sam</span><span>lambda</span><span>angular</span><span>primeng</span><span>textract</span><span>sqs</span><span>dynamodb</span><span>copilot</span><span>skills</span><span>sdd</span><span>specs</span>
+    <span>python</span><span>aws sam</span><span>lambda</span><span>angular</span><span>primeng</span><span>textract</span><span>sqs</span><span>dynamodb</span><span>copilot</span><span>skills</span><span>sdd</span><span>specs</span>
+  </div>
+</div>
+
 <section class="bloco">
   <div class="container">
-    <div class="manifesto" style="margin-top: 24px;">
+    <div class="manifesto" style="margin-top: 24px;" data-reveal>
       Construir em público é freio de mão: o código (ou a spec) prova a conversa do blog.
     </div>
-    <p style="margin-top: 18px; margin-bottom: 0;">Curadoria honesta — só o que tem história clara. O restante do GitHub continua em <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">github.com/pedronetodeveloper</a>.</p>
+    <p style="margin-top: 18px; margin-bottom: 0;" data-reveal>Curadoria honesta — só o que tem história clara. O restante do GitHub continua em <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">github.com/pedronetodeveloper</a>.</p>
   </div>
 </section>
 
 <section class="bloco" id="labs">
   <div class="container">
-    <h2>Iniciativas em público</h2>
+    <p class="eyebrow" data-reveal>5 repos · curadoria com história</p>
+    <h2 data-scramble>Iniciativas em público</h2>
     <div class="labs-grid">
 
-      <article class="lab-card featured lab-anchor" id="quickstart-agentes">
+      <article class="lab-card featured lab-anchor" data-reveal id="quickstart-agentes">
         <div class="lab-top">
           <span class="lab-tag comunidade">Comunidade</span>
           <span class="lab-stack">Copilot · Skills · Templates</span>
@@ -550,7 +727,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="docflow">
+      <article class="lab-card lab-anchor" data-reveal id="docflow">
         <div class="lab-top">
           <span class="lab-tag front">Front</span>
           <span class="lab-stack">Angular 19 · PrimeNG</span>
@@ -563,7 +740,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="onboarding-lambdas">
+      <article class="lab-card lab-anchor" data-reveal id="onboarding-lambdas">
         <div class="lab-top">
           <span class="lab-tag serverless">Serverless</span>
           <span class="lab-stack">Python · AWS SAM</span>
@@ -576,7 +753,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="tcc-documentos">
+      <article class="lab-card lab-anchor" data-reveal id="tcc-documentos">
         <div class="lab-top">
           <span class="lab-tag serverless">Serverless</span>
           <span class="lab-stack">Python · Textract</span>
@@ -589,7 +766,7 @@
         </div>
       </article>
 
-      <article class="lab-card lab-anchor" id="coreledger-specs">
+      <article class="lab-card lab-anchor" data-reveal id="coreledger-specs">
         <div class="lab-top">
           <span class="lab-tag specs">Specs</span>
           <span class="lab-stack">SDD · Kiro-style</span>
@@ -607,9 +784,9 @@
 </section>
 
 <div class="container">
-  <div class="cta">
+  <div class="cta" data-reveal>
     <span class="rotulo">$ gh repo list pedronetodeveloper</span>
-    <h2>Quer ver o restante?</h2>
+    <h2 data-scramble>Quer ver o restante?</h2>
     <p>Aqui está a curadoria com história. No GitHub tem o inventário completo — inclusive o que ainda é rascunho.</p>
     <a href="https://github.com/pedronetodeveloper" class="btn" target="_blank" rel="noopener">Abrir meu GitHub →</a>
   </div>
@@ -657,7 +834,7 @@
         }, 240);
       }
     }, 42);
-  }, 500);
+  }, document.documentElement.classList.contains('js-motion') ? 1050 : 500);
 })();
 </script>
 
@@ -678,6 +855,226 @@
   }, { passive: true });
   window.addEventListener('resize', atualizar);
   atualizar();
+})();
+</script>
+
+<script id="motion-labs-js">
+(function () {
+  const root = document.documentElement;
+  if (!root.classList.contains('js-motion')) return;
+
+  const boot = document.getElementById('boot');
+  const bootCmd = document.getElementById('boot-cmd');
+  const hero = document.querySelector('.sobre-hero');
+  const heroTerm = document.querySelector('.sobre-hero .term');
+  const statusline = document.querySelector('.statusline');
+  const slSecao = document.getElementById('sl-secao');
+  const slPct = document.getElementById('sl-pct');
+  const trilho = document.querySelector('.ticker-trilho');
+  const cards = Array.prototype.slice.call(document.querySelectorAll('.lab-card'));
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* entrada */
+  setTimeout(function () { if (boot) boot.classList.add('saiu'); }, 420);
+  setTimeout(function () { if (heroTerm) heroTerm.classList.add('on'); }, 700);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted && boot) boot.classList.add('saiu');
+  });
+
+  /* saída: wipe de baixo pra cima com o `cd` do destino */
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a || !boot) return;
+    if (a.target === '_blank' || a.hasAttribute('download')) return;
+    const href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    if (url.pathname === location.pathname && url.search === location.search) return;
+
+    e.preventDefault();
+    const arquivo = url.pathname.split('/').pop().replace(/\.html$/, '');
+    if (bootCmd) bootCmd.textContent = (!arquivo || arquivo === 'index') ? 'cd ~' : 'cd ~/' + arquivo;
+    boot.classList.add('armado');
+    boot.classList.remove('saiu');
+    void boot.offsetHeight;
+    boot.classList.remove('armado');
+    const barra = boot.querySelector('.boot-barra');
+    if (barra) barra.innerHTML = '<i></i>';
+    setTimeout(function () { location.href = url.href; }, 650);
+  });
+
+  /* reveal em cascata */
+  const reveals = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  function finalizarReveal(el) {
+    el.addEventListener('transitionend', function fim(ev) {
+      if (ev.target !== el || ev.propertyName !== 'transform') return;
+      el.removeEventListener('transitionend', fim);
+      el.removeAttribute('data-reveal');
+      el.classList.remove('on');
+      el.style.removeProperty('--d');
+    });
+  }
+  function revelar(el) {
+    if (el.classList.contains('lab-card')) {
+      const irmaos = Array.prototype.slice.call(el.parentElement.children);
+      el.style.setProperty('--d', (irmaos.indexOf(el) * 0.08).toFixed(2) + 's');
+      el.classList.add('scan');
+      el.addEventListener('animationend', function fimScan() {
+        el.removeEventListener('animationend', fimScan);
+        el.classList.remove('scan');
+      });
+    }
+    finalizarReveal(el);
+    el.classList.add('on');
+  }
+  if ('IntersectionObserver' in window) {
+    const ioReveal = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        ioReveal.unobserve(en.target);
+        revelar(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    reveals.forEach(function (el) { ioReveal.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.removeAttribute('data-reveal'); });
+  }
+
+  /* scramble nos h2 */
+  const glifos = '!<>-_\\/[]{}=+*^?#01';
+  function embaralhar(el) {
+    const final = el.textContent;
+    el.setAttribute('aria-label', final);
+    const duracao = 700;
+    const t0 = performance.now();
+    function quadro(t) {
+      const p = Math.min(1, (t - t0) / duracao);
+      const fixos = Math.floor(p * final.length);
+      let s = '';
+      for (let i = 0; i < final.length; i++) {
+        const c = final.charAt(i);
+        s += (i < fixos || c === ' ') ? c : glifos.charAt(Math.floor(Math.random() * glifos.length));
+      }
+      el.textContent = s;
+      if (p < 1) requestAnimationFrame(quadro);
+      else el.textContent = final;
+    }
+    requestAnimationFrame(quadro);
+  }
+  const scrambles = document.querySelectorAll('[data-scramble]');
+  if ('IntersectionObserver' in window) {
+    const ioScr = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        ioScr.unobserve(en.target);
+        embaralhar(en.target);
+      });
+    }, { threshold: 0.6 });
+    scrambles.forEach(function (el) { ioScr.observe(el); });
+  }
+
+  /* seção atual na statusline */
+  if ('IntersectionObserver' in window && slSecao) {
+    const ioSecao = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (en.isIntersecting && en.target.id) slSecao.textContent = '› #' + en.target.id;
+      });
+    }, { threshold: 0.5 });
+    cards.forEach(function (c) { ioSecao.observe(c); });
+  }
+
+  /* scroll: progresso, parallax, statusline e velocidade do ticker */
+  const anim = trilho && trilho.getAnimations ? trilho.getAnimations()[0] : null;
+  let ultimoY = window.scrollY;
+  let boost = 1;
+  let tickerRodando = false;
+  function loopTicker() {
+    boost += (1 - boost) * 0.06;
+    if (Math.abs(boost - 1) < 0.01) {
+      boost = 1;
+      tickerRodando = false;
+    }
+    if (anim) anim.playbackRate = boost;
+    if (tickerRodando) requestAnimationFrame(loopTicker);
+  }
+
+  let agendado = false;
+  function aoRolar() {
+    agendado = false;
+    const y = window.scrollY;
+    const max = Math.max(1, root.scrollHeight - window.innerHeight);
+    const prog = Math.min(1, Math.max(0, y / max));
+    root.style.setProperty('--prog', prog.toFixed(4));
+
+    if (hero) {
+      const h = hero.offsetHeight;
+      if (y < h) hero.style.setProperty('--grid-y', (y * 0.25).toFixed(1) + 'px');
+      if (statusline) statusline.classList.toggle('on', y > h * 0.6);
+    }
+    if (slPct) slPct.textContent = prog <= 0.005 ? 'Top' : prog >= 0.995 ? 'Bot' : Math.round(prog * 100) + '%';
+
+    const delta = Math.abs(y - ultimoY);
+    ultimoY = y;
+    if (anim && delta > 0) {
+      boost = Math.min(6, Math.max(boost, 1 + delta * 0.08));
+      if (!tickerRodando) { tickerRodando = true; requestAnimationFrame(loopTicker); }
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (!agendado) { agendado = true; requestAnimationFrame(aoRolar); }
+  }, { passive: true });
+  window.addEventListener('resize', aoRolar);
+  aoRolar();
+
+  if (!finePointer) return;
+
+  /* spotlight no hero */
+  if (hero) {
+    hero.addEventListener('pointermove', function (e) {
+      const r = hero.getBoundingClientRect();
+      hero.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px');
+      hero.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+      hero.style.setProperty('--spot', '1');
+    });
+    hero.addEventListener('pointerleave', function () { hero.style.setProperty('--spot', '0'); });
+  }
+
+  /* tilt + spotlight nos cards */
+  cards.forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--sx', x.toFixed(0) + 'px');
+      card.style.setProperty('--sy', y.toFixed(0) + 'px');
+      if (card.hasAttribute('data-reveal')) return;
+      const rx = ((y / r.height) - 0.5) * -8;
+      const ry = ((x / r.width) - 0.5) * 8;
+      card.classList.add('tilt');
+      card.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-3px)';
+    });
+    card.addEventListener('pointerleave', function () {
+      card.style.transform = '';
+      card.classList.remove('tilt');
+    });
+  });
+
+  /* botão magnético no CTA */
+  document.querySelectorAll('.cta .btn').forEach(function (btn) {
+    btn.addEventListener('pointermove', function (e) {
+      const r = btn.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+      const dy = (e.clientY - (r.top + r.height / 2)) * 0.25;
+      btn.classList.add('magnet');
+      btn.style.transform = 'translate(' + dx.toFixed(1) + 'px, ' + dy.toFixed(1) + 'px)';
+    });
+    btn.addEventListener('pointerleave', function () {
+      btn.style.transform = '';
+      btn.classList.remove('magnet');
+    });
+  });
 })();
 </script>
 </body>
