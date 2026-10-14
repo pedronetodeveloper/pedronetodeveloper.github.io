@@ -477,7 +477,7 @@
     animation: boot-out .75s var(--ease-io) .45s forwards;
   }
   @keyframes boot-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
-  html.js-motion .boot.saiu, html.js-motion .boot.armado { animation: none; }
+  html.js-motion .boot.saiu, html.js-motion .boot.armado, html.js-motion .boot.cobrindo { animation: none; }
   html.js-motion .boot.saiu { clip-path: inset(0 0 100% 0); pointer-events: none; }
   html.js-motion .boot.armado { clip-path: inset(100% 0 0 0); transition: none; }
   .boot .prompt { color: var(--accent); }
@@ -896,7 +896,7 @@
     e.preventDefault();
     const arquivo = url.pathname.split('/').pop().replace(/\.html$/, '');
     if (bootCmd) bootCmd.textContent = (!arquivo || arquivo === 'index') ? 'cd ~' : 'cd ~/' + arquivo;
-    boot.classList.add('armado');
+    boot.classList.add('armado', 'cobrindo');
     boot.classList.remove('saiu');
     void boot.offsetHeight;
     boot.classList.remove('armado');
