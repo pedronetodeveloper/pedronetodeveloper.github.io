@@ -502,6 +502,7 @@
         <li><a href="#" class="active">Home</a></li>
         <li><a href="#posts">Posts</a></li>
         <li><a href="#trilha">Trilha</a></li>
+        <li><a href="labs.html">Labs</a></li>
         <li><a href="sobre.html">Sobre</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
@@ -585,7 +586,7 @@
           <li class="breve"><span class="num">12</span> 🌱 Spring AI: IA generativa no mundo Java</li>
           <li class="breve"><span class="num">13</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
           <li class="breve"><span class="num">14</span> 📋 SDD + Kiro: a base do Spec-Driven</li>
-          <li class="breve"><span class="num">15</span> 🗂️ Projeto de portfólio</li>
+          <li><a href="labs.html"><span class="num">15</span> 🗂️ Labs &amp; iniciativas (portfólio)</a></li>
         </ol>
       </div>
     </div>
@@ -763,7 +764,7 @@
   const term = document.querySelector('.term');
   if (!alvo || !term) return;
 
-  const HELP_OUT = 'comandos: <a href="#posts">posts</a> · <a href="#trilha">trilha</a> · <a href="sobre.html">sobre</a> · <a href="#contato">contato</a> · ls · whoami · pwd · java · python · cloud · ia · ddd · solid · dicionario · clear · sudo';
+  const HELP_OUT = 'comandos: <a href="#posts">posts</a> · <a href="#trilha">trilha</a> · <a href="labs.html">labs</a> · <a href="sobre.html">sobre</a> · <a href="#contato">contato</a> · ls · whoami · pwd · java · python · cloud · ia · ddd · solid · dicionario · clear · sudo';
 
   // comandos que rotacionam, um por vez, a cada 10s
   const rotativos = [
@@ -772,7 +773,7 @@
     { cmd: 'cat stack.txt',
       out: 'Java · Spring · Python & IaC · Cloud · IA · DDD · SOLID' },
     { cmd: 'ls blog/',
-      out: '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>' }
+      out: '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="labs.html">labs/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>' }
   ];
   // help fica fixo na tela
   const helpEntry = { cmd: 'help', out: HELP_OUT };
@@ -891,11 +892,13 @@
         // se a tela foi limpa (clear), o help de cima não existe mais: mostra a lista
         return introVisivel ? 'o help já está logo ali em cima ☝️' : HELP_OUT;
       case 'ls': case 'dir':
-        return '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>';
+        return '<a href="#posts">posts/</a>&nbsp;&nbsp;<a href="#trilha">trilha/</a>&nbsp;&nbsp;<a href="labs.html">labs/</a>&nbsp;&nbsp;<a href="sobre.html">sobre.md</a>&nbsp;&nbsp;<a href="#contato">contato.txt</a>';
       case 'posts': case 'post':
         location.hash = '#posts'; return 'abrindo posts/ ...';
       case 'trilha':
         location.hash = '#trilha'; return 'abrindo trilha/ ...';
+      case 'labs': case 'lab': case 'portfolio': case 'portfólio':
+        setTimeout(function () { location.href = 'labs.html'; }, 350); return 'abrindo labs/ ...';
       case 'sobre':
         setTimeout(function () { location.href = 'sobre.html'; }, 350); return 'abrindo sobre.md ...';
       case 'contato':
