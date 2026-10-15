@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PPB6NBPG2C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PPB6NBPG2C');
+</script>
+<script>(function (d) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; d.classList.add('js-motion'); setTimeout(function () { if (!window.blogMotion) d.classList.remove('js-motion'); }, 2500); })(document.documentElement);</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Spring AI do zero: um chat simples com qualquer LLM — Blog Do Neto Dev</title>
+<meta name="description" content="O jeito mais simples de colocar um chat com LLM numa API Java: Spring AI, ChatClient, chave de API por variável de ambiente e troca de provedor (OpenAI, Groq, OpenRouter, Ollama) só na configuração.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --secondary: #3B82F6;
+    --accent: #F59E0B;
+    --bg: #FFFFFF;
+    --bg-soft: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --success: #10B981;
+    --danger: #EF4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--primary);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 16.5px;
+  }
+  a { text-decoration: none; color: inherit; }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Header ===== */
+  header {
+    position: relative; z-index: 50;
+    background: rgba(255,255,255,.92);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 800; font-size: 18px; letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-mark {
+    background: var(--primary); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .logo-mark span { color: var(--accent); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a {
+    font-size: 15px; font-weight: 500; color: var(--gray-700);
+    transition: color .15s;
+  }
+  nav ul a:hover, nav ul a.active { color: var(--secondary); }
+  .menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+  /* ===== Artigo ===== */
+  .post-hero { padding: 56px 0 8px; }
+  .badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; font-weight: 500; letter-spacing: .04em;
+    padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+    background: #FEF3C7; color: #92400E;
+  }
+  .serie-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--gray-500); margin-left: 10px;
+  }
+  .post-hero h1 {
+    margin-top: 16px;
+    font-size: clamp(30px, 5vw, 42px); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.15;
+  }
+  .post-meta {
+    margin-top: 16px; font-size: 14.5px; color: var(--gray-500);
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  article { padding: 32px 0 48px; }
+  article h2 {
+    font-size: 25px; font-weight: 700; letter-spacing: -.02em;
+    margin: 44px 0 14px; line-height: 1.3;
+  }
+  article h3 { font-size: 19px; font-weight: 700; margin: 30px 0 10px; }
+  article p { margin-bottom: 16px; color: var(--gray-700); }
+  article p strong { color: var(--primary); }
+  article ul, article ol { margin: 0 0 16px 24px; color: var(--gray-700); }
+  article li { margin-bottom: 8px; }
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: .88em;
+    background: var(--gray-100); padding: 2px 6px; border-radius: 5px;
+    color: var(--primary);
+  }
+  pre {
+    background: var(--primary); color: #E2E8F0;
+    border-radius: 12px; padding: 20px 22px; overflow-x: auto;
+    margin: 18px 0 24px; font-size: 14px; line-height: 1.65;
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--gray-500); margin-bottom: -12px; margin-top: 18px;
+  }
+  .frase-chave {
+    border-left: 4px solid var(--secondary);
+    background: #EFF6FF; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+    font-weight: 600; color: var(--primary);
+  }
+  .callout-erro {
+    border-left: 4px solid var(--danger);
+    background: #FEF2F2; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .callout-erro strong { color: var(--danger); }
+  .callout-dica {
+    border-left: 4px solid var(--success);
+    background: #ECFDF5; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 24px;
+  }
+  .quando-usar {
+    border-left: 4px solid var(--accent);
+    background: #FFFBEB; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 20px 0 28px;
+  }
+  .quando-usar strong { color: #92400E; }
+  .historia {
+    background: var(--bg-soft); border: 1px solid var(--gray-200);
+    border-radius: 18px; padding: 28px 30px; margin: 40px 0 8px;
+  }
+  .historia .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+  .historia h2 { margin-top: 8px; margin-bottom: 12px; }
+  .historia p { margin-bottom: 12px; }
+  .historia p:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0 24px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--gray-200); }
+  th { background: var(--bg-soft); font-weight: 600; font-size: 13.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--gray-700); }
+  td code { white-space: nowrap; }
+
+  .proximo-post {
+    background: var(--primary); color: #fff; border-radius: 18px;
+    padding: 36px; margin: 48px 0 24px;
+  }
+  .proximo-post .rotulo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+  .proximo-post h3 { font-size: 22px; margin: 8px 0 10px; color: #fff; }
+  .proximo-post p { color: #94A3B8; margin-bottom: 18px; }
+  .btn {
+    display: inline-block; padding: 12px 24px; border-radius: 10px;
+    font-weight: 600; font-size: 15px; transition: transform .15s;
+    background: var(--secondary); color: #fff;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .voltar { display: inline-block; margin-top: 8px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+  .voltar:hover { text-decoration: underline; }
+
+  /* ===== Footer ===== */
+  footer { border-top: 1px solid var(--gray-200); background: var(--bg-soft); padding: 36px 0; margin-top: 40px; }
+  .footer-inner {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-inner p { font-size: 14px; color: var(--gray-500); }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-links a { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+  .footer-links a:hover { color: var(--secondary); }
+
+  @media (max-width: 760px) {
+    nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0;
+      background: #fff; flex-direction: column; gap: 0; border-bottom: 1px solid var(--gray-200); }
+    nav ul.open { display: flex; }
+    nav ul li { border-top: 1px solid var(--gray-100); }
+    nav ul a { display: block; padding: 14px 24px; }
+    .menu-btn { display: block; }
+    .post-hero { padding: 36px 0 4px; }
+    pre { padding: 16px; font-size: 13px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+<style id="tema-terminal">
+  /* canvas escuro: overscroll (elástico) no topo/fim mostra escuro, não branco */
+  html { background: #0B1220; }
+
+  /* ===== Tema terminal: header ===== */
+  header { position: relative !important; background: rgba(11,18,32,.97) !important; border-bottom: 1px solid #1E293B !important; }
+  header .logo { color: #E2E8F0; }
+  header .logo-mark { background: #1E293B; }
+  header nav ul a {
+    font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  header nav ul a::before { content: './'; color: #475569; }
+  header nav ul a:hover, header nav ul a.active { color: var(--accent) !important; }
+  header .menu-btn { color: #E2E8F0 !important; }
+  @media (max-width: 760px) {
+    header nav ul { background: #0B1220 !important; border-bottom: 1px solid #1E293B !important; }
+    header nav ul li { border-top: 1px solid #1E293B !important; }
+  }
+
+  /* ===== Tema terminal: footer ===== */
+  footer { background: #0B1220 !important; border-top: 1px solid #1E293B !important; }
+  footer .footer-inner p {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 12.5px !important;
+    color: #64748B !important;
+  }
+  footer .footer-inner p::before { content: '$ echo '; color: var(--accent); }
+  footer .footer-links a {
+    font-family: 'JetBrains Mono', monospace !important; font-size: 13px !important;
+    text-transform: lowercase; color: #94A3B8 !important;
+  }
+  footer .footer-links a::before { content: '↗ '; color: #475569; }
+  footer .footer-links a:hover { color: var(--accent) !important; }
+  /* logo: barra de LED sobre o neto */
+  .logo-neto {
+    display: inline-flex; flex-direction: column; gap: 6px;
+    font-weight: 800; font-size: 17px; letter-spacing: -.02em;
+    color: #E2E8F0; line-height: 1; padding-top: 3px;
+  }
+  .logo-neto .led-bar {
+    position: relative; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(245,158,11,.15), #FCD34D 12%, #FCD34D 88%, rgba(245,158,11,.15));
+    box-shadow:
+      0 0 6px rgba(245,158,11,.9),
+      0 0 14px rgba(245,158,11,.55),
+      0 10px 22px rgba(245,158,11,.35);
+  }
+  .logo-neto .led-bar::after {
+    content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 14px;
+    background: linear-gradient(180deg, rgba(245,158,11,.35), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+</style>
+<style id="tema-terminal-corpo">
+  /* ===== Tema terminal: corpo ===== */
+  /* blocos de código = janelas de terminal (barra fixa, código rola dentro) */
+  .pre-janela {
+    position: relative; border: 1px solid #1E293B; border-radius: 12px;
+    overflow: hidden; margin: 18px 0 24px; background: var(--primary);
+  }
+  .pre-janela .pre-topo { height: 30px; background: #1E293B; position: relative; }
+  .pre-janela .pre-topo::before {
+    content: ''; position: absolute; top: 9px; left: 16px;
+    width: 11px; height: 11px; border-radius: 50%; background: #FF5F57;
+    box-shadow: 19px 0 0 #FEBC2E, 38px 0 0 #28C840;
+  }
+  .pre-janela pre { margin: 0 !important; border: none; border-radius: 0; }
+  .code-label {
+    color: #92400E !important;
+  }
+  .code-label::before { content: '» '; color: var(--accent); }
+
+
+  /* frase-chave com prompt de output */
+  .frase-chave::before { content: '> '; color: var(--secondary); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+  /* separadores entre assuntos */
+  article h2:not(:first-child) {
+    border-top: 1px dashed var(--gray-200);
+    padding-top: 36px; margin-top: 48px;
+  }
+  .historia h2, .veredito h2, .proximo-post h2 {
+    border-top: none !important; padding-top: 0 !important; margin-top: 8px !important;
+  }
+  body.modo-corrido .cap + .cap {
+    border-top: 1px dashed var(--gray-200);
+    margin-top: 44px; padding-top: 8px;
+  }
+
+  /* seleção de texto invertida */
+  ::selection { background: #0F172A; color: #F59E0B; }
+
+  /* scrollbar escura */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg-soft); }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; border: 2px solid var(--bg-soft); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+<style id="hero-terminal">
+  /* ===== Hero do post: janela de terminal clara + fita LED âmbar fixa no header ===== */
+  .post-hero { padding: 0 0 8px !important; }
+  header .led-wrap {
+    position: absolute; left: 0; right: 0; bottom: -3px;
+    z-index: 51; pointer-events: none;
+    animation: led-flicker 1.15s ease-out both;
+  }
+  @keyframes led-flicker {
+    0% { opacity: 0; } 8% { opacity: .7; } 13% { opacity: .15; }
+    19% { opacity: .9; } 24% { opacity: .35; } 32%, 100% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { header .led-wrap { animation: none; } }
+  .led-luminaria {
+    position: relative; height: 4px; width: 100%;
+    background: linear-gradient(90deg, rgba(245,158,11,.08), #FBBF24 8%, #FDE68A 50%, #FBBF24 92%, rgba(245,158,11,.08));
+    box-shadow:
+      0 0 8px rgba(251,191,36,.8),
+      0 0 20px rgba(251,191,36,.45),
+      0 8px 24px rgba(251,191,36,.25);
+  }
+  .led-luminaria::after {
+    content: ''; position: absolute; left: 4%; right: 4%; top: 4px; height: 22px;
+    background: linear-gradient(180deg, rgba(251,191,36,.28), transparent);
+    filter: blur(3px); pointer-events: none;
+  }
+  .post-hero .container { padding-top: 48px; }
+  .term-post {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
+    box-shadow: 0 14px 44px rgba(15,23,42,.08);
+    overflow: hidden; position: relative; z-index: 1;
+  }
+  .term-post .ijp-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .term-post .ijp-logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
+  .term-post .ijp-logo svg { width: 100%; height: 100%; display: block; }
+  .term-post .ijp-file {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--primary); letter-spacing: .3px; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .term-post .ijp-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .term-post .ijp-btn {
+    width: 26px; height: 26px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; opacity: .9; cursor: default;
+    transition: background .15s, filter .15s;
+  }
+  .term-post .ijp-btn svg { width: 16px; height: 16px; display: block; }
+  .term-post .ijp-btn:hover { opacity: 1; background: rgba(15,23,42,.06); filter: brightness(1.1); }
+  .term-post .ijp-btn:disabled { opacity: .35; }
+  .term-post-body { padding: 30px 30px 28px; }
+  .term-post-body h1 { margin-top: 12px !important; }
+  .term-post-body h2 { font-size: 20px; font-weight: 700; margin: 24px 0 8px; }
+  .term-post-body p { color: var(--gray-700); margin-bottom: 12px; }
+  @media (max-width: 760px) { .term-post-body { padding: 22px 18px; } }
+</style>
+<style id="tabela-mobile">
+  @media (max-width: 760px) {
+    article table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    article td code { word-break: break-word; }
+  }
+</style>
+<link rel="stylesheet" href="../assets/motion.css">
+<script src="../assets/motion.js" defer></script>
+</head>
+<body data-motion="lite">
+
+<div class="boot" id="boot" aria-hidden="true">
+  <div>
+    <p><span class="prompt">$</span> <span id="boot-cmd">cat posts/12-spring-ai-chat-simples.md</span></p>
+    <div class="boot-barra"><i></i></div>
+  </div>
+</div>
+
+<header>
+  <div class="nav">
+    <a href="../index.html" class="logo">
+      <span class="logo-neto"><span class="led-bar"></span>Blog Do Neto Dev</span>
+    </a>
+    <nav>
+      <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+      <ul id="menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../index.html#posts" class="active">Posts</a></li>
+        <li><a href="../index.html#trilha">Trilha</a></li>
+        <li><a href="../sobre.html">Sobre</a></li>
+        <li><a href="../index.html#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="led-wrap" aria-hidden="true"><div class="led-luminaria"></div></div>
+</header>
+
+<div class="post-hero">
+  <div class="container">
+    <div class="term-post">
+      <div class="ijp-bar">
+        <span class="ijp-logo" title="IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ijGradP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#ijGradP)"/><rect x="3" y="3" width="18" height="18" fill="#000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/></svg></span>
+        <span class="ijp-file">ChatController.java</span>
+        <span class="ijp-controls">
+          <button class="ijp-btn" type="button" aria-label="Run" title="Run"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+          <button class="ijp-btn" type="button" aria-label="Debug" title="Debug"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg></button>
+          <button class="ijp-btn" type="button" disabled aria-label="Stop" title="Stop"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C"/></svg></button>
+        </span>
+      </div>
+      <div class="term-post-body">
+    <span class="badge">Spring AI</span><span class="serie-num">12 / ia no java</span>
+    <h1>Spring AI do zero: um chat simples com qualquer LLM</h1>
+    <div class="post-meta">
+      <span>Pedro Neto</span> • <span>15 out 2026</span> • <span>10 min de leitura</span>
+    </div>
+
+    <h2>Por que você deveria entender isso?</h2>
+    <p>Todo mundo já usou um chat de IA. Pouca gente sabe que, no Java, colocar um desses dentro da sua API leva <strong>uma dependência, duas linhas de configuração e um controller</strong>.</p>
+    <p>Neste post a gente faz exatamente isso: um endpoint <code>/chat</code> que recebe uma pergunta, manda pra uma LLM usando sua chave de API e devolve a resposta. Sem framework mágico, sem front, sem banco.</p>
+    <p>E o melhor: o mesmo código funciona com OpenAI, Groq, OpenRouter ou um modelo rodando no seu notebook. Só muda a configuração.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<article>
+  <div class="container">
+
+
+    <h2>🌱 O que é Spring AI (em uma frase)</h2>
+    <div class="frase-chave">Spring AI é o “Spring Data das LLMs”: você conversa com uma interface só, e o provedor de IA vira detalhe de configuração.</div>
+    <p>Sem Spring AI, você teria que montar na mão a requisição HTTP pra API do provedor, serializar o JSON, tratar erro e ler a resposta. E se trocasse de provedor, reescrevia tudo.</p>
+    <p>Com Spring AI, você usa o <code>ChatClient</code>. Ele fala com o provedor que estiver configurado no <code>application.properties</code>. O seu código não sabe (e nem precisa saber) se do outro lado está o GPT, o Llama ou o Gemini.</p>
+
+    <h2>🔑 “Via tokens”: as duas palavras que confundem</h2>
+    <p>Quando alguém fala “consumir uma LLM via token”, pode estar falando de duas coisas diferentes. Vale separar antes de escrever código:</p>
+    <table>
+      <thead><tr><th>Termo</th><th>O que é</th><th>Onde aparece</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Chave de API</strong> (API key / token de acesso)</td><td>A “senha” que identifica você no provedor. Sem ela, a API devolve 401.</td><td>No <code>application.properties</code>, lida de uma variável de ambiente.</td></tr>
+        <tr><td><strong>Tokens</strong> (de texto)</td><td>Pedaços de palavra que o modelo lê e escreve. É por eles que você paga.</td><td>Na resposta da API, no campo de uso (<code>usage</code>).</td></tr>
+      </tbody>
+    </table>
+    <p>Regra prática: em português, <strong>1 token ≈ 3 a 4 caracteres</strong>. Uma pergunta curta e uma resposta de um parágrafo ficam na casa das centenas de tokens, ou seja, centavos (ou de graça, nos planos gratuitos).</p>
+
+    <h2>📦 Passo 1: criar o projeto</h2>
+    <p>Vai no <a href="https://start.spring.io" target="_blank" rel="noopener">start.spring.io</a> e escolhe:</p>
+    <ul>
+      <li><strong>Project:</strong> Maven · <strong>Language:</strong> Java 21 · <strong>Spring Boot:</strong> a versão estável mais recente</li>
+      <li><strong>Dependencies:</strong> <code>Spring Web</code> e <code>OpenAI</code> (fica na seção “AI”)</li>
+    </ul>
+    <p>Gera, descompacta e abre no IntelliJ. No <code>pom.xml</code>, o que importa são estas partes (o Initializr já coloca pra você):</p>
+    <p class="code-label">pom.xml</p>
+<pre data-lang="plain"><code>&lt;properties&gt;
+    &lt;java.version&gt;21&lt;/java.version&gt;
+    &lt;spring-ai.version&gt;1.0.0&lt;/spring-ai.version&gt; &lt;!-- use a que o Initializr gerar --&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-ai-starter-model-openai&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-ai-bom&lt;/artifactId&gt;
+            &lt;version&gt;${spring-ai.version}&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre>
+    <p>O <strong>BOM</strong> (<code>spring-ai-bom</code>) alinha as versões de todos os módulos do Spring AI. Por isso o starter não tem <code>&lt;version&gt;</code>.</p>
+
+    <h2>⚙️ Passo 2: configurar a chave</h2>
+    <p>Pegue uma chave no painel do provedor (OpenAI, Groq, OpenRouter...) e exporte como variável de ambiente:</p>
+<pre data-lang="plain" data-file="terminal"><code># Linux / macOS
+export OPENAI_API_KEY="sk-...sua-chave..."
+
+# Windows (PowerShell)
+$env:OPENAI_API_KEY="sk-...sua-chave..."</code></pre>
+    <p>No projeto, o <code>application.properties</code> só aponta pra essa variável e escolhe o modelo:</p>
+    <p class="code-label">src/main/resources/application.properties</p>
+<pre data-lang="plain"><code>spring.ai.openai.api-key=${OPENAI_API_KEY}
+spring.ai.openai.chat.options.model=gpt-4o-mini
+spring.ai.openai.chat.options.temperature=0.7</code></pre>
+    <ul>
+      <li><code>model</code>: qual LLM usar. Modelos “mini” são baratos e mais que suficientes pra aprender.</li>
+      <li><code>temperature</code>: criatividade. Perto de <code>0</code> = respostas mais previsíveis; perto de <code>1</code> = mais variadas.</li>
+    </ul>
+    <div class="callout-erro">
+      <strong>Erro que não pode acontecer:</strong> colar a chave direto no <code>application.properties</code> e dar commit. Bots varrem o GitHub atrás de chaves expostas em minutos, e a conta é sua. Sempre <code>${VARIAVEL}</code>, e a chave fica só na sua máquina (ou no cofre de segredos do deploy).
+    </div>
+
+    <h2>💬 Passo 3: o controller do chat</h2>
+    <div class="frase-chave">O ChatClient é o único objeto que você precisa conhecer: monta o prompt, chama a LLM e devolve o texto.</div>
+    <p>O starter já registra um <code>ChatClient.Builder</code> configurado com a sua chave. A gente só pede ele no construtor e monta o client:</p>
+    <p class="code-label">ChatController.java</p>
+<pre><code>package dev.neto.chat;
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/chat")
+public class ChatController {
+
+    private final ChatClient chatClient;
+
+    public ChatController(ChatClient.Builder builder) {
+        this.chatClient = builder
+            .defaultSystem("Você é um assistente que responde em português, de forma curta e direta.")
+            .build();
+    }
+
+    @GetMapping
+    public String perguntar(@RequestParam String mensagem) {
+        return chatClient.prompt()
+            .user(mensagem)      // o que o usuário perguntou
+            .call()              // chama a LLM (espera a resposta inteira)
+            .content();          // pega só o texto da resposta
+    }
+}</code></pre>
+    <p>Lendo de cima pra baixo:</p>
+    <ul>
+      <li><code>defaultSystem(...)</code>: o <strong>system prompt</strong>, a “personalidade” do assistente. Vale pra todas as perguntas.</li>
+      <li><code>prompt().user(mensagem)</code>: a pergunta do usuário.</li>
+      <li><code>call()</code>: faz a chamada e espera a resposta completa.</li>
+      <li><code>content()</code>: devolve só a <code>String</code> da resposta.</li>
+    </ul>
+    <p>É isso. Não tem classe de configuração, não tem cliente HTTP, não tem DTO de request.</p>
+
+    <h2>🚀 Passo 4: rodar e conversar</h2>
+<pre data-lang="plain" data-file="terminal"><code>./mvnw spring-boot:run</code></pre>
+    <p>Com a aplicação de pé, em outro terminal:</p>
+<pre data-lang="plain" data-file="terminal"><code>curl "http://localhost:8080/chat?mensagem=O%20que%20e%20um%20record%20no%20Java%3F"</code></pre>
+    <p>Algo assim volta:</p>
+<pre data-lang="plain" data-file="resposta.txt"><code>Um record é um tipo de classe imutável, criado pra carregar dados.
+O Java gera sozinho construtor, getters, equals, hashCode e toString.</code></pre>
+    <div class="callout-dica">
+      <strong>Se você está com pressa:</strong> também dá pra abrir a URL direto no navegador. É um <code>GET</code>, então funciona sem Postman.
+    </div>
+
+    <h2>🔄 Trocando de LLM sem mexer no Java</h2>
+    <p>Aqui está o pulo do gato. Muitos provedores expõem uma API <strong>compatível com a da OpenAI</strong>. Então o mesmo starter conversa com eles: basta trocar a URL base, a chave e o nome do modelo.</p>
+    <p class="code-label">application.properties — Groq, com plano gratuito</p>
+<pre data-lang="plain"><code>spring.ai.openai.base-url=https://api.groq.com/openai
+spring.ai.openai.api-key=${GROQ_API_KEY}
+spring.ai.openai.chat.options.model=llama-3.3-70b-versatile</code></pre>
+    <p class="code-label">application.properties — OpenRouter, vários modelos numa chave só</p>
+<pre data-lang="plain"><code>spring.ai.openai.base-url=https://openrouter.ai/api
+spring.ai.openai.api-key=${OPENROUTER_API_KEY}
+spring.ai.openai.chat.options.model=meta-llama/llama-3.3-70b-instruct</code></pre>
+    <p>Quer rodar <strong>sem chave nenhuma</strong>, no seu notebook? Instala o <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a>, baixa um modelo (<code>ollama pull llama3.2</code>) e troca o starter no <code>pom.xml</code> por <code>spring-ai-starter-model-ollama</code>:</p>
+    <p class="code-label">application.properties — Ollama local</p>
+<pre data-lang="plain"><code>spring.ai.ollama.base-url=http://localhost:11434
+spring.ai.ollama.chat.options.model=llama3.2</code></pre>
+    <p>Repara: o <code>ChatController</code> não mudou uma linha em nenhum dos casos.</p>
+    <div class="quando-usar">
+      <strong>Quando usar cada um:</strong> pra aprender sem gastar, Groq (plano gratuito) ou Ollama (local). Pra comparar modelos, OpenRouter. Pra produção, o provedor que sua empresa já contratou, com a chave no cofre de segredos.
+    </div>
+
+    <h2>📊 Bônus: quantos tokens eu gastei?</h2>
+    <p>Lembra dos tokens de texto? Dá pra ler o consumo de cada chamada. Em vez de <code>content()</code>, pede a <code>chatResponse()</code> inteira:</p>
+    <p class="code-label">ChatController.java — dentro da mesma classe</p>
+<pre><code>import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.metadata.Usage;
+
+public record RespostaChat(String resposta, Integer tokensPergunta,
+                           Integer tokensResposta, Integer tokensTotal) {}
+
+@GetMapping("/detalhado")
+public RespostaChat perguntarDetalhado(@RequestParam String mensagem) {
+    ChatResponse resposta = chatClient.prompt()
+        .user(mensagem)
+        .call()
+        .chatResponse();
+
+    Usage uso = resposta.getMetadata().getUsage();
+    return new RespostaChat(
+        resposta.getResult().getOutput().getText(),
+        uso.getPromptTokens(),       // tokens que você mandou
+        uso.getCompletionTokens(),   // tokens que a LLM escreveu
+        uso.getTotalTokens()         // é isso que vira cobrança
+    );
+}</code></pre>
+<pre data-lang="plain" data-file="resposta.json"><code>{
+  "resposta": "Um record é um tipo de classe imutável...",
+  "tokensPergunta": 31,
+  "tokensResposta": 42,
+  "tokensTotal": 73
+}</code></pre>
+    <p>Repara que o system prompt também conta como token de pergunta, <strong>em toda chamada</strong>. System prompt gigante = conta gigante.</p>
+
+    <h2>⚠️ Os erros que você vai ver (e o que significam)</h2>
+    <table>
+      <thead><tr><th>Erro</th><th>Causa mais comum</th><th>Correção</th></tr></thead>
+      <tbody>
+        <tr><td><code>401 Unauthorized</code></td><td>Chave errada ou variável de ambiente não exportada no terminal que subiu a app.</td><td>Confira com <code>echo $OPENAI_API_KEY</code> e suba a app de novo no mesmo terminal.</td></tr>
+        <tr><td><code>429 Too Many Requests</code></td><td>Limite do plano estourado ou conta sem crédito.</td><td>Espere um pouco, ou adicione crédito, ou troque pra Groq/Ollama.</td></tr>
+        <tr><td><code>404</code> / modelo não encontrado</td><td>Nome do modelo não existe naquele provedor.</td><td>Copie o nome exato da página de modelos do provedor.</td></tr>
+        <tr><td><code>404</code> na URL</td><td><code>base-url</code> com <code>/v1</code> no final. O Spring AI já adiciona <code>/v1/chat/completions</code>.</td><td>Deixe a URL base sem o <code>/v1</code>.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-erro">
+      <strong>Erro que EU cometi:</strong> exportei a chave num terminal e rodei a aplicação pelo botão Run do IntelliJ. O IntelliJ não enxerga variáveis de um terminal aberto à parte, então tomei 401 e perdi meia hora. Na IDE, a variável vai em <em>Run → Edit Configurations → Environment variables</em>.
+    </div>
+
+    <div class="historia">
+      <span class="rotulo">~/background $</span>
+      <h2>A história por trás desse post</h2>
+      <p>Minha primeira integração com LLM foi um cliente HTTP escrito na mão: montava o JSON, tratava cada erro, parseava a resposta. Funcionava, mas era um código que ninguém queria manter, e trocar de provedor significava reescrever tudo.</p>
+      <p>Quando migrei pro Spring AI, aquele arquivo de mais de cem linhas virou o <code>ChatController</code> que você viu aqui. <strong>Foi aí que caiu a ficha: IA no backend é integração, e integração o Spring resolve há anos.</strong></p>
+    </div>
+
+    <h2>Conclusão</h2>
+    <p>Se você sair daqui com uma frase, que seja essa: <strong>a chave fica na variável de ambiente, o provedor fica no <code>application.properties</code>, e o seu código só conhece o <code>ChatClient</code></strong>. O resto (stream, memória de conversa, ferramentas) é construído em cima disso.</p>
+
+    <div class="proximo-post">
+      <span class="rotulo">13 / ia no java — próximo post (em breve)</span>
+      <h3>🔌 Chat stream com Java + MCP com Spring AI</h3>
+      <p>Agora que o chat responde, o próximo passo é a resposta chegar palavra por palavra (stream) e a LLM poder chamar ferramentas de verdade via MCP, sem sair do Spring.</p>
+      <a href="../index.html#trilha" class="btn">Ver a trilha →</a>
+    </div>
+
+    <a href="../index.html#posts" class="voltar">← Voltar para os posts</a>
+
+  </div>
+</article>
+
+<footer id="contato">
+  <div class="footer-inner">
+    <p>© 2026 Blog Do Neto Dev — Jornada de um Arquiteto de TI Júnior</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/pedro-neto-07415b21b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/pedronetodeveloper" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<style id="acc-css">
+  /* ===== Accordions: mentalidade, erros e dicas ===== */
+  details.mentalidade, details.callout-erro, details.callout-dica { padding: 0 !important; }
+  details.mentalidade summary, details.callout-erro summary, details.callout-dica summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px;
+  }
+  details.mentalidade summary { padding: 16px 26px; }
+  details.mentalidade summary::-webkit-details-marker,
+  details.callout-erro summary::-webkit-details-marker,
+  details.callout-dica summary::-webkit-details-marker { display: none; }
+  details.mentalidade summary .acc-label { display: inline !important; margin: 0 !important; }
+  details.callout-erro summary .acc-label { font-weight: 700; color: var(--danger); font-size: 15.5px; }
+  details.callout-dica summary .acc-label { font-weight: 700; color: #065F46; font-size: 15.5px; }
+  details.mentalidade .seta-acc, details.callout-erro .seta-acc, details.callout-dica .seta-acc {
+    font-size: 12px; flex-shrink: 0; transition: transform .2s ease;
+    display: inline !important; margin: 0 !important; color: var(--gray-500);
+  }
+  details[open] > summary .seta-acc { transform: rotate(180deg); }
+  details.mentalidade .acc-conteudo { padding: 0 26px 18px; }
+  details.callout-erro .acc-conteudo, details.callout-dica .acc-conteudo { padding: 2px 20px 14px; font-weight: 400; }
+</style>
+<script id="acc-js">
+(function () {
+  // mentalidade: o rótulo vira o cabeçalho, a frase fica dentro
+  document.querySelectorAll('div.mentalidade').forEach(div => {
+    const label = div.querySelector('span');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = label ? label.textContent : 'a mentalidade';
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (label) label.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+
+  // callouts de erro e dica: o <strong> inicial vira o cabeçalho
+  document.querySelectorAll('div.callout-erro, div.callout-dica').forEach(div => {
+    const ehErro = div.classList.contains('callout-erro');
+    const strong = div.querySelector('strong');
+    const titulo = strong ? strong.textContent.replace(/:\s*$/, '') : (ehErro ? 'Atenção' : 'Dica');
+    const det = document.createElement('details');
+    det.className = div.className;
+    const sum = document.createElement('summary');
+    const lbl = document.createElement('span');
+    lbl.className = 'acc-label';
+    lbl.textContent = (ehErro ? '⚠️ ' : '💡 ') + titulo;
+    const seta = document.createElement('span');
+    seta.className = 'seta-acc'; seta.textContent = '▼';
+    sum.append(lbl, seta);
+    if (strong) strong.remove();
+    const cont = document.createElement('div');
+    cont.className = 'acc-conteudo';
+    while (div.firstChild) cont.appendChild(div.firstChild);
+    if (cont.firstChild && cont.firstChild.nodeType === 3) {
+      cont.firstChild.textContent = cont.firstChild.textContent.replace(/^\s+/, '');
+    }
+    det.append(sum, cont);
+    div.replaceWith(det);
+  });
+})();
+</script>
+<style id="ide-components">
+  /* ===== Code Block IntelliJ ===== */
+  .intellij-codeblock {
+    display: flex; flex-direction: column;
+    border-radius: 16px; border: 1px solid #1E293B;
+    background: #0F172A; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 18px 0 24px;
+  }
+  .intellij-header {
+    display: flex; align-items: center;
+    padding: 12px 16px; background: #1E293B;
+    border-bottom: 1px solid #0F172A; gap: 12px;
+  }
+  .intellij-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 2px; border-radius: 4px; transition: all 150ms; }
+  .intellij-logo svg { width: 100%; height: 100%; }
+  .intellij-logo:hover { background: rgba(187,134,252,.15); box-shadow: 0 0 8px rgba(187,134,252,.3); }
+  .intellij-filename {
+    color: #E2E8F0; font-size: 13.5px; font-weight: 600;
+    font-family: 'Inter', sans-serif; flex-grow: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .3px;
+  }
+  .intellij-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .intellij-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border: none; background: transparent;
+    cursor: pointer; border-radius: 4px; transition: all 150ms;
+    opacity: .85; position: relative;
+  }
+  .intellij-btn:not(:disabled):hover { opacity: 1; background: rgba(255,255,255,.1); transform: translateY(-1px); }
+  .intellij-btn:not(:disabled):hover svg { filter: brightness(1.25); }
+  .intellij-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .intellij-btn svg { width: 17px; height: 17px; }
+  .intellij-btn::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; padding: 4px 8px; border-radius: 4px;
+    font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #1E293B;
+    font-family: 'Inter', sans-serif; font-weight: 500; z-index: 10;
+  }
+  .intellij-btn:hover::after { opacity: 1; }
+  .intellij-btn-debug.active { opacity: 1; background: rgba(89,168,105,.15); border-bottom: 2px solid #59A869; }
+  .intellij-btn-run.running { animation: intellij-pulse 2s infinite; }
+  @keyframes intellij-pulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+  .intellij-body { display: flex; overflow: hidden; background: #0F172A; }
+  .intellij-line-numbers {
+    display: flex; flex-direction: column;
+    padding: 20px 8px; color: #606366;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #1E293B; min-width: 46px;
+  }
+  .intellij-body pre {
+    flex: 1; margin: 0 !important; border-radius: 0 !important;
+    background: #0F172A !important; color: #A9B7C6 !important;
+  }
+  .intellij-status {
+    padding: 8px 16px; background: #1E293B; border-top: 1px solid #0F172A;
+    color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  }
+  .intellij-status-text { animation: intellij-blink 1s infinite; }
+  @keyframes intellij-blink { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+  /* Syntax highlighting — IntelliJ Darcula */
+  .intellij-codeblock .hl-com { color: #808080; font-style: italic; }
+  .intellij-codeblock .hl-str { color: #6A8759; }
+  .intellij-codeblock .hl-ann { color: #BBB529; }
+  .intellij-codeblock .hl-kw  { color: #CC7832; }
+  .intellij-codeblock .hl-num { color: #6897BB; }
+  .intellij-codeblock .hl-cls { color: #4EC9B0; }
+  .intellij-codeblock .hl-fn  { color: #FFC66D; }
+
+  /* ===== Code Block VSCode (Dracula) ===== */
+  .vscode-codeblock {
+    display: flex; flex-direction: column;
+    border-radius: 12px; border: 1px solid #44475A;
+    background: #282A36; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 18px 0 24px;
+  }
+  .vscode-header {
+    display: flex; align-items: center;
+    padding: 8px 12px; background: #21222C;
+    border-bottom: 1px solid #44475A; gap: 12px;
+  }
+  .vscode-logo { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3px; border-radius: 3px; transition: all 150ms; }
+  .vscode-logo svg { width: 100%; height: 100%; }
+  .vscode-logo:hover { background: rgba(88,175,243,.2); box-shadow: 0 0 6px rgba(88,175,243,.3); }
+  .vscode-tabs { display: flex; flex-grow: 1; overflow-x: auto; }
+  .vscode-tab {
+    display: flex; align-items: center;
+    padding: 8px 16px; background: #21222C; color: #F8F8F2;
+    font-size: 12px; border-bottom: 2px solid #50FA7B; white-space: nowrap;
+  }
+  .vscode-tab-label { display: flex; align-items: center; gap: 6px; }
+  .vscode-tab-label::before { content: ''; width: 8px; height: 8px; background: #50FA7B; border-radius: 50%; }
+  .vscode-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .vscode-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 6px 12px; background: #50FA7B; color: #282A36;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    transition: all 150ms; position: relative;
+  }
+  .vscode-btn:hover:not(:disabled) { background: #44FF99; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(80,250,123,.2); }
+  .vscode-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .vscode-btn svg { width: 13px; height: 13px; }
+  .vscode-btn::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+    background: #44475A; color: #F8F8F2; padding: 4px 8px; border-radius: 4px;
+    font-size: 10px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 150ms; border: 1px solid #6272A4; z-index: 10;
+  }
+  .vscode-btn:hover::after { opacity: 1; }
+  .vscode-body { display: flex; overflow: hidden; background: #282A36; }
+  .vscode-line-numbers {
+    display: flex; flex-direction: column;
+    padding: 20px 8px; color: #6272A4;
+    font-size: 14px; line-height: 1.65; text-align: right;
+    user-select: none; border-right: 1px solid #44475A; min-width: 42px;
+  }
+  .vscode-body pre {
+    flex: 1; margin: 0 !important; border-radius: 0 !important;
+    background: #282A36 !important; color: #F8F8F2 !important;
+  }
+  .vscode-statusbar {
+    padding: 6px 16px; background: #21222C; border-top: 1px solid #44475A;
+    color: #6272A4; font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  }
+  .vscode-status-text.running { color: #50FA7B; }
+
+  /* Syntax highlighting — Dracula */
+  .vscode-codeblock .hl-com { color: #6272A4; }
+  .vscode-codeblock .hl-str { color: #F1FA8C; }
+  .vscode-codeblock .hl-ann { color: #50FA7B; }
+  .vscode-codeblock .hl-kw  { color: #FF79C6; }
+  .vscode-codeblock .hl-num { color: #BD93F9; }
+  .vscode-codeblock .hl-cls { color: #8BE9FD; }
+  .vscode-codeblock .hl-fn  { color: #50FA7B; }
+
+  @media (max-width: 760px) {
+    .intellij-header { padding: 10px 12px; gap: 8px; }
+    .intellij-logo, .vscode-logo { width: 20px; height: 20px; }
+    .intellij-filename { font-size: 12px; }
+    .intellij-btn { width: 27px; height: 27px; }
+    .intellij-btn svg { width: 15px; height: 15px; }
+    .intellij-btn::after, .vscode-btn::after { display: none; }
+    .intellij-line-numbers, .vscode-line-numbers { padding: 16px 6px; font-size: 12px; min-width: 34px; }
+    .vscode-tab { padding: 6px 12px; font-size: 11px; }
+    .vscode-btn { padding: 4px 8px; font-size: 11px; }
+    .vscode-btn-text { display: none; }
+    .vscode-statusbar { padding: 4px 12px; font-size: 10px; }
+  }
+</style>
+<script id="pre-js">
+(function () {
+  var IDE = 'intellij';
+  var DEFAULT_NAME = 'Exemplo.java';
+
+  var INTELLIJ_LOGO = '<a class="intellij-logo" href="https://www.jetbrains.com/idea/download/?section=windows" target="_blank" rel="noopener" title="Baixar IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="intellijGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#intellijGradient)"/><rect x="3" y="3" width="18" height="18" fill="#000000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#FFFFFF" font-family="JetBrains Mono, Menlo, monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#FFFFFF"/></svg></a>';
+  var VSCODE_LOGO = '<a class="vscode-logo" href="https://code.visualstudio.com/download?_exp_download=fb315fc982" target="_blank" rel="noopener" title="Baixar VS Code"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L4.147 12 .326 15.26a1 1 0 0 0 .001 1.479l1.407 1.407a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.494 1.494 0 0 0 1.705.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 13.6L10.826 12l7.178-4.187z" fill="#007ACC"/></svg></a>';
+
+  /* icones tradicionais IntelliJ: play vazado verde, bug verde, stop vermelho */
+  var ICON_RUN_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var ICON_BUG_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869" stroke="none"/></svg>';
+  var ICON_STOP_IJ = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="#DB5C5C" stroke="none"/></svg>';
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  var RE_JAVA = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(public|private|protected|class|interface|enum|record|extends|implements|return|new|static|final|void|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|throws|import|package|this|super|null|true|false|var|int|long|double|float|boolean|char|byte|short|instanceof|abstract|default|synchronized)\b|\b(\d+(?:\.\d+)?[LlFfDd]?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
+  var RE_PY = /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|[fbr]?"(?:[^"\\\n]|\\.)*"|[fbr]?'(?:[^'\\\n]|\\.)*')|(@\w+)|\b(def|return|if|elif|else|for|while|import|from|as|with|try|except|finally|raise|pass|break|continue|class|lambda|not|and|or|in|is|None|True|False|global|yield|async|await|del)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/g;
+
+  function highlight(text, lang) {
+    var re = lang === 'java' ? RE_JAVA : RE_PY;
+    var cls = ['hl-com', 'hl-str', 'hl-ann', 'hl-kw', 'hl-num', 'hl-cls', 'hl-fn'];
+    var out = '', last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(text))) {
+      out += esc(text.slice(last, m.index));
+      var klass = '';
+      for (var g = 1; g <= 7; g++) if (m[g] !== undefined) { klass = cls[g - 1]; break; }
+      out += '<span class="' + klass + '">' + esc(m[0]) + '</span>';
+      last = re.lastIndex;
+    }
+    return out + esc(text.slice(last));
+  }
+
+  function filenameFor(pre) {
+    if (pre.dataset.file) return pre.dataset.file;
+    var el = pre.previousElementSibling;
+    if (el && el.classList && el.classList.contains('code-label')) {
+      var t = el.textContent.split('—')[0].replace('»', '').trim();
+      if (t) return t;
+    }
+    return DEFAULT_NAME;
+  }
+
+  function lineNumbersHtml(pre) {
+    var n = pre.textContent.replace(/\n$/, '').split('\n').length;
+    var out = '';
+    for (var i = 1; i <= n; i++) out += '<span>' + i + '</span>';
+    return out;
+  }
+
+  document.querySelectorAll('article pre').forEach(function (pre) {
+    if (pre.closest('.intellij-codeblock') || pre.closest('.vscode-codeblock')) return;
+
+    /* aplica syntax highlighting se o codigo ainda for texto puro */
+    var codeEl = pre.querySelector('code') || pre;
+    if (!codeEl.querySelector('span') && pre.dataset.lang !== 'plain') {
+      codeEl.innerHTML = highlight(codeEl.textContent, IDE === 'intellij' ? 'java' : 'python');
+    }
+
+    var name = filenameFor(pre);
+    var nums = lineNumbersHtml(pre);
+    var wrap = document.createElement('div');
+
+    if (IDE === 'intellij') {
+      wrap.className = 'intellij-codeblock';
+      wrap.innerHTML =
+        '<div class="intellij-header">' + INTELLIJ_LOGO +
+          '<span class="intellij-filename"></span>' +
+          '<div class="intellij-controls">' +
+            '<button class="intellij-btn intellij-btn-run" data-tooltip="Run (Shift+F10)" type="button" aria-label="Run">' + ICON_RUN_IJ + '</button>' +
+            '<button class="intellij-btn intellij-btn-debug" data-tooltip="Debug (Shift+F9)" type="button" aria-label="Debug">' + ICON_BUG_IJ + '</button>' +
+            '<button class="intellij-btn intellij-btn-stop" disabled data-tooltip="Stop (Ctrl+F2)" type="button" aria-label="Stop">' + ICON_STOP_IJ + '</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="intellij-body"><div class="intellij-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
+        '<div class="intellij-status" style="display:none"><span class="intellij-status-text">Running...</span></div>';
+      wrap.querySelector('.intellij-filename').textContent = name;
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.querySelector('.intellij-body').appendChild(pre);
+
+      var debugBtn = wrap.querySelector('.intellij-btn-debug');
+      var runBtn = wrap.querySelector('.intellij-btn-run');
+      var stopBtn = wrap.querySelector('.intellij-btn-stop');
+      var status = wrap.querySelector('.intellij-status');
+      var running = false, debug = false, timer = null;
+
+      debugBtn.addEventListener('click', function () {
+        debug = !debug;
+        debugBtn.classList.toggle('active', debug);
+        pre.style.opacity = debug ? '0.8' : '1';
+        runBtn.disabled = debug;
+      });
+      runBtn.addEventListener('click', function () {
+        if (running) return;
+        running = true;
+        runBtn.classList.add('running');
+        runBtn.disabled = true;
+        debugBtn.disabled = true;
+        stopBtn.disabled = false;
+        status.style.display = 'block';
+        timer = setTimeout(stop, 2000);
+      });
+      stopBtn.addEventListener('click', stop);
+      function stop() {
+        clearTimeout(timer);
+        running = false;
+        runBtn.classList.remove('running');
+        runBtn.disabled = debug;
+        debugBtn.disabled = false;
+        stopBtn.disabled = true;
+        status.style.display = 'none';
+      }
+    } else {
+      wrap.className = 'vscode-codeblock';
+      wrap.innerHTML =
+        '<div class="vscode-header">' + VSCODE_LOGO +
+          '<div class="vscode-tabs"><div class="vscode-tab active"><span class="vscode-tab-label"></span></div></div>' +
+          '<div class="vscode-controls">' +
+            '<button class="vscode-btn vscode-btn-run" data-tooltip="Run (Ctrl+Enter)" type="button" aria-label="Run">' + ICON_PLAY + '<span class="vscode-btn-text">Run</span></button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vscode-body"><div class="vscode-line-numbers" aria-hidden="true">' + nums + '</div></div>' +
+        '<div class="vscode-statusbar"><span class="vscode-status-text">✓ Pronto</span></div>';
+      wrap.querySelector('.vscode-tab-label').textContent = name;
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.querySelector('.vscode-body').appendChild(pre);
+
+      var vsRun = wrap.querySelector('.vscode-btn-run');
+      var vsStatus = wrap.querySelector('.vscode-status-text');
+      var vsRunning = false;
+
+      vsRun.addEventListener('click', function () {
+        if (vsRunning) return;
+        vsRunning = true;
+        vsRun.disabled = true;
+        vsStatus.textContent = '► Executando...';
+        vsStatus.classList.add('running');
+        setTimeout(function () {
+          vsRunning = false;
+          vsRun.disabled = false;
+          vsStatus.textContent = '✓ Pronto';
+          vsStatus.classList.remove('running');
+        }, 1500);
+      });
+    }
+  });
+})();
+</script>
+
+<style id="cap-css">
+  /* ===== Modo capítulos ===== */
+  #cap-progresso {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    z-index: 60; transition: width .3s ease;
+  }
+  #cap-nav {
+    position: fixed; bottom: 27px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 60;
+    background: rgba(15,23,42,.96); color: #E2E8F0;
+    border-radius: 999px; padding: 10px 12px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.35);
+    font-size: 15px; max-width: calc(100vw - 24px);
+    backdrop-filter: blur(6px);
+  }
+  #cap-nav button {
+    border: none; cursor: pointer; border-radius: 999px;
+    background: #1E293B; color: #E2E8F0; font-family: inherit;
+    font-size: 16px; font-weight: 600; padding: 10px 18px;
+    transition: background .15s; white-space: nowrap;
+  }
+  #cap-nav button:hover:not(:disabled) { background: var(--secondary); }
+  #cap-nav button:disabled { opacity: .3; cursor: default; }
+  #cap-modo { font-size: 13px !important; font-weight: 500 !important; color: #94A3B8 !important; }
+  #cap-info {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 6px 10px; border-radius: 999px; min-width: 0;
+  }
+  #cap-info:hover { background: #1E293B; }
+  #cap-contador { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); white-space: nowrap; }
+  #cap-titulo-atual { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; font-weight: 500; }
+  #cap-menu {
+    position: fixed; bottom: 91px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #E2E8F0; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(15,23,42,.45); padding: 8px;
+    display: none; z-index: 61; max-height: 55vh; overflow-y: auto;
+    min-width: 300px; max-width: calc(100vw - 24px);
+  }
+  #cap-menu.aberto { display: block; }
+  #cap-menu button {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    color: #CBD5E1; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 14px;
+  }
+  #cap-menu button:hover { background: #1E293B; }
+  #cap-menu button.atual { color: var(--accent); font-weight: 600; }
+  #cap-menu .grupo-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: #64748B; padding: 10px 12px 2px;
+  }
+  @keyframes capFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  body.modo-capitulos article { padding-bottom: 120px; }
+  body.modo-capitulos .cap { display: none; }
+  body.modo-capitulos .cap.ativa { display: block; animation: capFade .28s ease; }
+  body.modo-corrido article { padding-bottom: 100px; }
+  body.modo-corrido #cap-progresso, body.modo-corrido #cap-prev,
+  body.modo-corrido #cap-prox, body.modo-corrido #cap-info { display: none; }
+  /* ===== No celular: só leitura corrida ===== */
+  /* nada de barra de capítulos, menu ou progresso — a tela é pequena demais */
+  @media (max-width: 760px) {
+    #cap-nav, #cap-menu, #cap-progresso { display: none !important; }
+    body.modo-corrido article, body.modo-capitulos article { padding-bottom: 32px; }
+  }
+</style>
+<script id="cap-js">
+(function () {
+  const artigo = document.querySelector('article .container');
+  if (!artigo) return;
+  const capitulos = [];
+
+  function tituloDe(el) {
+    if (!el || el.nodeType !== 1) return null;
+    if (el.tagName === 'H2') return el.textContent.trim();
+    const c = el.classList;
+    if (c.contains('historia')) return '📖 A história por trás';
+    if (c.contains('proximo-post')) return '⏭️ Próximo post';
+    if (c.contains('veredito')) return '🏁 Veredito';
+    return null;
+  }
+
+  // Agrupamento: só títulos que casam com um prefixo abaixo iniciam capítulo novo.
+  // O resto (h2 sem prefixo listado, próximo-post, conclusão) continua no capítulo atual.
+  const CAPITULOS = [
+    ['🌱', '🌱 O que é Spring AI'],
+    ['🔑', '🔑 Chave de API e tokens'],
+    ['📦', '📦 Montando o chat em 4 passos'],
+    ['🔄', '🔄 Trocando de LLM'],
+    ['📊', '📊 Contando tokens'],
+    ['⚠️', '⚠️ Erros comuns e conclusão']
+  ];
+
+  function inicioDe(raw) {
+    if (!raw) return null;
+    for (const par of CAPITULOS) {
+      if (raw.startsWith(par[0])) return par[1];
+    }
+    return null;
+  }
+
+  function dividir(container, grupo) {
+    let atual = null;
+    for (const n of Array.from(container.childNodes)) {
+      if (n.nodeType === 8) continue;
+      if (n.nodeType === 3 && !n.textContent.trim()) continue;
+      const el = n.nodeType === 1 ? n : null;
+      if (el && (el.classList.contains('tabs-wrap') || el.classList.contains('tab-panel') || el.tagName === 'SCRIPT')) {
+        atual = null; continue;
+      }
+      const novo = inicioDe(tituloDe(el));
+      if (novo || !atual) {
+        atual = document.createElement('section');
+        atual.className = 'cap';
+        atual.dataset.titulo = novo || 'Introdução';
+        atual.dataset.grupo = grupo;
+        container.insertBefore(atual, n);
+        capitulos.push(atual);
+      }
+      atual.appendChild(n);
+    }
+  }
+
+  const paineis = Array.from(artigo.querySelectorAll('.tab-panel'));
+  paineis.forEach(p => dividir(p, p.id));
+  dividir(artigo, '');
+  if (!capitulos.length) return;
+
+  function rotuloGrupo(idPainel) {
+    const btn = document.getElementById(idPainel.replace('panel-', 'btn-'));
+    return btn ? btn.childNodes[0].textContent.trim() : idPainel;
+  }
+
+  // ===== UI =====
+  const barra = document.createElement('div'); barra.id = 'cap-progresso';
+  const nav = document.createElement('div'); nav.id = 'cap-nav';
+  nav.innerHTML = '<button id="cap-prev" aria-label="Capítulo anterior">←</button>' +
+    '<div id="cap-info" title="Ver capítulos"><span id="cap-contador"></span><span id="cap-titulo-atual"></span></div>' +
+    '<button id="cap-prox" aria-label="Próximo capítulo">→</button>' +
+    '<button id="cap-modo"></button>';
+  const menu = document.createElement('div'); menu.id = 'cap-menu';
+  document.body.append(barra, nav, menu);
+
+  let ultimoGrupo = null;
+  capitulos.forEach((cap, i) => {
+    if (cap.dataset.grupo && cap.dataset.grupo !== ultimoGrupo) {
+      const lbl = document.createElement('div');
+      lbl.className = 'grupo-label';
+      lbl.textContent = rotuloGrupo(cap.dataset.grupo);
+      menu.appendChild(lbl);
+      ultimoGrupo = cap.dataset.grupo;
+    }
+    const b = document.createElement('button');
+    b.textContent = (i + 1) + '. ' + cap.dataset.titulo;
+    b.onclick = () => { ir(i); fecharMenu(); };
+    menu.appendChild(b);
+  });
+
+  const prev = document.getElementById('cap-prev');
+  const prox = document.getElementById('cap-prox');
+  const contador = document.getElementById('cap-contador');
+  const tituloAtual = document.getElementById('cap-titulo-atual');
+  const btnModo = document.getElementById('cap-modo');
+  const info = document.getElementById('cap-info');
+
+  let idx = 0;
+  function ir(i, rolar = true) {
+    idx = Math.max(0, Math.min(capitulos.length - 1, i));
+    const cap = capitulos[idx];
+    capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    if (cap.dataset.grupo && typeof trocarAba === 'function') {
+      trocarAba(cap.dataset.grupo.replace('panel-', ''));
+      capitulos.forEach((c, j) => c.classList.toggle('ativa', j === idx));
+    }
+    const heroPost = document.querySelector('.post-hero');
+    if (heroPost) heroPost.style.display = (idx === 0) ? '' : 'none';
+    barra.style.width = ((idx + 1) / capitulos.length * 100) + '%';
+    contador.textContent = (idx + 1) + ' / ' + capitulos.length;
+    tituloAtual.textContent = cap.dataset.titulo;
+    info.title = cap.dataset.titulo + ' — clique para ver os capítulos';
+    prev.disabled = idx === 0;
+    prox.disabled = idx === capitulos.length - 1;
+    menu.querySelectorAll('button').forEach(b => b.classList.remove('atual'));
+    const botoes = Array.from(menu.querySelectorAll('button'));
+    if (botoes[idx]) botoes[idx].classList.add('atual');
+    if (rolar) window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function fecharMenu() { menu.classList.remove('aberto'); }
+  info.onclick = (e) => { e.stopPropagation(); menu.classList.toggle('aberto'); };
+  document.addEventListener('click', (e) => { if (!menu.contains(e.target)) fecharMenu(); });
+  prev.onclick = () => ir(idx - 1);
+  prox.onclick = () => ir(idx + 1);
+
+  // tab buttons pulam pro primeiro capítulo do grupo
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!document.body.classList.contains('modo-capitulos')) return;
+      const painel = btn.id.replace('btn-', 'panel-');
+      const alvo = capitulos.findIndex(c => c.dataset.grupo === painel);
+      if (alvo >= 0) ir(alvo);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('modo-capitulos')) return;
+    if (e.key === 'ArrowRight') ir(idx + 1);
+    if (e.key === 'ArrowLeft') ir(idx - 1);
+    if (e.key === 'Escape') fecharMenu();
+  });
+
+  // ===== modo de leitura =====
+  // no celular a leitura é sempre corrida: nada de capítulos nem de botão de modo
+  const telaPequena = window.matchMedia('(max-width: 760px)');
+
+  function aplicarModo(modo, salvar = true) {
+    document.body.classList.toggle('modo-capitulos', modo === 'capitulos');
+    document.body.classList.toggle('modo-corrido', modo !== 'capitulos');
+    btnModo.textContent = modo === 'capitulos' ? '☰ ler corrido' : '▤ modo capítulos';
+    const heroPost2 = document.querySelector('.post-hero');
+    if (heroPost2 && modo !== 'capitulos') heroPost2.style.display = '';
+    btnModo.title = modo === 'capitulos' ? 'Mudar para leitura corrida' : 'Mudar para modo capítulos';
+    // só grava a escolha feita no desktop — o corrido forçado do mobile não sobrescreve
+    if (salvar) { try { localStorage.setItem('donetodev-modo-leitura', modo); } catch (e) {} }
+    if (modo === 'capitulos') ir(idx, false);
+  }
+
+  function preferenciaSalva() {
+    try { return localStorage.getItem('donetodev-modo-leitura') || 'capitulos'; } catch (e) { return 'capitulos'; }
+  }
+
+  function sincronizar() {
+    if (telaPequena.matches) {
+      aplicarModo('corrido', false);   // travado no corrido, sem salvar
+      fecharMenu();
+    } else {
+      aplicarModo(preferenciaSalva(), false);
+    }
+  }
+
+  btnModo.onclick = () => {
+    if (telaPequena.matches) return;   // no celular o botão nem aparece
+    aplicarModo(document.body.classList.contains('modo-capitulos') ? 'corrido' : 'capitulos');
+  };
+
+  // reavalia se girar a tela ou redimensionar a janela
+  if (telaPequena.addEventListener) telaPequena.addEventListener('change', sincronizar);
+  else if (telaPequena.addListener) telaPequena.addListener(sincronizar);
+
+  sincronizar();
+})();
+</script>
+
+<style id="ao-topo-css">
+  #ao-topo {
+    position: fixed; right: 20px; bottom: 24px; z-index: 60;
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #1E293B; color: var(--accent);
+    border: 1px solid #334155; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35), 0 0 18px rgba(245,158,11,.25);
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+  }
+  #ao-topo.mostra { opacity: 1; visibility: visible; transform: none; }
+  #ao-topo:hover { background: #273449; box-shadow: 0 10px 28px rgba(0,0,0,.42), 0 0 24px rgba(245,158,11,.4); }
+  #ao-topo svg { width: 22px; height: 22px; }
+  /* no celular não existe barra de capítulos, então o botão pode ficar embaixo mesmo */
+  @media (max-width: 760px) { #ao-topo { right: 14px; bottom: 20px; width: 42px; height: 42px; } }
+</style>
+<button id="ao-topo" type="button" aria-label="Voltar ao topo" title="Voltar ao topo">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script id="ao-topo-js">
+(function () {
+  var b = document.getElementById('ao-topo');
+  if (!b) return;
+  function upd() { b.classList.toggle('mostra', window.scrollY > 400); }
+  window.addEventListener('scroll', upd, { passive: true });
+  b.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  upd();
+})();
+</script>
+</body>
+</html>
