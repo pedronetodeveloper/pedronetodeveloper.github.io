@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>O modelo que não escreve: arquitetura de decisão com Spring AI, Jev e RAG — Blog Do Neto Dev</title>
-<meta name="description" content="Chat pra escrever, Jev pra julgar, RAG pro contexto e Java pra decidir — a ideia do Spring AI TypeSafe com um exemplo bem simples de reembolso e humano no circuito.">
+<meta name="description" content="Chat pra escrever, Jev pra julgar, RAG pro contexto e Java pra decidir — a ideia do Spring AI TypeSafe com um exemplo bem simples de contestação de compra no cartão e humano no circuito.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -484,7 +484,7 @@
     <div class="term-post">
       <div class="ijp-bar">
         <span class="ijp-logo" title="IntelliJ IDEA"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ijGradP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FC1C67"/><stop offset="50%" stop-color="#6B57FF"/><stop offset="100%" stop-color="#087CFA"/></linearGradient></defs><rect width="24" height="24" fill="url(#ijGradP)"/><rect x="3" y="3" width="18" height="18" fill="#000"/><text x="5" y="12.5" font-size="8" font-weight="bold" fill="#fff" font-family="'JetBrains Mono', monospace">IE</text><rect x="5.2" y="16" width="6.5" height="1.8" fill="#fff"/></svg></span>
-        <span class="ijp-file">RefundService.java</span>
+        <span class="ijp-file">ContestacaoService.java</span>
         <span class="ijp-controls">
           <button class="ijp-btn" type="button" aria-label="Run" title="Run"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.2v13.6a.6.6 0 0 0 .9.52l11.4-6.8a.6.6 0 0 0 0-1.04L7.4 4.68a.6.6 0 0 0-.9.52z" fill="none" stroke="#59A869" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
           <button class="ijp-btn" type="button" aria-label="Debug" title="Debug"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" fill="#59A869"/></svg></button>
@@ -495,7 +495,7 @@
     <span class="badge">Spring AI</span><span class="serie-num">13 / ia no java</span>
     <h1>O modelo que não escreve:<br>arquitetura de decisão com Spring AI, Jev e RAG</h1>
     <div class="post-meta">Pedro Neto • 22 out 2026 • 8 min de leitura</div>
-    <p class="intro">Chat pra escrever, Jev pra julgar, RAG pro contexto e <strong>Java pra decidir</strong> — com humano no circuito. A ideia num exemplo bem simples de reembolso, onde nenhum modelo tem a palavra final.</p>
+    <p class="intro">Chat pra escrever, Jev pra julgar, RAG pro contexto e <strong>Java pra decidir</strong> — com humano no circuito. A ideia num exemplo bem simples de contestação de compra no cartão de crédito, onde nenhum modelo tem a palavra final.</p>
     <div class="livro-fita">
       <span class="tag tag-rag">📚 RAG busca</span>
       <span class="seta">→</span>
@@ -513,8 +513,8 @@
 <article>
   <div class="container">
 
-    <p><strong>Por que você deveria entender isso?</strong> Porque o próximo passo depois de <a class="link" href="12-spring-ai-chat-simples.html">fazer um chat com Spring AI</a> é sempre a mesma tentação: <em>“e se o chat aprovar o reembolso?”</em>, <em>“e se o chat decidir pra qual time vai o ticket?”</em>. Parece óbvio. É aí que o projeto começa a dar errado.</p>
-    <p>Chat é ótimo pra <strong>escrever</strong>. É péssimo pra <strong>decidir</strong>: devolve texto quando você queria um sim ou não, demora segundos pra uma pergunta de um bit e custa caro pra algo que você vai fazer milhares de vezes por dia. E ainda te obriga a parsear a resposta com regex e torcer.</p>
+    <p><strong>Por que você deveria entender isso?</strong> Porque, depois de <a class="link" href="12-spring-ai-chat-simples.html">fazer um chat com Spring AI</a>, a tentação natural é dar mais poder pra ele: deixar o próprio chat <em>aprovar a contestação de uma compra no cartão</em> ou <em>escolher pra qual time vai um ticket</em>. Parece o próximo passo lógico — e é exatamente aí que o projeto começa a dar errado.</p>
+    <p>Chat é ótimo pra <strong>escrever</strong>. É péssimo pra <strong>decidir</strong>: devolve texto quando você queria um sim ou não, demora segundos pra uma pergunta de um bit e custa caro pra algo que você vai fazer milhares de vezes por dia.</p>
     <p>Em setembro saiu um projeto novo da comunidade Spring AI que ataca exatamente isso: o <strong>Spring AI TypeSafe</strong>, que integra o <strong>Jev</strong>, um modelo que <em>não escreve uma palavra</em>. Você faz perguntas tipadas, ele devolve números com confiança. Neste post eu não vou reexplicar a documentação — vou mostrar <strong>onde essa peça encaixa numa arquitetura de verdade</strong>.</p>
 
     <div class="mentalidade">
@@ -523,7 +523,7 @@
     </div>
 
     <div class="quando-usar">
-      <strong>Transparência antes de seguir:</strong> eu ainda estou estudando o Jev e entendendo como ele se comporta. O projeto saiu em setembro, está na versão 0.1.0, e este post é o meu mapa até aqui — não receita de produção. Se, estudando mais, eu entender algo diferente, eu volto e atualizo o post.
+      <strong>Transparência antes de seguir:</strong> eu ainda estou estudando o Jev e entendendo como ele se comporta. O projeto saiu em setembro, está na versão 0.1.0, e este post é o meu mapa até aqui.
     </div>
 
     <div class="callout-dica">
@@ -595,23 +595,24 @@
       </div>
     </div>
 
-    <p>E a ideia mais importante do artigo, que vale tatuar: <strong>a confiança é um segundo eixo</strong>. Ela não diz se a resposta está certa. Ela diz <strong>se dá pra agir sem um humano olhando</strong>. Confiança baixa não é “errado”, é “não automático”.</p>
+    <p>Repara que no Choice e no Score vêm dois números: a <strong>resposta</strong> (o rótulo ou a posição na régua) e a <strong>confiança</strong>. A confiança não diz se a resposta está certa. Ela diz <strong>se dá pra agir sem um humano olhando</strong>. É ela que joga o pedido na faixa amarela do semáforo lá de cima.</p>
+    <p><strong>Regra de bolso:</strong> confiança baixa não é “resposta errada”, é “não decide sozinho, manda pra uma pessoa”.</p>
 
-    <p>Sobre velocidade e custo: o autor mediu no notebook dele uma mediana de ~275 ms pra uma pergunta e ~310 ms pra três. A TypeSafe publica um benchmark bem mais agressivo contra modelos de chat — mas é benchmark do fornecedor, e o próprio artigo diz que precisa ser validado. Eu ainda vou medir no meu repo antes de repetir qualquer número com a minha assinatura.</p>
+    <p><strong>E é rápido?</strong> Bastante: a resposta volta em cerca de <strong>um quarto de segundo</strong>. E o melhor: fazer <strong>três perguntas custa quase o mesmo tempo que uma</strong>, porque vai tudo na mesma chamada. Pra quem vinha de esperar segundos pelo chat, é outra conversa. (Número medido pelo autor do artigo.)</p>
 
-    <p>Pra usar no Spring, é uma dependência (<code>spring-ai-starter-typesafe</code>) e a variável <code>TYPESAFE_API_KEY</code>. Ponto de atenção: <strong>é um serviço hospedado</strong>. Não roda local, e o texto do cliente sai da sua infra — guarda essa informação pra seção de armadilhas.</p>
+    <p>Pra usar no Spring, é uma dependência (<code>spring-ai-starter-typesafe</code>) e a variável <code>TYPESAFE_API_KEY</code>. Ponto de atenção: <strong>é um serviço hospedado</strong>. Não roda local, e o texto do cliente sai da sua infra.</p>
 
     <h2>A arquitetura: o modelo é só mais uma peça</h2>
-    <p>O caso é fictício e de propósito simples: <strong>pedido de reembolso</strong> num e-commerce. O cliente escreve um texto livre, a empresa tem regras (prazo, valor) e alguém precisa responder.</p>
+    <p>O caso é fictício e de propósito simples: <strong>contestação de compra no cartão de crédito</strong>. O cliente abre o app, diz em texto livre por que quer cancelar uma compra da fatura, o banco tem regras (prazo, valor) e alguém precisa responder. As regras e os números daqui são apenas de exemplo.</p>
 
     <div class="fluxo">
-      <div class="no no-entrada"><small>entrada</small><strong>Pedido de reembolso</strong> — mensagem do cliente + dias desde a compra</div>
+      <div class="no no-entrada"><small>entrada</small><strong>Contestação de compra</strong> — mensagem do cliente + valor + dias desde a compra</div>
       <div class="desce">▼</div>
-      <div class="no no-dom"><small>java</small><strong>Regra dura</strong> — fora do prazo? Nega na hora, nem chama modelo.</div>
+      <div class="no no-dom"><small>java</small><strong>Regra dura</strong> — fora do prazo? Nega. Valor alto? Pessoa olha. Nem chama modelo.</div>
       <div class="desce">▼ passou na regra</div>
-      <div class="no no-jev"><small>jev</small><strong>Pergunta de sim ou não</strong> — “chegou com defeito?” → um número de 0 a 1</div>
+      <div class="no no-jev"><small>jev</small><strong>Duas perguntas de sim ou não, numa chamada só</strong> — “o cliente não reconhece a compra?” e “tem sinal de golpe?” → um número de 0 a 1 pra cada</div>
       <div class="desce">▼</div>
-      <div class="no no-dom"><small>java</small><strong>Seu código decide</strong> — número alto aprova, o resto vai pra uma pessoa</div>
+      <div class="no no-dom"><small>java</small><strong>Seu código decide</strong> — sinal de golpe vai pra uma pessoa; não reconhece com certeza alta aprova; o resto vai pra uma pessoa</div>
       <div class="ramos">
         <div class="ramo ramo-ok">
           <div class="rotulo-ramo">▼ APROVAR / NEGAR</div>
@@ -623,54 +624,75 @@
         </div>
       </div>
     </div>
-    <p class="fluxo-legenda">Em uma frase: o modelo responde uma pergunta, o seu código decide.</p>
+    <p class="fluxo-legenda">Em uma frase: o modelo responde perguntas, o seu código decide.</p>
 
     <p>Se você leu o <a class="link" href="02-mvc-vs-hexagonal.html">post de MVC vs Hexagonal</a>, a ideia é a mesma de lá: o modelo de IA entra como mais um adapter, igual um banco de dados. A regra de negócio não depende dele.</p>
 
     <h2>Um exemplo bem simples</h2>
     <p>Sem arquitetura completa, sem advisor, sem RAG: só o essencial pra ver as peças funcionando juntas. Lê os comentários na ordem:</p>
 
-    <p class="code-label">RefundService.java — o exemplo inteiro</p>
+    <p class="code-label">ContestacaoService.java — o exemplo inteiro</p>
 <pre><code>@Service
-class RefundService {
+class ContestacaoService {
+
+    private static final int PRAZO_DIAS = 90;
+    private static final BigDecimal TETO_AUTOMATICO = new BigDecimal("500.00");
 
     private final TypeSafeClient typeSafe;
 
-    RefundService(TypeSafeClient typeSafe) {
+    ContestacaoService(TypeSafeClient typeSafe) {
         this.typeSafe = typeSafe;
     }
 
-    String decidir(String mensagem, int diasDesdeCompra) {
-        // 1. Regra dura primeiro: fora do prazo, nem pergunta pro modelo
-        if (diasDesdeCompra &gt; 30) {
-            return "NEGAR";
+    String decidir(String mensagem, BigDecimal valor, int diasDesdeCompra) {
+        // 1. Regras duras primeiro: nenhuma delas pergunta pro modelo
+        if (diasDesdeCompra &gt; PRAZO_DIAS) {
+            return "NEGAR";     // fora do prazo de contestação
+        }
+        if (valor.compareTo(TETO_AUTOMATICO) &gt; 0) {
+            return "ESCALAR";   // valor alto: sempre uma pessoa
         }
 
-        // 2. Uma pergunta de sim ou não pro Jev
-        Noul defeito = Noul.builder()
-                .instructions("O cliente diz que o produto chegou com defeito?")
-                .whenTrue("A mensagem relata produto quebrado ou com defeito")
-                .whenFalse("A mensagem não relata defeito")
+        // 2. Duas perguntas de sim ou não pro Jev, na mesma chamada
+        Noul naoReconhece = Noul.builder()
+                .instructions("O cliente diz que não reconhece essa compra?")
+                .whenTrue("A mensagem diz que o cliente não fez ou não reconhece a compra")
+                .whenFalse("A mensagem não fala de compra não reconhecida")
                 .build();
 
-        double certeza = typeSafe.systemOne(mensagem, Map.of("defeito", defeito))
-                .noulValue("defeito");   // um número de 0 a 1
+        Noul sinalDeGolpe = Noul.builder()
+                .instructions("A mensagem tem sinal de golpe?")
+                .whenTrue("Alguém se passou pelo banco, pediu senha, código ou mandou o cliente fazer algo")
+                .whenFalse("A mensagem não tem sinal de golpe")
+                .build();
 
-        // 3. Quem transforma o número em decisão é o seu código
-        if (certeza &gt;= 0.8) {
-            return "APROVAR";   // defeito claro: a política cobre
+        var respostas = typeSafe.systemOne(mensagem, Map.of(
+                "naoReconhece", naoReconhece,
+                "sinalDeGolpe", sinalDeGolpe));
+
+        double naoReconheceCerteza = respostas.noulValue("naoReconhece");   // 0 a 1
+        double golpeCerteza = respostas.noulValue("sinalDeGolpe");          // 0 a 1
+
+        // 3. Quem transforma os números em decisão é o seu código
+        if (golpeCerteza &gt;= 0.5) {
+            return "ESCALAR";   // cheiro de golpe: uma pessoa sempre olha
+        }
+        if (naoReconheceCerteza &gt;= 0.8) {
+            return "APROVAR";   // não reconhece, valor baixo, no prazo: a política cobre
         }
         return "ESCALAR";       // na dúvida, uma pessoa olha
     }
 }</code></pre>
 
-    <p>Repara no que o Jev <strong>não</strong> faz: ele não aprova nada. Ele só responde “quanto isso parece um defeito”, de 0 a 1. Quem transforma o número em decisão é um <code>if</code> que você escreveu, consegue testar e consegue explicar numa reunião.</p>
+    <p>Repara no que o Jev <strong>não</strong> faz: ele não aprova nada. Ele só responde duas perguntas estreitas, cada uma com um número de 0 a 1. E repara que cada uma tem <strong>o seu próprio limite</strong>: pra golpe, 0.5 já basta pra chamar uma pessoa; pra aprovar, só com 0.8 ou mais. Quem transforma os números em decisão é um <code>if</code> que você escreveu, consegue testar e consegue explicar numa reunião.</p>
 
-    <p>Três pedidos passando pelo mesmo código (os números do Jev aqui são ilustrativos):</p>
+    <p>Cinco contestações passando pelo mesmo código (os números do Jev aqui são ilustrativos):</p>
     <ul>
-      <li><strong>45 dias desde a compra:</strong> <code>NEGAR</code>. O Jev nem foi chamado — a regra dura resolveu sozinha, de graça.</li>
-      <li><strong>“chegou com a tela trincada”, 5 dias:</strong> o Jev devolve algo perto de 1 → <code>APROVAR</code>.</li>
-      <li><strong>“veio meio estranho”, 5 dias:</strong> o Jev fica no meio do caminho → <code>ESCALAR</code>. Uma pessoa olha.</li>
+      <li><strong>Compra de 120 dias atrás:</strong> <code>NEGAR</code>. O Jev nem foi chamado — a regra dura resolveu sozinha, de graça.</li>
+      <li><strong>Compra de R$ 2.300:</strong> <code>ESCALAR</code>. Valor alto vai pra uma pessoa, também sem chamar modelo.</li>
+      <li><strong>“não fiz essa compra, nunca ouvi falar dessa loja”, R$ 89:</strong> não reconhece perto de 1, golpe perto de 0 → <code>APROVAR</code>.</li>
+      <li><strong>“um moço ligou dizendo que era do banco e mandou eu contestar essa compra”, R$ 89:</strong> golpe alto → <code>ESCALAR</code>, mesmo com o cliente dizendo que não reconhece.</li>
+      <li><strong>“não lembro direito dessa compra”, R$ 89:</strong> não reconhece no meio do caminho → <code>ESCALAR</code>. Uma pessoa olha.</li>
     </ul>
 
     <div class="callout-dica">
@@ -685,15 +707,13 @@ class RefundService {
     <p style="font-size:14px;color:var(--gray-500);margin-top:-16px;">— ideia do artigo do Christian Tzolov, que eu só traduzi pra regra de negócio.</p>
 
     <h2>O que mais existe (e eu ainda estou estudando)</h2>
-    <p>O exemplo usa só o formato mais simples. O artigo mostra bem mais coisa, e eu deixo aqui como mapa, sem fingir que já domino:</p>
+    <p>O exemplo mostra só o básico. O artigo vai além, e eu deixo aqui o que ainda estou estudando:</p>
     <ul>
-      <li><strong>Várias perguntas numa chamada só:</strong> em vez de uma pergunta gigante (“analise esse pedido”), várias estreitas — motivo (<code>Choice</code>), ameaça jurídica (<code>Noul</code>), frustração (<code>Score</code>) —, cada uma com o seu próprio limite no seu código.</li>
+      <li><strong>Misturar formatos na mesma chamada:</strong> o exemplo usa duas perguntas de sim ou não, mas dá pra juntar tipos diferentes — motivo (<code>Choice</code>), ameaça jurídica (<code>Noul</code>), frustração (<code>Score</code>) —, cada uma com o seu próprio limite no seu código.</li>
       <li><strong>Conferir a resposta do chat:</strong> o Jev julga se o texto que o chat escreveu bate com a decisão; se não bater, o chat tenta de novo.</li>
       <li><strong>Guardrail:</strong> barrar tentativa de manipulação na entrada e resposta perigosa na saída.</li>
       <li><strong>Filtrar o RAG:</strong> tirar trecho irrelevante dos documentos antes de chegarem no chat e reordenar o que sobrou.</li>
     </ul>
-    <p>Quando eu tiver testado essas peças com calma, elas viram post próprio. Por enquanto, o padrão do exemplo já é a parte que importa.</p>
-
     <h2>Chat faz tudo vs cada peça no seu papel</h2>
     <p>Mesmo pedido, duas arquiteturas. Troque de aba:</p>
 
