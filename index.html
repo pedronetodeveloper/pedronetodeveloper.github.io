@@ -345,6 +345,31 @@
   }
   .cat-pill:hover { border-color: var(--secondary); color: var(--secondary); background: #EFF6FF; }
 
+  /* ===== Labs & iniciativas ===== */
+  .labs-home { background: var(--bg-soft); border-top: 1px solid var(--gray-200); padding: 56px 0 64px; }
+  .labs-home h2 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+  .lab-mini {
+    display: flex; flex-direction: column; gap: 10px;
+    background: #fff; border: 1px solid var(--gray-200); border-left: 4px solid var(--accent);
+    border-radius: 14px; padding: 24px 28px; color: var(--primary);
+    transition: transform .2s, box-shadow .25s, border-color .2s;
+  }
+  .lab-mini:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(15,23,42,.1); border-color: var(--secondary); }
+  .lab-mini h3 { font-size: 20px; font-weight: 700; line-height: 1.35; word-break: break-word; }
+  .lab-mini:hover h3 { color: var(--secondary); }
+  .lab-mini p { font-size: 15px; color: var(--gray-700); line-height: 1.6; }
+  .lab-mini-tag {
+    align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px;
+  }
+  .tag-comunidade { background: #EDE9FE; color: #5B21B6; }
+  .lab-mini-stack {
+    padding-top: 10px; border-top: 1px solid var(--gray-100);
+    font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--gray-500);
+  }
+  .labs-home-cta { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+  @media (max-width: 640px) { .lab-mini { padding: 20px; } .lab-mini h3 { font-size: 17px; } }
+
   /* ===== Newsletter ===== */
   .newsletter {
     background: var(--primary); color: #fff; border-radius: 18px;
@@ -571,7 +596,7 @@
 <section class="serie" id="trilha" data-sl="trilha">
   <div class="container">
     <h2 data-scramble>A trilha do blog</h2>
-    <p class="section-sub" data-reveal>O mapa da jornada. A <strong>leva 1</strong> são os fundamentos que me levaram de estagiário a arquiteto de TI júnior. A <strong>leva 2</strong> aprofunda conceitos e vocabulário (DDD, SOLID, dicionários). A <strong>leva 3</strong> é o próximo degrau: front Angular, IA no Java, SDD/Kiro e projeto de portfólio. Em todos os posts: experiência real, visão de como começar e erros que eu mesmo cometi.</p>
+    <p class="section-sub" data-reveal>O mapa da jornada. A <strong>leva 1</strong> são os fundamentos que me levaram de estagiário a arquiteto de TI júnior. A <strong>leva 2</strong> aprofunda conceitos e vocabulário (DDD, SOLID, dicionários). A <strong>leva 3</strong> é o próximo degrau: front Angular, IA no Java e SDD/Kiro. Em todos os posts: experiência real, visão de como começar e erros que eu mesmo cometi.</p>
     <div class="levas">
       <div class="leva" data-reveal data-card>
         <span class="leva-tag concluida">✔ leva 1 — publicada</span>
@@ -597,13 +622,13 @@
       </div>
       <div class="leva futuro" data-reveal data-card>
         <span class="leva-tag construindo">✦ leva 3 — em construção</span>
-        <h3>Front, IA, SDD e portfólio</h3>
+        <h3>Front, IA no Java e SDD</h3>
         <ol>
           <li><a href="posts/11-angular-21-signals-primeng.html"><span class="num">11</span> 🅰️ Angular 21 limpo: Signals, TypeScript e PrimeNG</a></li>
           <li><a href="posts/12-spring-ai-chat-simples.html"><span class="num">12</span> 🌱 Spring AI: IA generativa no mundo Java</a></li>
-          <li class="breve"><span class="num">13</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
-          <li class="breve"><span class="num">14</span> 📋 SDD + Kiro: a base do Spec-Driven</li>
-          <li><a href="labs.html"><span class="num">15</span> 🗂️ Labs &amp; iniciativas (portfólio)</a></li>
+          <li><a href="posts/13-o-modelo-que-nao-escreve.html"><span class="num">13</span> ⚖️ O modelo que não escreve: decisão com Spring AI, Jev e RAG</a></li>
+          <li class="breve"><span class="num">14</span> 🔌 Chat stream com Java + MCP com Spring AI</li>
+          <li class="breve"><span class="num">15</span> 📋 SDD + Kiro: a base do Spec-Driven</li>
         </ol>
       </div>
     </div>
@@ -615,6 +640,18 @@
     <h2 data-scramble>Posts recentes</h2>
     <p class="section-sub" data-reveal>Direto ao ponto.</p>
     <div class="posts-grid">
+      <article class="post-card" data-reveal data-card>
+        <div class="card-top">
+          <span class="avatar">PN</span>
+          <span class="autor">Pedro Neto</span>
+          <span class="badge badge-spring">Spring AI</span>
+        </div>
+        <h3><a href="posts/13-o-modelo-que-nao-escreve.html">O modelo que não escreve: arquitetura de decisão com Spring AI, Jev e RAG</a></h3>
+        <div class="card-body">
+          <p>Chat pra escrever, Jev pra julgar, RAG pro contexto e Java pra decidir — a ideia com um exemplo bem simples de contestação de compra no cartão, de quem ainda está estudando o Jev.</p>
+          <div class="post-meta"><span>Pedro Neto • 8 min</span><span class="read-link">→ Leia</span></div>
+        </div>
+      </article>
       <article class="post-card" data-reveal data-card>
         <div class="card-top">
           <span class="avatar">PN</span>
@@ -772,6 +809,23 @@
       <a href="posts/05-fundacao-cloud.html" class="cat-pill" data-magnet>☁️ AWS</a>
       <a href="posts/11-angular-21-signals-primeng.html" class="cat-pill" data-magnet>🅰️ Angular</a>
       <a href="posts/12-spring-ai-chat-simples.html" class="cat-pill" data-magnet>🌱 Spring AI</a>
+    </div>
+  </div>
+</section>
+
+<section class="labs-home" id="labs" data-sl="labs">
+  <div class="container">
+    <h2 data-scramble>Labs &amp; iniciativas</h2>
+    <p class="section-sub" data-reveal>Fora da trilha de posts: o que eu construo em público. Aqui vai um destaque — o catálogo completo, com a história de cada iniciativa, fica na página Labs.</p>
+    <a href="labs.html#quickstart-agentes" class="lab-mini" data-reveal data-card>
+      <span class="lab-mini-tag tag-comunidade">Comunidade · em destaque</span>
+      <h3>quickstart-agent-ai-community</h3>
+      <p>Hub pra começar com agentes de IA no Copilot: a tríade instructions, skills e context, guias de workflow e templates pra Java, Python, Node e Angular.</p>
+      <span class="lab-mini-stack">Copilot · Skills · Templates</span>
+    </a>
+    <div class="labs-home-cta" data-reveal>
+      <a href="labs.html" class="btn btn-primary" data-magnet>Ver os outros labs →</a>
+      <a href="https://github.com/pedronetodeveloper" class="btn btn-outline" target="_blank" rel="noopener" data-magnet>Abrir meu GitHub</a>
     </div>
   </div>
 </section>
